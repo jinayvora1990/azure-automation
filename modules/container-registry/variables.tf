@@ -15,5 +15,7 @@ variable "resource_group_name" {
 }
 
 variable "resource_location" {
-  #  default = "West Europe"
+  default = "uaenorth"
 }
+
+variable "key_vault_name" {}
