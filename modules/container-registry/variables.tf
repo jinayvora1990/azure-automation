@@ -18,4 +18,6 @@ variable "resource_location" {
   default = "uaenorth"
 }
 
-variable "key_vault_name" {}
+variable "azurerm_key_vault_key" {}
+
+variable "azurerm_key_vault" {}
