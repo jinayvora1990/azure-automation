@@ -31,3 +31,21 @@ resource "azurerm_key_vault" "this" {
   }
   tags = local.common_tags
 }
+
+
+resource "azurerm_key_vault_key" "vault_key" {
+  name         = "super-secret"
+  key_vault_id = azurerm_key_vault.this.id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
+
+}
