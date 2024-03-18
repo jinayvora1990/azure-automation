@@ -34,7 +34,7 @@ resource "azurerm_key_vault" "this" {
 
 
 resource "azurerm_key_vault_key" "vault_key" {
-  name         = "super-secret"
+  name         = var.azurerm_key_vault_key
   key_vault_id = azurerm_key_vault.this.id
   key_type     = "RSA"
   key_size     = 2048

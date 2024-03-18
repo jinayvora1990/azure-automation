@@ -123,3 +123,7 @@ variable "owners" {
   type        = string
   default     = ""
 }
+
+variable "azurerm_key_vault_key" {
+  default = "super-secret"
+}
