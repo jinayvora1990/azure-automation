@@ -6,7 +6,7 @@ variable "name" {
 variable "location" {
   type        = string
   description = "location of key vault"
-  default = "uaenorth"
+  default     = "uaenorth"
 }
 
 variable "resource_group_name" {
@@ -29,7 +29,7 @@ variable "enabled_for_disk_encryption" {
 variable "purge_protection_enabled" {
   type        = bool
   description = "(optional) enable purge protection"
-  default     = false
+  default     = true
 }
 
 variable "public_network_access_enabled" {
@@ -39,9 +39,9 @@ variable "public_network_access_enabled" {
 }
 
 variable "enable_rbac_authorization" {
-    type = bool
-    description = "(Optional) Boolean flag to specify whether Azure Key Vault uses Role Based Access Control (RBAC) for authorization of data actions."
-    default = false
+  type        = bool
+  description = "(Optional) Boolean flag to specify whether Azure Key Vault uses Role Based Access Control (RBAC) for authorization of data actions."
+  default     = false
 }
 
 variable "sku_name" {
@@ -59,7 +59,7 @@ variable "soft_delete_retention_days" {
 variable "default_action" {
   type        = string
   description = "(The Default Action to use when no rules match from ip_rules / virtual_network_subnet_ids."
-  default     = "Allow"
+  default     = "Deny"
 }
 
 variable "bypass" {
@@ -108,7 +108,7 @@ variable "secret_values" {
     name  = string
     value = string
   }))
-  default = []
+  default     = []
   description = "(optional) values of key vault secrets"
 }
 
@@ -122,8 +122,4 @@ variable "owners" {
   description = "Project owners email address/AAD Group name"
   type        = string
   default     = ""
-}
-
-variable "azurerm_key_vault_key" {
-  default = "super-secret"
 }

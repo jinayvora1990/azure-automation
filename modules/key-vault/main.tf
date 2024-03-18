@@ -20,9 +20,9 @@ resource "azurerm_key_vault" "this" {
   purge_protection_enabled      = var.purge_protection_enabled
   public_network_access_enabled = var.public_network_access_enabled
   enable_rbac_authorization     = var.enable_rbac_authorization
-  
+
   sku_name = var.sku_name
-  
+
   network_acls {
     bypass                     = var.bypass
     default_action             = var.default_action
@@ -30,22 +30,4 @@ resource "azurerm_key_vault" "this" {
     virtual_network_subnet_ids = var.virtual_network_subnet_ids
   }
   tags = local.common_tags
-}
-
-
-resource "azurerm_key_vault_key" "vault_key" {
-  name         = var.azurerm_key_vault_key
-  key_vault_id = azurerm_key_vault.this.id
-  key_type     = "RSA"
-  key_size     = 2048
-
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
-
 }
