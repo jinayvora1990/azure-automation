@@ -54,4 +54,6 @@ resource "azurerm_key_vault_key" "vault_key" {
     "verify",
     "wrapKey",
   ]
+
+  depends_on = [ azurerm_role_assignment.kv_administrator_role_assignment ]
 }
