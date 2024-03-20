@@ -1,6 +1,4 @@
-resource "azurerm_resource_group" "dynamic_rg" {
-  for_each = var.resource_groups
-
-  name     = each.value
+resource "azurerm_resource_group" "base_rg" {
+  name     = "${var.app_name}-${var.env}-base-rg"
   location = var.location
 }

@@ -10,17 +10,37 @@ variable "virtual_network_name" {
   default     = "vnet-avd-uaenorth-01"
 }
 
+variable "vnet_address_spaces" {
+  description = "(Required) The address space that is used the virtual network. You can supply more than one address space."
+  type = list
+}
+
+variable "dns_servers" {
+  description = "(Optional) List of IP addresses of DNS servers"
+  type = list
+  default = []
+}
+
+variable "app_name" {
+  description = "Application Name"
+  type = string
+}
+
+variable "env" {
+  description = "Environment name"
+  type = string
+  # Add allowed values regex
+}
+
 variable "subnets" {
   description = "List of subnets to be created"
   type        = list(object({
     name                            = string
     address_prefixes                = list(string)
-    private_endpoint_network_policy = bool
-    depends_on                      = list(string)
+    private_endpoint_network_policies_enabled = bool
   }))
   default     = []
 }
-
 
 variable "security_rules" {
   description = "List of security rules to be applied"

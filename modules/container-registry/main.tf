@@ -55,5 +55,5 @@ resource "azurerm_key_vault_key" "vault_key" {
     "wrapKey",
   ]
 
-  depends_on = [ azurerm_role_assignment.kv_administrator_role_assignment ]
+  depends_on = [azurerm_role_assignment.kv_administrator_role_assignment]
 }

@@ -1,8 +1,7 @@
-resource "azurerm_virtual_network" "avd" {
-  provider            = azurerm.avd
-  name                = "vnet-avd-uaenorth-01"
-  location            = azurerm_resource_group.avd.location
-  resource_group_name = "rg-vnet-avd-prod-uaenorth-01"
-  address_space       = ["xxx.xxx8.0/22"]
-  dns_servers         = ["xxx.xxx6.4", "xxx.xxx6.5"]
+resource "azurerm_virtual_network" "vnet" {
+  name                = var.virtual_network_name
+  location            = var.location
+  resource_group_name = azurerm_resource_group.base_rg
+  address_space       = var.vnet_address_spaces
+  dns_servers         = var.dns_servers
 }
