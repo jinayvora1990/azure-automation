@@ -1,7 +1,7 @@
 
 #Create Peering to Hub
 resource "azurerm_virtual_network_peering" "peer-avd-to-Hub" {
-  provider                     = azurerm.avd
+#  provider                     = azurerm.avd
   name                         = "peer-avd-to-Hub"
   resource_group_name          = "rg-vnet-avd-prod-uaenorth-01"
   virtual_network_name         = "vnet-avd-uaenorth-01"

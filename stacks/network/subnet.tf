@@ -1,3 +1,4 @@
+
 module "example_subnets" {
   source = "../../modules/network"
 
@@ -22,4 +23,7 @@ module "example_subnets" {
     },
     # Add more subnets here if needed
   }
+  app_name            = ""
+  env                 = ""
+  vnet_address_spaces = ""
 }

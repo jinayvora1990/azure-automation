@@ -6,14 +6,14 @@ terraform {
       version = ">= 3.71.0"
     }
   }
-
-  backend "azurerm" {
-    storage_account_name = "uanavddevtfbackend"
-    resource_group_name  = "test-rg"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-    use_azuread_auth     = true
-  }
+#
+#  backend "azurerm" {
+#    storage_account_name = "uanavddevtfbackend"
+#    resource_group_name  = "test-rg"
+#    container_name       = "tfstate"
+#    key                  = "terraform.tfstate"
+#    use_azuread_auth     = true
+#  }
 }
 
 # Configure the Microsoft Azure Provider

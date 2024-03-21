@@ -1,5 +1,5 @@
 resource "azurerm_network_security_group" "avd_nsg" {
-  provider            = azurerm.avd
+
   location            = var.location
   name                = "nsg-snet-avd-prod-uaenorth-001"
   resource_group_name = var.resource_group_name
@@ -22,34 +22,12 @@ resource "azurerm_network_security_group" "avd_nsg" {
 }
 
 
-resource "azurerm_network_security_group" "avd_pe_nsg" {
-  provider            = azurerm.avd
-  location            = "uaenorth"
-  name                = "nsg-snet-pe-prod-uaenorth-001"
-  resource_group_name = "rg-vnet-avd-prod-uaenorth-01"
-}
-
-
 resource "azurerm_subnet_network_security_group_association" "nsg_avd_assoc" {
-  provider                  = azurerm.avd
-  subnet_id                 = azurerm_subnet.avd_subnet.id
+  #subnet_id                 = azurerm_subnet.avd_subnet.id
+  for_each = var.subnets
+  subnet_id = azurerm_subnet.subnet[each.key].id
   network_security_group_id = azurerm_network_security_group.avd_nsg.id
   depends_on = [
-    azurerm_subnet.avd_subnet
+    azurerm_subnet.subnet
   ]
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg_w365_assoc" {
-  provider                  = azurerm.avd
-  subnet_id                 = azurerm_subnet.w365_subnet.id
-  network_security_group_id = azurerm_network_security_group.avd_nsg.id
-  depends_on = [
-    azurerm_subnet.avd_subnet
-  ]
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg_pe_assoc" {
-  provider                  = azurerm.avd
-  subnet_id                 = azurerm_subnet.private_endpoint_subnet.id
-  network_security_group_id = azurerm_network_security_group.avd_pe_nsg.id
 }

@@ -4,6 +4,8 @@ variable "resource_group_name" {
   default     = "rg-vnet-avd-prod-uaenorth-01"
 }
 
+
+
 variable "virtual_network_name" {
   description = "Name of the virtual network in which the subnets will be created"
   type        = string
@@ -34,12 +36,12 @@ variable "env" {
 
 variable "subnets" {
   description = "List of subnets to be created"
-  type        = list(object({
+  type        = map(object({
     name                            = string
     address_prefixes                = list(string)
     private_endpoint_network_policies_enabled = bool
   }))
-  default     = []
+  default     = {}
 }
 
 variable "security_rules" {
