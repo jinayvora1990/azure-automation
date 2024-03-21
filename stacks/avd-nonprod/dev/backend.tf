@@ -11,7 +11,7 @@ terraform {
     storage_account_name = "uanavddevtfbackend"
     resource_group_name  = "test-rg"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    key                  = "/avd/nonprod_sub/dev/terraform.tfstate"
     use_azuread_auth     = true
   }
 }

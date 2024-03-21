@@ -1,5 +1,5 @@
 module "container_registry" {
-  source = "../../modules/container-registry"
+  source = "../../../modules/container-registry"
 
   registry_name               = "adcbcontregistryadagasg"
   registry_sku                = "Premium"

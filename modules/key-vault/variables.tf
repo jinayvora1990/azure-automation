@@ -59,7 +59,7 @@ variable "soft_delete_retention_days" {
 variable "default_action" {
   type        = string
   description = "(The Default Action to use when no rules match from ip_rules / virtual_network_subnet_ids."
-  default     = "Deny"
+  default     = "Allow"
 }
 
 variable "bypass" {
