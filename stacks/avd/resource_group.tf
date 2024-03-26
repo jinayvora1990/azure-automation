@@ -1,7 +1,7 @@
 locals {
   tags = {
     project = "adcb"
-    owners = "jinay"
+    owners  = "jinay"
   }
 }
 
