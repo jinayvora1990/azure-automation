@@ -116,6 +116,7 @@ variable "tables" {
   type        = list(string)
   default     = []
 }
+
 variable "lifecycles" {
   description = "Configure Azure Storage firewalls and virtual networks"
   type        = list(object({ prefix_match = set(string), tier_to_cool_after_days = number, tier_to_archive_after_days = number, delete_after_days = number, snapshot_delete_after_days = number }))
