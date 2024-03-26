@@ -33,6 +33,7 @@ variable "replicas" {
 variable "max_memory_policy" {
   type        = string
   description = "Redis cache key eviction policy"
+  default     = "volatile-lru"
 }
 
 variable "rdb_backup_enabled" {
@@ -54,6 +55,11 @@ variable "rdb_backup_configuration" {
     storage_connection_string = string
   })
   description = "RDB Backup Confifuration"
+  default = {
+    backup_frequency          = 0
+    max_snapshot_count        = 0
+    storage_connection_string = ""
+  }
 }
 
 variable "aof_backup_configuration" {
@@ -62,6 +68,10 @@ variable "aof_backup_configuration" {
     storage_connection_string_1 = string
   })
   description = "AOF Backup Configuration"
+  default = {
+    storage_connection_string_0 = ""
+    storage_connection_string_1 = ""
+  }
 }
 
 # variable "shard_count" {
