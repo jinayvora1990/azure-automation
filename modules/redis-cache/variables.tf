@@ -9,6 +9,11 @@ variable "resource_group_name" {
   description = "The resource group for the redis cache"
 }
 
+variable "redis_cache_name" {
+  type        = string
+  description = "The name of the redis cache resource created"
+}
+
 variable "cache_tier" {
   type = object({
     family   = string
@@ -30,7 +35,7 @@ variable "replicas" {
   default     = 1
 }
 
-variable "max_memory_policy" {
+variable "cache_eviction_policy" {
   type        = string
   description = "Redis cache key eviction policy"
   default     = "volatile-lru"
@@ -74,7 +79,33 @@ variable "aof_backup_configuration" {
   }
 }
 
-# variable "shard_count" {
-#   type = number
-#   description = "The number of shards in the redis cache"
+variable "shard_count" {
+  type        = number
+  description = "The number of shards in the redis cache"
+  default     = 1
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet where Redis cache is hosted"
+}
+
+variable "patch_schedules" {
+  type = set(object({
+    day_of_week    = string
+    start_hour_utc = number
+  }))
+  description = "Maintenance schedule of the redis cache."
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags to be added to the resources"
+  default     = {}
+}
+
+# variable "zones" {
+#   type        = set(string)
+#   description = "List of Availability zones where redis cache is hosted"
+#   default     = []
 # }
