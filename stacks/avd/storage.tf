@@ -1,10 +1,12 @@
 module "tf_state_storage_account" {
-  source = "../../../modules/storage"
+  source = "../../modules/storage"
 
-  resource_group       = var.rg_name
-  storage_account_name = var.storage_account_name
-  containers_list      = var.containers_list
-  skuname              = var.skuname
+  for_each = { for sa in var.storage_accounts : sa.name => sa }
+
+  resource_group       = each.value.resource_group
+  storage_account_name = each.value.name
+  containers_list      = toset(each.value.containers)
+  skuname              = each.value.skuname
 
   depends_on = [module.resource_group]
 }
