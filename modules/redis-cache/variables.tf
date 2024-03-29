@@ -60,7 +60,7 @@ variable "rdb_backup_configuration" {
     storage_connection_string = string
   })
   description = "RDB Backup Confifuration"
-  default = {
+  default     = {
     backup_frequency          = 0
     max_snapshot_count        = 0
     storage_connection_string = ""
@@ -98,6 +98,7 @@ variable "subnet" {
     resource_group = string
   })
   description = "Subnet to use with PostgreSQL server"
+  default     = null
 }
 
 variable "patch_schedules" {
