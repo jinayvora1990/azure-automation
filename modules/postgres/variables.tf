@@ -43,7 +43,7 @@ variable "subnet" {
 variable "create_mode" {
   type        = string
   default     = "Default"
-  description = "(Optional) The creation mode which can be used to restore or replicate existing servers. Possible values are Default, Replica and Update. Support for PointInTimeRestore will be added later"
+  description = "The creation mode which can be used to restore or replicate existing servers. Possible values are Default, Replica and Update. Support for PointInTimeRestore will be added later"
   validation {
     condition     = can(regex("^(?:Default|Update|Replica)$", var.create_mode))
     error_message = "Allowed values for availability zone: Default, Replica, Update"
@@ -92,6 +92,16 @@ variable "storage_in_mb" {
   validation {
     condition     = can(regex("^(?:32768|65536|131072|262144|524288|1048576|2097152|4194304|8388608|16777216|33554432)$", var.storage_in_mb))
     error_message = "Allowed values are 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216 and 33554432. Mb."
+  }
+}
+
+variable "storage_tier" {
+  type        = string
+  description = "The name of storage performance tier for IOPS of the PostgreSQL Flexible Server. Possible values are P4, P6, P10, P15, P20, P30, P40, P50, P60, P70 or P80. Default value is dependant on the storage_mb value"
+  default     = null
+  validation {
+    condition     = can(regex("^(?:P4|P6|P10|P15|P20|P30|P40|P50|P60|P70|P80)$", var.storage_tier))
+    error_message = "Allowed values are P4, P6, P10, P15, P20, P30, P40, P50, P60, P70 or P80"
   }
 }
 

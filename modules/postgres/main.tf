@@ -30,8 +30,9 @@ resource "azurerm_postgresql_flexible_server" "postgresql_flexible_server" {
     }
   }
 
-  storage_mb = var.storage_in_mb
-  sku_name   = var.sku_name
+  storage_mb   = var.storage_in_mb
+  storage_tier = var.storage_tier
+  sku_name     = var.sku_name
 
   tags = var.tags
 }
