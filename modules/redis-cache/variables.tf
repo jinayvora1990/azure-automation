@@ -115,6 +115,15 @@ variable "tags" {
   default     = {}
 }
 
+variable "log_analytics" {
+  type = object({
+    workspace_name      = string
+    resource_group_name = string
+  })
+  description = "Log Analytics workspace"
+  default     = null
+}
+
 # variable "zones" {
 #   type        = set(string)
 #   description = "List of Availability zones where redis cache is hosted"

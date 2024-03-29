@@ -49,7 +49,7 @@ resource "azurerm_redis_cache" "rediscache" {
   tags = merge(var.tags, local.common_tags, { "resource_type" = "redis-cache" })
 
   lifecycle {
-    # A bug in the Redis API where the original storage connection string isn't being returneds
+    # A bug in the Redis API where the original storage connection string isn't being returned
     ignore_changes = [redis_configuration.0.rdb_storage_connection_string]
   }
 }
@@ -68,4 +68,22 @@ resource "azurerm_private_endpoint" "pep" {
   }
 
   tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
+}
+
+resource "azurerm_monitor_diagnostic_setting" "extaudit" {
+  count                      = var.log_analytics.workspace_name != null ? 1 : 0
+  name                       = format("%s%s", var.redis_cache_name, "-monitoring")
+  target_resource_id         = azurerm_redis_cache.rediscache.id
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_ws.0.id
+  #  storage_account_id         = var.enable_data_persistence ? azurerm_storage_account.storeacc.0.id : null
+
+  metric {
+    category = "AllMetrics"
+  }
+
+  lifecycle {
+    ignore_changes = [metric]
+  }
+
+  tags = merge(var.tags, local.common_tags, { "resource_type" = "log-analytics-monitoring" })
 }
