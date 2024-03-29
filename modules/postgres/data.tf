@@ -25,9 +25,3 @@ data "azurerm_key_vault_secret" "postgres_admin_password" {
   name         = var.keyvault.postgres_admin_password_key
   key_vault_id = data.azurerm_key_vault.keyvault.id
 }
-
-data "azurerm_private_dns_zone" "private_dns_zone" {
-  count               = var.private_dns_zone_name != null ? 1 : 0
-  name                = var.private_dns_zone_name
-  resource_group_name = var.private_dns_resource_group_name
-}
