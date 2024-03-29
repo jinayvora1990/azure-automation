@@ -40,6 +40,16 @@ variable "subnet" {
   description = "Subnet to use with PostgreSQL server"
 }
 
+variable "create_mode" {
+  type        = string
+  default     = "Default"
+  description = "(Optional) The creation mode which can be used to restore or replicate existing servers. Possible values are Default, Replica and Update. Support for PointInTimeRestore will be added later"
+  validation {
+    condition     = can(regex("^(?:Default|Update|Replica)$", var.create_mode))
+    error_message = "Allowed values for availability zone: Default, Replica, Update"
+  }
+}
+
 variable "availability_zone" {
   type        = string
   description = "The Availability Zone of the PostgreSQL Flexible Server. Possible values are 1, 2 and 3"

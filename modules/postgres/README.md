@@ -34,6 +34,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_pgbouncer_settings"></a> [additional\_pgbouncer\_settings](#input\_additional\_pgbouncer\_settings) | map for additional pgbouncer settings. Remember to set `pgbouncer.enabled` to true in server\_configuration | <pre>map(object({<br>    config_value = string<br>  }))</pre> | `{}` | no |
 | <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone) | The Availability Zone of the PostgreSQL Flexible Server. Possible values are 1, 2 and 3 | `string` | `"1"` | no |
+| <a name="input_create_mode"></a> [create\_mode](#input\_create\_mode) | (Optional) The creation mode which can be used to restore or replicate existing servers. Possible values are Default, Replica and Update. Support for PointInTimeRestore will be added later | `string` | `"Default"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment that the cluster will be a part of. Eg: dev, qa, uat, sit, prod | `string` | n/a | yes |
 | <a name="input_geo_redundant_backup_enabled"></a> [geo\_redundant\_backup\_enabled](#input\_geo\_redundant\_backup\_enabled) | Is geo-redundant backup enabled. | `bool` | `false` | no |
 | <a name="input_high_availability_enabled"></a> [high\_availability\_enabled](#input\_high\_availability\_enabled) | is high availability enabled for azure postgresql flexible server | `bool` | `false` | no |

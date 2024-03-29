@@ -1,13 +1,16 @@
 resource "azurerm_postgresql_flexible_server" "postgresql_flexible_server" {
-  name                         = "flexi-postgres-${var.environment}"
-  resource_group_name          = local.postgresql_resource_group_name
-  location                     = local.location
-  version                      = var.sql_version
-  delegated_subnet_id          = data.azurerm_subnet.subnet.id
+  name                = "flexi-postgres-${var.environment}"
+  resource_group_name = local.postgresql_resource_group_name
+  location            = local.location
+  version             = var.sql_version
+  delegated_subnet_id = data.azurerm_subnet.subnet.id
+  create_mode         = var.create_mode
+
   administrator_login          = local.administrator_login
   administrator_password       = local.administrator_password
   zone                         = var.availability_zone
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
+
 
   dynamic "maintenance_window" {
     for_each = local.maintenance_window_enabled ? { maintenance_window = var.maintenance_window } : {}
