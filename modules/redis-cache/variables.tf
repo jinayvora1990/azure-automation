@@ -67,16 +67,22 @@ variable "rdb_backup_configuration" {
   }
 }
 
-variable "aof_backup_configuration" {
+variable "rdb_storage_account" {
   type = object({
-    storage_connection_string_0 = string
-    storage_connection_string_1 = string
+    storage_account_name = string,
+    resource_group_name  = string
   })
-  description = "AOF Backup Configuration"
-  default = {
-    storage_connection_string_0 = ""
-    storage_connection_string_1 = ""
-  }
+  default     = null
+  description = "Storage Account details to store rdb backups."
+}
+
+variable "aof_storage_account" {
+  type = object({
+    storage_account_name = string,
+    resource_group_name  = string
+  })
+  default     = null
+  description = "Storage Account details to store aof backups."
 }
 
 variable "shard_count" {
@@ -85,13 +91,17 @@ variable "shard_count" {
   default     = 1
 }
 
-variable "subnet_id" {
-  type        = string
-  description = "Subnet where Redis cache is hosted"
+variable "subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet to use with PostgreSQL server"
 }
 
 variable "patch_schedules" {
-  type = set(object({
+  type = list(object({
     day_of_week    = string
     start_hour_utc = number
   }))

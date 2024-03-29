@@ -1,7 +1,8 @@
 locals {
-  common_tags = { module : "redis-cache" }
+  common_tags = { module = "redis-cache" }
   rg          = var.resource_group_name
   location    = var.resource_location
+  subnet_id   = data.azurerm_subnet.subnet.id
 }
 
 resource "azurerm_redis_cache" "rediscache" {
@@ -15,7 +16,7 @@ resource "azurerm_redis_cache" "rediscache" {
   minimum_tls_version           = var.min_tls_version
   replicas_per_primary          = var.replicas
   shard_count                   = var.shard_count
-  subnet_id                     = var.subnet_id
+  subnet_id                     = local.subnet_id
   public_network_access_enabled = false
 
   # Only available in preview
@@ -32,24 +33,25 @@ resource "azurerm_redis_cache" "rediscache" {
   redis_configuration {
     maxmemory_policy = var.cache_eviction_policy
 
+    #rdb backup configuration
     rdb_backup_enabled            = var.rdb_backup_enabled
     rdb_backup_frequency          = var.rdb_backup_configuration.backup_frequency
     rdb_backup_max_snapshot_count = var.rdb_backup_configuration.max_snapshot_count
-    rdb_storage_connection_string = var.rdb_backup_configuration.storage_connection_string
+    rdb_storage_connection_string = data.azurerm_storage_account.rdb_sa.primary_connection_string
 
+    #aof backup configuration
     aof_backup_enabled              = var.aof_backup_enabled
-    aof_storage_connection_string_0 = var.aof_backup_configuration.storage_connection_string_0
-    aof_storage_connection_string_1 = var.aof_backup_configuration.storage_connection_string_1
+    aof_storage_connection_string_0 = data.azurerm_storage_account.aof_sa.primary_connection_string
   }
 
-  tags = merge(var.tags, local.common_tags, { "resource_type" : "redis-cache" })
+  tags = merge(var.tags, local.common_tags, { "resource_type" = "redis-cache" })
 }
 
 resource "azurerm_private_endpoint" "pep" {
   name                = format("%s%s", var.redis_cache_name, "-private-endpoint")
   location            = local.location
   resource_group_name = local.rg
-  subnet_id           = var.subnet_id
+  subnet_id           = local.subnet_id
 
   private_service_connection {
     name                           = format("%s%s", var.redis_cache_name, "-privatelink")
@@ -58,12 +60,5 @@ resource "azurerm_private_endpoint" "pep" {
     subresource_names              = ["redisCache"]
   }
 
-  tags = merge(var.tags, local.common_tags, { "resource_type" : "private-endpoint", })
+  tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
 }
-
-data "azurerm_private_endpoint_connection" "pep_connection" {
-  name                = azurerm_private_endpoint.pep.name
-  resource_group_name = local.rg
-  depends_on          = [azurerm_redis_cache.rediscache]
-}
-
