@@ -1,7 +1,10 @@
+
+
 resource "azurerm_network_security_group" "avd_nsg" {
 
   location            = var.location
-  name                = "nsg-snet-avd-prod-uaenorth-001"
+  name                = var.nsg_name
+
   resource_group_name = var.resource_group_name
 
   dynamic "security_rule" {

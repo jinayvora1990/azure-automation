@@ -41,7 +41,6 @@ variable "subnets" {
     address_prefixes                = list(string)
     private_endpoint_network_policies_enabled = bool
   }))
-  default     = {}
 }
 
 variable "security_rules" {
@@ -58,7 +57,6 @@ variable "security_rules" {
     destination_address_prefixes = list(string)
     description                  = string
   }))
-  default     = []
 }
 
 variable "location" {
@@ -67,13 +65,19 @@ variable "location" {
   default     = "uaenorth"
 }
 
-variable "resource_groups" {
-  description = "Map of resource group names and their locations"
-  type        = map(string)
-  default = {
-    "shared"   = "rg-shared-avd-prod-uaenorth-01"
-    "storage"  = "rg-storage-avd-prod-uaenorth-01"
-    "avd"      = "rg-vnet-avd-prod-uaenorth-01"
-    "akv"      = "rg-akv-avd-prod-uaenorth-01"
-  }
-}
+
+#
+#variable "resource_groups" {
+#  description = "Map of resource group names and their locations"
+#  type        = map(string)
+#  default = {
+#    "shared"   = "rg-shared-avd-prod-uaenorth-01"
+#    "storage"  = "rg-storage-avd-prod-uaenorth-01"
+#    "avd"      = "rg-vnet-avd-prod-uaenorth-01"
+#    "akv"      = "rg-akv-avd-prod-uaenorth-01"
+#  }
+#}
+
+variable "nsg_name" {}
+
+variable "peering_to_hub_name" {}
