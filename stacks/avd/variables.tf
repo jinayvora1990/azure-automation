@@ -1,5 +1,5 @@
 variable "rg_name" {
-  description = "(Mandatory) Name of the resource group"
+  description = "(Required) Name of the resource group"
   type        = list(string)
 }
 
@@ -17,22 +17,38 @@ variable "storage_accounts" {
   default = []
 }
 
-variable "subscription_name" {
-  description = "(Required) The Name of the Subscription. This is the Display Name in the portal."
+variable "kv_name" {
+  description = "Name of the Key Vault"
   type        = string
+  default     = null
+}
+
+variable "acr_name" {
+  description = "Name of the Azure Container Registry"
+  type        = string
+  default     = null
+}
+
+variable "subscription_name" {
+  description = "The Name of the Subscription. This is the Display Name in the portal."
+  type        = string
+  default     = null
 }
 
 variable "enrollment_account_name" {
-  description = "(Required) Name of the Enrollment Account"
+  description = "Name of the Enrollment Account"
   type        = string
+  default     = null
 }
 
 variable "billing_account_name" {
-  description = "(Required) Name of the billing account"
+  description = "Name of the billing account"
   type        = string
+  default     = null
 }
 
 variable "azure_mgmt_group" {
-  description = "(Required) Name of the Management Group where subscription needs to be created"
+  description = "Name of the Management Group where subscription needs to be created"
   type        = string
+  default     = null
 }
