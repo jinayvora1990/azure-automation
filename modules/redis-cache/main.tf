@@ -38,7 +38,7 @@ resource "azurerm_redis_cache" "rediscache" {
     rdb_backup_enabled            = local.subscription == "Premium" ? var.rdb_backup_enabled : false
     rdb_backup_frequency          = local.subscription == "Premium" ? var.rdb_backup_configuration.backup_frequency : null
     rdb_backup_max_snapshot_count = local.subscription == "Premium" ? var.rdb_backup_configuration.max_snapshot_count : null
-    rdb_storage_connection_string = local.subscription == "Premium" ? data.azurerm_storage_account.rdb_sa.0.primary_blob_connection_string : null
+    rdb_storage_connection_string = local.subscription == "Premium" ? data.azurerm_storage_account.rdb_sa.primary_blob_connection_string : null
 
     #aof backup configuration
     aof_backup_enabled              = local.subscription == "Premium" ? var.aof_backup_enabled : false
@@ -84,6 +84,4 @@ resource "azurerm_monitor_diagnostic_setting" "extaudit" {
   lifecycle {
     ignore_changes = [metric]
   }
-
-  tags = merge(var.tags, local.common_tags, { "resource_type" = "log-analytics-monitoring" })
 }
