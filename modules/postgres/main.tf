@@ -65,7 +65,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
   for_each = var.diagnostic_settings
 
   name                           = each.value.name != null ? each.value.name : "diag-flexi-postgres-${var.environment}"
-  target_resource_id             = azurerm_key_vault.this.id
+  target_resource_id             = azurerm_postgresql_flexible_server.postgresql_flexible_server.id
   eventhub_authorization_rule_id = each.value.event_hub_authorization_rule_resource_id
   eventhub_name                  = each.value.event_hub_name
   log_analytics_destination_type = each.value.log_analytics_destination_type
