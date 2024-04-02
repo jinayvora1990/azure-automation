@@ -27,6 +27,11 @@ variable "virtual_network_name" {
   type        = string
 }
 
+variable "hub_vnet_id" {
+  description = "Remote Hub VNET ID"
+  type        = string
+}
+
 variable "vnet_address_spaces" {
   description = "The address space to be used for the Azure virtual network."
   type        = list(string)
