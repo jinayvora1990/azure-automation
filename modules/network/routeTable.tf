@@ -15,8 +15,7 @@ resource "azurerm_route_table" "udr" {
 resource "azurerm_subnet_route_table_association" "udr_avd_asso" {
   #provider       = azurerm.avd
   #subnet_id      = azurerm_subnet.avd_subnet.id
-  for_each = var.subnets
-  subnet_id = azurerm_subnet.subnet[each.key].id
+  subnet_id = azurerm_subnet.subnet.id
   route_table_id = azurerm_route_table.udr.id
 }
 

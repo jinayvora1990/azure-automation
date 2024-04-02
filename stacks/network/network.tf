@@ -1,22 +1,23 @@
-
-module "network_setup" {
+module "base_network_setup" {
   source = "../../modules/network"
-  app_name = "cibg-development"
-  env = "sit"
-  vnet_address_spaces = var.vnet_address_spaces
-  nsg_name            = var.nsg_name
+  #for_each = { for idx in var.network_setup : idx.env => idx }
+
+
+  for_each = { for idx in var.network_setup : idx =>  {
+
+    key1 = var.network_setup[env]
+    key2 = var.nsg_name[name]
+  }}
+
+  app_name = each.value.name
+  env = each.value.env
+  nsg_name = each.value.nsg_name.name
   peering_to_hub_name = var.peering_to_hub_name
-  subnets = {
-    subnet1 = {
-      name                            = "subnet1"
-      address_prefixes                = ["10.0.1.0/24"]
-      private_endpoint_network_policies_enabled = true
-    }
-    subnet2 = {
-      name                            = "subnet2"
-      address_prefixes                = ["10.0.2.0/24"]
-      private_endpoint_network_policies_enabled = false
-    }
-  }
-  security_rules = []
+  vnet_address_spaces = var.vnet_address_spaces
+  subnet_address_prefixes = each.value.subnet_name[*].address_prefixes
+
+  subnet_name = each.value.subnet_name.name
 }
+
+
+# NSG, route Table, subnet.

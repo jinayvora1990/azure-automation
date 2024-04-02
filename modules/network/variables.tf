@@ -34,14 +34,14 @@ variable "env" {
   # Add allowed values regex
 }
 
-variable "subnets" {
-  description = "List of subnets to be created"
-  type        = map(object({
-    name                            = string
-    address_prefixes                = list(string)
-    private_endpoint_network_policies_enabled = bool
-  }))
-}
+#variable "subnets" {
+#  description = "List of subnets to be created"
+#  type        = map(object({
+#    name                            = string
+#    address_prefixes                = list(string)
+#    private_endpoint_network_policies_enabled = bool
+#  }))
+#}
 
 variable "security_rules" {
   description = "List of security rules to be applied"
@@ -57,6 +57,7 @@ variable "security_rules" {
     destination_address_prefixes = list(string)
     description                  = string
   }))
+  default = []
 }
 
 variable "location" {

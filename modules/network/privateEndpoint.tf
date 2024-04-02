@@ -1,10 +1,20 @@
+variable "private_dns_zone_ids" {
+  default = ["/subscriptions/6fa47cb8-1205-49a2-aa48-e35dfec6d698/resourceGroups/rg-connectivity-dns-uaenorth-01/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"]
+}
+variable "azurerm_private_endpoint_name" {
+  default = "pe-saavdproduaenorth01-file"
+}
+
+
+
+
 resource "azurerm_private_endpoint" "afpe" {
 #  provider            = azurerm.avd
-  for_each = var.subnets
-  name                = "pe-saavdproduaenorth01-file"
+  name                = var.azurerm_private_endpoint_name
+
   location            = azurerm_resource_group.base_rg.location
   resource_group_name = azurerm_resource_group.base_rg.name
-  subnet_id           = azurerm_subnet.subnet[each.key].id
+  subnet_id           = azurerm_subnet.subnet.id
 
   private_service_connection {
     name                           = "psc-file-01"
@@ -15,7 +25,8 @@ resource "azurerm_private_endpoint" "afpe" {
   private_dns_zone_group {
 
     name                 = "dns-file-01"
-    private_dns_zone_ids = ["/subscriptions/6fa47cb8-1205-49a2-aa48-e35dfec6d698/resourceGroups/rg-connectivity-dns-uaenorth-01/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"]
+    private_dns_zone_ids = var.private_dns_zone_ids
+
   }
 }
 
