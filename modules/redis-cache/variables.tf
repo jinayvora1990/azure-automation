@@ -91,13 +91,23 @@ variable "shard_count" {
   default     = 1
 }
 
-variable "subnet" {
+variable "redis_subnet" {
   type = object({
     name           = string
     vnet_name      = string
     resource_group = string
   })
-  description = "Subnet to use with PostgreSQL server"
+  description = "Subnet where the redis cache is provisioned. This subnet needs to have only the redis in the subnet."
+  default     = null
+}
+
+variable "privatelink_subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet where the private link is required."
   default     = null
 }
 

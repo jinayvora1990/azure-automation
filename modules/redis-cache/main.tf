@@ -2,7 +2,6 @@ locals {
   common_tags  = { module = "redis-cache" }
   rg           = var.resource_group_name
   location     = var.resource_location
-  subnet_id    = data.azurerm_subnet.subnet.id
   subscription = var.cache_tier.sku_name
 }
 
@@ -17,7 +16,7 @@ resource "azurerm_redis_cache" "rediscache" {
   minimum_tls_version           = var.min_tls_version
   replicas_per_primary          = local.subscription == "Premium" ? var.replicas : null
   shard_count                   = local.subscription == "Premium" ? var.shard_count : null
-  subnet_id                     = local.subscription == "Premium" ? local.subnet_id : null
+  subnet_id                     = local.subscription == "Premium" ? data.azurerm_subnet.redis_subnet : null
   public_network_access_enabled = false
 
   # Only available in preview
@@ -58,7 +57,7 @@ resource "azurerm_private_endpoint" "pep" {
   name                = format("%s%s", var.redis_cache_name, "-private-endpoint")
   location            = local.location
   resource_group_name = local.rg
-  subnet_id           = local.subnet_id
+  subnet_id           = data.azurerm_subnet.privatelink_subnet.id
 
   private_service_connection {
     name                           = format("%s%s", var.redis_cache_name, "-privatelink")
