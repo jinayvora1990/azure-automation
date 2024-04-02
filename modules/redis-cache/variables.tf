@@ -14,6 +14,22 @@ variable "redis_cache_name" {
   description = "The name of the redis cache resource created"
 }
 
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+  default     = ""
+}
+variable "env" {
+  type        = string
+  description = "Environment where redis cache is provisioned"
+  default     = "dev"
+}
+variable "instance_number" {
+  type        = number
+  description = "The numeric id of the resource being provisioned"
+  default     = 1
+}
+
 variable "cache_tier" {
   type = object({
     family   = string

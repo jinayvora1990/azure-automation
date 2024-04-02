@@ -1,12 +1,16 @@
 locals {
-  common_tags  = { module = "redis-cache" }
-  rg           = var.resource_group_name
-  location     = var.resource_location
-  subscription = var.cache_tier.sku_name
+  common_tags    = { module = "redis-cache" }
+  rg             = var.resource_group_name
+  location       = var.resource_location
+  subscription   = var.cache_tier.sku_name
+  location_short = {
+    "uaenorth"   = "uan"
+    "uaecentral" = "uac"
+  }
 }
 
 resource "azurerm_redis_cache" "rediscache" {
-  name                          = var.redis_cache_name
+  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), var.instance_number)
   location                      = local.location
   resource_group_name           = local.rg
   sku_name                      = var.cache_tier.sku_name
@@ -54,7 +58,7 @@ resource "azurerm_redis_cache" "rediscache" {
 }
 
 resource "azurerm_private_endpoint" "pep" {
-  name                = format("%s%s", var.redis_cache_name, "-private-endpoint")
+  name                = format("pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), var.instance_number)
   location            = local.location
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.privatelink_subnet.id
@@ -71,7 +75,7 @@ resource "azurerm_private_endpoint" "pep" {
 
 resource "azurerm_monitor_diagnostic_setting" "extaudit" {
   count                      = var.log_analytics.workspace_name != null ? 1 : 0
-  name                       = format("%s%s", var.redis_cache_name, "-monitoring")
+  name                       = format("diag-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), var.instance_number)
   target_resource_id         = azurerm_redis_cache.rediscache.id
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_ws.0.id
   #  storage_account_id         = var.enable_data_persistence ? azurerm_storage_account.storeacc.0.id : null
