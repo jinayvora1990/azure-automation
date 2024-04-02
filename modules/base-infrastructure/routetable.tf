@@ -4,17 +4,15 @@ resource "azurerm_route_table" "udr" {
   location                      = var.location
   resource_group_name           = var.resource_group_name
   disable_bgp_route_propagation = true
+  tags                          = merge({ "Name" = format("%s", "rt_${each.key}") }, var.tags, )
 
-  # Add tags
-
-  # Need to fix Route Table
   dynamic "route" {
-    for_each = var.subnets
+    for_each = lookup(each.value, "route_table_rules", [])
     content {
-      name                   = "udr-to-fw"
-      address_prefix         = "0.0.0.0/0"
-      next_hop_type          = "VirtualAppliance"
-      next_hop_in_ip_address = "xxx.xxx1.4"
+      name                   = route.value[0]
+      address_prefix         = route.value[1]
+      next_hop_type          = route.value[2]
+      next_hop_in_ip_address = route.value[3]
     }
   }
 }
