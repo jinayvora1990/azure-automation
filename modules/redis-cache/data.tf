@@ -8,10 +8,16 @@ data "azurerm_storage_account" "aof_sa" {
   resource_group_name = var.aof_storage_account.resource_group_name
 }
 
-data "azurerm_subnet" "subnet" {
-  name                 = var.subnet.name
-  virtual_network_name = var.subnet.vnet_name
-  resource_group_name  = var.subnet.resource_group
+data "azurerm_subnet" "redis_subnet" {
+  name                 = var.redis_subnet.name
+  virtual_network_name = var.redis_subnet.vnet_name
+  resource_group_name  = var.redis_subnet.resource_group
+}
+
+data "azurerm_subnet" "privatelink_subnet" {
+  name                 = var.privatelink_subnet.name
+  virtual_network_name = var.privatelink_subnet.vnet_name
+  resource_group_name  = var.privatelink_subnet.resource_group
 }
 
 data "azurerm_private_endpoint_connection" "pep_connection" {

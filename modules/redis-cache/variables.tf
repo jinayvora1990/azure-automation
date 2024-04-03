@@ -14,6 +14,22 @@ variable "redis_cache_name" {
   description = "The name of the redis cache resource created"
 }
 
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+  default     = ""
+}
+variable "env" {
+  type        = string
+  description = "Environment where redis cache is provisioned"
+  default     = "dev"
+}
+variable "instance_number" {
+  type        = number
+  description = "The numeric id of the resource being provisioned"
+  default     = 1
+}
+
 variable "cache_tier" {
   type = object({
     family   = string
@@ -91,13 +107,23 @@ variable "shard_count" {
   default     = 1
 }
 
-variable "subnet" {
+variable "redis_subnet" {
   type = object({
     name           = string
     vnet_name      = string
     resource_group = string
   })
-  description = "Subnet to use with PostgreSQL server"
+  description = "Subnet where the redis cache is provisioned. This subnet needs to have only the redis in the subnet."
+  default     = null
+}
+
+variable "privatelink_subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet where the private link is required."
   default     = null
 }
 
