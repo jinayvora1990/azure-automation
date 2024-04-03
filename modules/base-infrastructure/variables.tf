@@ -1,4 +1,3 @@
-
 variable "subscription_id" {
   description = "The ID of the Subscription."
   type        = string
@@ -16,10 +15,20 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "app_name" {
+  description = "Name of the application"
+  type        = string
+}
+
 variable "location" {
   description = "The location/region to keep all your network resources. To get the list of all locations with table format from azure cli, run 'az account list-locations -o table'"
   type        = string
   default     = "uaenorth"
+}
+
+variable "environment" {
+  description = "Application Environment"
+  type        = string
 }
 
 variable "virtual_network_name" {

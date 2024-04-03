@@ -1,14 +1,10 @@
-locals {
-  if_ddos_enabled = var.create_ddos_plan ? [{}] : []
-}
-
 resource "azurerm_virtual_network" "vnet" {
-  name                = var.virtual_network_name
-  location            = var.location
+  name                = "vnet-${var.app_name}-${local.environment}-${local.region_shortcode}-1"
+  location            = local.location
   resource_group_name = var.resource_group_name
   address_space       = var.vnet_address_spaces
   dns_servers         = var.dns_servers
-  tags                = merge({ "Name" = format("%s", var.virtual_network_name) }, var.tags, )
+  tags                = var.tags
 
   dynamic "ddos_protection_plan" {
     for_each = local.if_ddos_enabled
@@ -24,21 +20,21 @@ resource "azurerm_network_ddos_protection_plan" "ddos" {
   count               = var.create_ddos_plan ? 1 : 0
   name                = var.ddos_plan_name
   resource_group_name = var.resource_group_name
-  location            = var.location
+  location            = local.location
   tags                = merge({ "Name" = format("%s", var.ddos_plan_name) }, var.tags, )
 }
 
 resource "azurerm_network_watcher" "nwatcher" {
   count               = var.create_network_watcher != false ? 1 : 0
-  name                = "NetworkWatcher_${var.location}"
-  location            = var.location
+  name                = "NetworkWatcher_${local.location}"
+  location            = local.location
   resource_group_name = var.resource_group_name
-  tags                = merge({ "Name" = format("%s", "NetworkWatcher_${var.location}") }, var.tags, )
+  tags                = merge({ "Name" = format("%s", "NetworkWatcher_${local.location}") }, var.tags, )
 }
 
 resource "azurerm_subnet" "snet" {
   for_each                                      = var.subnets
-  name                                          = each.value.subnet_name
+  name                                          = "snet-${each.value.subnet_name}"
   resource_group_name                           = var.resource_group_name
   virtual_network_name                          = azurerm_virtual_network.vnet.name
   address_prefixes                              = each.value.subnet_address_prefix

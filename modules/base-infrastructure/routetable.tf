@@ -1,7 +1,7 @@
 resource "azurerm_route_table" "udr" {
   for_each                      = var.subnets
-  name                          = lower("rt_${each.key}")
-  location                      = var.location
+  name                          = lower("rt-${each.key}")
+  location                      = local.location
   resource_group_name           = var.resource_group_name
   disable_bgp_route_propagation = true
   tags                          = merge({ "Name" = format("%s", "rt_${each.key}") }, var.tags, )
