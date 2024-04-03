@@ -9,8 +9,13 @@ locals {
   }
 }
 
+module "res-id" {
+  source = "../utility/random-identifier"
+  count  = local.no_of_resources
+}
+
 resource "azurerm_redis_cache" "rediscache" {
-  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), var.instance_number)
+  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.0.result)
   location                      = local.location
   resource_group_name           = local.rg
   sku_name                      = var.cache_tier.sku_name
@@ -58,13 +63,13 @@ resource "azurerm_redis_cache" "rediscache" {
 }
 
 resource "azurerm_private_endpoint" "pep" {
-  name                = format("pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), var.instance_number)
+  name                = format("redis-pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.1.result)
   location            = local.location
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.privatelink_subnet.id
 
   private_service_connection {
-    name                           = format("%s%s", var.redis_cache_name, "-privatelink")
+    name                           = format("redis-pl-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.2.result)
     is_manual_connection           = false
     private_connection_resource_id = azurerm_redis_cache.rediscache.id
     subresource_names              = ["redisCache"]
@@ -75,7 +80,7 @@ resource "azurerm_private_endpoint" "pep" {
 
 resource "azurerm_monitor_diagnostic_setting" "extaudit" {
   count                      = var.log_analytics.workspace_name != null ? 1 : 0
-  name                       = format("diag-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), var.instance_number)
+  name                       = format("redis-diag-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.3.result)
   target_resource_id         = azurerm_redis_cache.rediscache.id
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_ws.0.id
   #  storage_account_id         = var.enable_data_persistence ? azurerm_storage_account.storeacc.0.id : null
