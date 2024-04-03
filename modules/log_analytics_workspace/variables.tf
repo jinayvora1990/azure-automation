@@ -3,6 +3,11 @@ variable "workspace_name" {
   type        = string
 }
 
+
+variable "sku" {
+  description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
+}
+
 variable "resource_group_name" {
   description = "The name of the resource group to create the resources in."
   type        = string

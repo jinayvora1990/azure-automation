@@ -10,6 +10,7 @@ resource "random_id" "this" {
   byte_length = 8
 }
 
+
 module "log_analytics" {
   # source = "github.com/equinor/terraform-azurerm-log-analytics"
   source = "../../modules/log_analytics_workspace"
@@ -17,15 +18,6 @@ module "log_analytics" {
   workspace_name      = "log-${random_id.this.hex}"
   resource_group_name = var.resource_group_name
   location            = var.location
+  sku                 = var.sku
 }
 
-
-variable "resource_group_name" {
-  description = "The name of the resource group to create the resources in."
-  type        = string
-}
-
-variable "location" {
-  description = "The name of the location to create the resources in."
-  type        = string
-}
