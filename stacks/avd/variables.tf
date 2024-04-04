@@ -1,5 +1,5 @@
 variable "rg_name" {
-  description = "(Mandatory) Name of the resource group"
+  description = "(Required) Name of the resource group"
   type        = list(string)
 }
 
@@ -17,33 +17,38 @@ variable "storage_accounts" {
   default = []
 }
 
-variable "subnets_for_vnet" {
-  description = "List of subnets to be created"
-  type        = map(object(
-    {
-    name                            = string
-    address_prefixes                = list(string)
-    private_endpoint_network_policies_enabled = bool
-  }
-  ))
-  default = {}
+variable "kv_name" {
+  description = "Name of the Key Vault"
+  type        = string
+  default     = null
 }
 
-variable "peering_to_hub_name" {
-  default = "peer-avd-to-Hub"
+variable "acr_name" {
+  description = "Name of the Azure Container Registry"
+  type        = string
+  default     = null
 }
 
-variable "nsg_name" {
-  default = "nsg-snet-avd-prod-uaenorth-001"
+variable "subscription_name" {
+  description = "The Name of the Subscription. This is the Display Name in the portal."
+  type        = string
+  default     = null
 }
-#
-#variable "resource_groups" {
-#  description = "Map of resource group names and their locations"
-#  type        = map(string)
-#  default = {
-#    "shared"   = "rg-shared-avd-prod-uaenorth-01"
-#    "storage"  = "rg-storage-avd-prod-uaenorth-01"
-#    "avd"      = "rg-vnet-avd-prod-uaenorth-01"
-#    "akv"      = "rg-akv-avd-prod-uaenorth-01"
-#  }
-#}
+
+variable "enrollment_account_name" {
+  description = "Name of the Enrollment Account"
+  type        = string
+  default     = null
+}
+
+variable "billing_account_name" {
+  description = "Name of the billing account"
+  type        = string
+  default     = null
+}
+
+variable "azure_mgmt_group" {
+  description = "Name of the Management Group where subscription needs to be created"
+  type        = string
+  default     = null
+}
