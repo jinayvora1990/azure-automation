@@ -68,7 +68,6 @@ variable "location" {
   type        = string
 }
 
-
 variable "sku" {
   default = "PerGB2018"
 }
