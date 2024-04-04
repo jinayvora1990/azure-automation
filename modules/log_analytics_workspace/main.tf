@@ -14,7 +14,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 resource "azurerm_role_assignment" "logs" {
   count                = length(var.contributors)
-  scope                = var.resource_group_name
+  scope                = azurerm_log_analytics_workspace.this.id
   role_definition_name = "Log Analytics Contributor"
   principal_id         = var.contributors[count.index]
 }
