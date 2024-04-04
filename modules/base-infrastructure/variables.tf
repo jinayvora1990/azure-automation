@@ -1,11 +1,11 @@
 variable "subscription_id" {
-  description = "The ID of the Subscription."
+  description = "ID of the Application Subscription."
   type        = string
   default     = null
 }
 
 variable "azure_mgmt_group" {
-  description = "Name of the Management Group where subscription needs to be associated"
+  description = "Name of the Management Group where application subscription needs to be associated"
   type        = string
   default     = null
 }
@@ -31,14 +31,10 @@ variable "environment" {
   type        = string
 }
 
-variable "virtual_network_name" {
-  description = "Name of your Azure Virtual Network"
-  type        = string
-}
-
 variable "hub_vnet_id" {
   description = "Remote Hub VNET ID"
   type        = string
+  default     = null
 }
 
 variable "vnet_address_spaces" {
