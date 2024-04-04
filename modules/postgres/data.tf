@@ -5,10 +5,16 @@ data "azurerm_virtual_network" "virtual_network" {
   resource_group_name = var.virtual_network_resource_group
 }
 
-data "azurerm_subnet" "subnet" {
-  name                 = var.subnet.name
-  virtual_network_name = var.subnet.vnet
-  resource_group_name  = var.subnet.resource_group
+data "azurerm_subnet" "psql_subnet" {
+  name                 = var.psql_subnet.name
+  virtual_network_name = var.psql_subnet.vnet_name
+  resource_group_name  = var.psql_subnet.resource_group
+}
+
+data "azurerm_subnet" "privatelink_subnet" {
+  name                 = var.privatelink_subnet.name
+  virtual_network_name = var.privatelink_subnet.vnet_name
+  resource_group_name  = var.privatelink_subnet.resource_group
 }
 
 data "azurerm_key_vault" "keyvault" {

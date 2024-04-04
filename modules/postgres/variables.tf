@@ -19,6 +19,12 @@ variable "environment" {
   }
 }
 
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+  default     = ""
+}
+
 variable "virtual_network_name" {
   type        = string
   default     = null
@@ -31,13 +37,23 @@ variable "virtual_network_resource_group" {
   description = "Name of virtual network resource group"
 }
 
-variable "subnet" {
+variable "psql_subnet" {
   type = object({
     name           = string
-    vnet           = string
+    vnet_name      = string
     resource_group = string
   })
   description = "Subnet to use with PostgreSQL server"
+}
+
+variable "privatelink_subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet where the private link is required."
+  default     = null
 }
 
 variable "create_mode" {

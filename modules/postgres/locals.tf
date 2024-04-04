@@ -11,4 +11,6 @@ locals {
 
   administrator_login    = data.azurerm_key_vault_secret.postgres_admin_username.value
   administrator_password = data.azurerm_key_vault_secret.postgres_admin_password.value
+
+  common_tags = { module = "postgresql-flexi-server" }
 }
