@@ -1,23 +1,36 @@
 variable "registry_name" {
-  #  default = "containerRegistry1"
+  description = "Specifies the name of the Container Registry. Only Alphanumeric characters allowed. Changing this forces a new resource to be created"
+  type        = string
 }
 
 variable "registry_sku" {
-  #  default = "Premium"
+  description = "The SKU name of the container registry. Possible values are Basic, Standard and Premium"
+  type        = string
+  default     = "Basic"
 }
 
 variable "user_assigned_identity_name" {
-  #  default = "registry-uai"
+  description = "Name of the User Assigned Managed Identity"
+  type        = string
 }
 
 variable "resource_group_name" {
-  #  default = "example-resources"
+  description = "The name of the resource group in which to create the Container Registry. Changing this forces a new resource to be created."
+  type        = string
 }
 
-variable "resource_location" {
-  default = "uaenorth"
+variable "location" {
+  description = "Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created"
+  type        = string
+  default     = "uaenorth"
 }
 
-variable "azurerm_key_vault_key" {}
+variable "azurerm_key_vault_key" {
+  description = "Specifies the name of the Key Vault Key. Changing this forces a new resource to be created."
+  type        = string
+}
 
-variable "azurerm_key_vault" {}
+variable "kv_name" {
+  description = "The ID of the Key Vault where the Key should be created. Changing this forces a new resource to be created"
+  type        = string
+}
