@@ -1,6 +1,4 @@
-locals {
-  diagnostic_setting_metric_categories = ["AllMetrics"]
-}
+
 
 resource "azurerm_log_analytics_workspace" "this" {
   name                          = var.workspace_name
