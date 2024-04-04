@@ -1,5 +1,10 @@
+variable "app_name" {
+  description = "(Required) Name of the application"
+  type        = string
+}
+
 variable "rg_name" {
-  description = "(Required) Name of the resource group"
+  description = "(Required) Name of Resource Groups to create"
   type        = list(string)
 }
 
