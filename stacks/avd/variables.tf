@@ -57,3 +57,8 @@ variable "location" {
   description = "The name of the location to create the resources in."
   type        = string
 }
+
+
+variable "sku" {
+  default = "PerGB2018"
+}
