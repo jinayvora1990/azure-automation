@@ -1,5 +1,4 @@
 terraform {
-  experiments = [module_variable_optional_attrs]
   required_version = ">= 1.5.6"
   required_providers {
     azurerm = {
@@ -9,8 +8,8 @@ terraform {
     }
   }
 
-#  backend "azurerm" {
-#  }
+  #  backend "azurerm" {
+  #  }
 }
 
 # Configure the Microsoft Azure Provider

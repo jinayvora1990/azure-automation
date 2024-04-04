@@ -44,7 +44,7 @@ resource "azurerm_subnet" "snet" {
   private_link_service_network_policies_enabled = lookup(each.value, "private_link_service_network_policies_enabled", null)
 
   dynamic "delegation" {
-    for_each = lookup(each.value, "delegation", {}) != {} ? [1] : []
+    for_each = lookup(each.value, "delegation", {}) != null ? [1] : []
     content {
       name = lookup(each.value.delegation, "name", null)
       service_delegation {
