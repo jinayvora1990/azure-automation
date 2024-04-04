@@ -66,10 +66,34 @@ variable "create_network_watcher" {
   default     = false
 }
 
+#variable "subnets" {
+#  description = "For each subnet, create an object that contain fields"
+#  default     = {}
+#}
+
 variable "subnets" {
-  description = "For each subnet, create an object that contain fields"
+  description = "A map of subnets to be created"
+  type        = map(object({
+    subnet_name                                = string
+    subnet_address_prefix                      = list(string)
+    service_endpoints                          = optional(list(string))
+    service_endpoint_policy_ids                = optional(list(string))
+    private_endpoint_network_policies_enabled  = optional(bool)
+    private_link_service_network_policies_enabled = optional(bool)
+    nsg_inbound_rules = optional(list(list(string)))
+    nsg_outbound_rules = optional(list(list(string)))
+    route_table_rules = optional(list(list(string)))
+    delegation                                 = optional(object({
+      name                  = string
+      service_delegation = object({
+        name    = string
+        actions = list(string)
+      })
+    }))
+  }))
   default     = {}
 }
+
 
 variable "tags" {
   description = "A map of tags to add to all resources"
