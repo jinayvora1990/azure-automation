@@ -28,7 +28,8 @@
 | Private Link               | pl           |
 | Monitor Diagnostic Setting | diag         |
 | Backup Vault               | bvault       |
-| Recovery Services Vault    | rsv          |
+| Recovery Services Vault    | rsv          |           
+| Key Vault Key              | kvkey        |
 | Virtual Network            | vnet         |
 | Subnets                    | snet         |
 | Route Tables               | rt           |

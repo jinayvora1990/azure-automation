@@ -57,12 +57,22 @@ variable "classic_vmware_replication_enabled" {
   default     = false
 }
 
-variable "encryption" {
+variable "encryption_config" {
   type = object({
     infrastructure_encryption    = bool
-    key_id                       = string
     use_system_assigned_identity = optional(string)
     user_assigned_identity_id    = optional(string)
+    encryption_key               = object({
+      vault = object({
+        vault_name          = string
+        resource_group_name = string
+      })
+      rotation_policy = optional(object({
+        expire_after         = string
+        notify_before_expiry = string
+        time_before_expiry   = string
+      }))
+    })
   })
   description = "Encryption details for the vault"
   default     = null

@@ -8,6 +8,11 @@ output "vault_id" {
   value       = azurerm_recovery_services_vault.vault.id
 }
 
+output "encryption_key" {
+  description = "The name of the encryption key for the recovery services vault"
+  value       = coalesce(azurerm_key_vault_key.encryption_key.0.name, null)
+}
+
 output "vault_tenant_ids" {
   description = "The tenant ids of the azure backup vault"
   value       = [for identity in azurerm_recovery_services_vault.vault.identity : identity.tenant_id]

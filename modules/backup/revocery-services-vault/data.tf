@@ -9,3 +9,8 @@ data "azurerm_private_endpoint_connection" "pep_connection" {
   resource_group_name = var.resource_group_name
   depends_on          = [azurerm_recovery_services_vault.vault]
 }
+
+data "azurerm_key_vault" "key_vault" {
+  name                = var.encryption_config.encryption_key.vault.vault_name
+  resource_group_name = var.encryption_config.encryption_key.vault.resource_group_name
+}
