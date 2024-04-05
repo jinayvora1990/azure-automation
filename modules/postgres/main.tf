@@ -1,9 +1,9 @@
 resource "azurerm_postgresql_flexible_server" "postgresql_flexible_server" {
-  name                = "flexi-postgres-${var.environment}"
+  name                = "psql-${var.application_name}-${local.environment}-${local.region_shortcode}-1"
   resource_group_name = local.postgresql_resource_group_name
   location            = local.location
   version             = var.sql_version
-  delegated_subnet_id = data.azurerm_subnet.subnet.id
+  delegated_subnet_id = data.azurerm_subnet.psql_subnet.id
   create_mode         = var.create_mode
 
   administrator_login          = local.administrator_login
@@ -60,6 +60,23 @@ resource "azurerm_postgresql_flexible_server_configuration" "postgres_pgbouncer_
     azurerm_postgresql_flexible_server_configuration.postgres_configuration
   ]
 }
+
+resource "azurerm_private_endpoint" "pep" {
+  name                = format("pep-psql-%s-%s-%s", var.application_name, local.environment, local.region_shortcode)
+  location            = local.location
+  resource_group_name = local.postgresql_resource_group_name
+  subnet_id           = data.azurerm_subnet.privatelink_subnet.id
+
+  private_service_connection {
+    name                           = format("%s%s", azurerm_postgresql_flexible_server.postgresql_flexible_server.name, "-privatelink")
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_postgresql_flexible_server.postgresql_flexible_server.id
+    subresource_names              = ["postgresqlServer"]
+  }
+
+  tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
+}
+
 
 resource "azurerm_monitor_diagnostic_setting" "this" {
   for_each = var.diagnostic_settings

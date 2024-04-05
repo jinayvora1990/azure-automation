@@ -1,8 +1,8 @@
 locals {
-  common_tags    = { module = "redis-cache" }
-  rg             = var.resource_group_name
-  location       = var.resource_location
-  subscription   = var.cache_tier.sku_name
+  common_tags  = { module = "redis-cache" }
+  rg           = var.resource_group_name
+  location     = var.resource_location
+  subscription = var.cache_tier.sku_name
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
