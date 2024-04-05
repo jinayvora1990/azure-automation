@@ -9,10 +9,14 @@
 ## Naming Convention
 
 * The resources have been named in the following convention
+    * Primary Resources
 
-  `<resource_abbreviation>-<app_name>-<environemnt>-<shortened_resource_location>-<random-8-letter-string>`
+      `<resource_abbreviation>-<app_name>-<environemnt>-<shortened_resource_location>-<random-8-letter-string>`
 
-    * This random 8 letter string is defined inside the 'utility/random-identifier'
+        * This random 8 letter string is defined inside the 'utility/random-identifier'
+    * Secondary resources in module
+
+      `<primary_resource_abbreviation>-<secondary_resource_abbreviation>-<app_name>-<environemnt>-<shortened_resource_location>-<random-8-letter-string>`
 
 * The resource location has been shortened to three digits using the following criteria
 
@@ -35,6 +39,8 @@
 | Route Tables               | rt           |
 | Postgresql Flexi Server    | psql         |
 | MySQL Flexi Server         | mysql        |
+| Managed Identity           | id           |
+
 
 
 

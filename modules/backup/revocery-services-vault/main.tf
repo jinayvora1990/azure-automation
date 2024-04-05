@@ -19,10 +19,15 @@ resource "azurerm_key_vault_key" "encryption_key" {
   key_opts = [
     "decrypt",
     "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
   ]
   key_type     = "RSA"
   key_size     = 2048
   key_vault_id = data.azurerm_key_vault.key_vault.id
+
   dynamic "rotation_policy" {
     for_each = var.encryption_config != null ? [1] : []
     content {
@@ -33,9 +38,18 @@ resource "azurerm_key_vault_key" "encryption_key" {
       }
     }
   }
-  rotation_policy {
+}
 
-  }
+resource "azurerm_user_assigned_identity" "rsv_managed_identity" {
+  name                = format("rsv-id-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  resource_group_name = local.rg
+  location            = local.location
+}
+
+resource "azurerm_role_assignment" "crypto_encryption_role_assignment" {
+  scope                = data.azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Crypto Service Encryption User"
+  principal_id         = azurerm_user_assigned_identity.rsv_managed_identity.principal_id
 }
 
 resource "azurerm_recovery_services_vault" "vault" {
@@ -53,13 +67,23 @@ resource "azurerm_recovery_services_vault" "vault" {
   soft_delete_enabled                = var.soft_delete
   classic_vmware_replication_enabled = var.classic_vmware_replication_enabled
 
+  dynamic "identity" {
+    for_each = var.encryption_config != null ? [1] : []
+    content {
+      type         = "UserAssigned"
+      identity_ids = [
+        azurerm_user_assigned_identity.rsv_managed_identity.id
+      ]
+    }
+  }
+
   dynamic "encryption" {
     for_each = var.encryption_config != null ? [1] : []
     content {
       infrastructure_encryption_enabled = var.encryption_config.infrastructure_encryption
       key_id                            = azurerm_key_vault_key.encryption_key.id
-      use_system_assigned_identity      = var.encryption_config.use_system_assigned_identity
-      user_assigned_identity_id         = var.encryption_config.user_assigned_identity_id
+      use_system_assigned_identity      = false
+      user_assigned_identity_id         = azurerm_user_assigned_identity.rsv_managed_identity.id
     }
   }
 
@@ -68,14 +92,6 @@ resource "azurerm_recovery_services_vault" "vault" {
     content {
       alerts_for_all_job_failures_enabled            = var.monitoring.alerts_for_all_job_failures
       alerts_for_critical_operation_failures_enabled = var.monitoring.alerts_for_critical_operation_failures
-    }
-  }
-
-  dynamic "identity" {
-    for_each = var.identity != null ? [1] : []
-    content {
-      type         = var.identity.type
-      identity_ids = var.identity.ids
     }
   }
 

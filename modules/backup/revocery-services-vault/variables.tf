@@ -59,12 +59,10 @@ variable "classic_vmware_replication_enabled" {
 
 variable "encryption_config" {
   type = object({
-    infrastructure_encryption    = bool
-    use_system_assigned_identity = optional(string)
-    user_assigned_identity_id    = optional(string)
-    encryption_key               = object({
+    infrastructure_encryption = bool
+    encryption_key            = object({
       vault = object({
-        vault_name          = string
+        key_vault_name          = string
         resource_group_name = string
       })
       rotation_policy = optional(object({
@@ -84,15 +82,6 @@ variable "monitoring" {
     alerts_for_critical_operation_failures = optional(bool)
   })
   description = "Monitoring configuration for the vault"
-  default     = null
-}
-
-variable "identity" {
-  type = object({
-    type = string
-    ids  = optional(list(string))
-  })
-  description = "Identity for the vault"
   default     = null
 }
 
