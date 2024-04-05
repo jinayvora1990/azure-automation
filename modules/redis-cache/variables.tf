@@ -19,11 +19,13 @@ variable "application_name" {
   description = "The application that requires this resource"
   default     = ""
 }
+
 variable "env" {
   type        = string
   description = "Environment where redis cache is provisioned"
   default     = "dev"
 }
+
 variable "instance_number" {
   type        = number
   description = "The numeric id of the resource being provisioned"
@@ -76,7 +78,7 @@ variable "rdb_backup_configuration" {
     storage_connection_string = string
   })
   description = "RDB Backup Confifuration"
-  default     = {
+  default = {
     backup_frequency          = 0
     max_snapshot_count        = 0
     storage_connection_string = ""

@@ -2,7 +2,7 @@ locals {
   common_tags    = { module = "redis-cache" }
   rg             = var.resource_group_name
   location       = var.resource_location
-  subscription   = var.cache_tier.sku_name
+  sku            = var.cache_tier.sku_name
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
@@ -18,9 +18,9 @@ resource "azurerm_redis_cache" "rediscache" {
   capacity                      = var.cache_tier.capacity
   enable_non_ssl_port           = false
   minimum_tls_version           = var.min_tls_version
-  replicas_per_primary          = local.subscription == "Premium" ? var.replicas : null
-  shard_count                   = local.subscription == "Premium" ? var.shard_count : null
-  subnet_id                     = local.subscription == "Premium" ? data.azurerm_subnet.redis_subnet : null
+  replicas_per_primary          = local.sku == "Premium" ? var.replicas : null
+  shard_count                   = local.sku == "Premium" ? var.shard_count : null
+  subnet_id                     = local.sku == "Premium" ? data.azurerm_subnet.redis_subnet : null
   public_network_access_enabled = false
 
   # Only available in preview
@@ -38,15 +38,15 @@ resource "azurerm_redis_cache" "rediscache" {
     maxmemory_policy = var.cache_eviction_policy
 
     #rdb backup configuration
-    rdb_backup_enabled            = local.subscription == "Premium" ? var.rdb_backup_enabled : false
-    rdb_backup_frequency          = local.subscription == "Premium" ? var.rdb_backup_configuration.backup_frequency : null
-    rdb_backup_max_snapshot_count = local.subscription == "Premium" ? var.rdb_backup_configuration.max_snapshot_count : null
-    rdb_storage_connection_string = local.subscription == "Premium" ? data.azurerm_storage_account.rdb_sa.primary_blob_connection_string : null
+    rdb_backup_enabled            = local.sku == "Premium" ? var.rdb_backup_enabled : false
+    rdb_backup_frequency          = local.sku == "Premium" ? var.rdb_backup_configuration.backup_frequency : null
+    rdb_backup_max_snapshot_count = local.sku == "Premium" ? var.rdb_backup_configuration.max_snapshot_count : null
+    rdb_storage_connection_string = local.sku == "Premium" ? data.azurerm_storage_account.rdb_sa.primary_blob_connection_string : null
 
     #aof backup configuration
-    aof_backup_enabled              = local.subscription == "Premium" ? var.aof_backup_enabled : false
-    aof_storage_connection_string_0 = local.subscription == "Premium" ? data.azurerm_storage_account.aof_sa.primary_blob_connection_string : null
-    aof_storage_connection_string_1 = local.subscription == "Premium" ? data.azurerm_storage_account.aof_sa.secondary_blob_connection_string : null
+    aof_backup_enabled              = local.sku == "Premium" ? var.aof_backup_enabled : false
+    aof_storage_connection_string_0 = local.sku == "Premium" ? data.azurerm_storage_account.aof_sa.primary_blob_connection_string : null
+    aof_storage_connection_string_1 = local.sku == "Premium" ? data.azurerm_storage_account.aof_sa.secondary_blob_connection_string : null
   }
 
   tags = merge(var.tags, local.common_tags, { "resource_type" = "redis-cache" })
