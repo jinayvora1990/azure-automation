@@ -6,17 +6,15 @@ locals {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
-  no_of_resources = 1
 }
 
 module "res-id" {
   source = "../../utility/random-identifier"
-  count  = local.no_of_resources
 }
 
 resource "azurerm_data_protection_backup_vault" "backup_vault" {
   #Required
-  name                = format("bvault-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.0.result)
+  name                = format("bvault-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   datastore_type      = var.datastore_type
   location            = local.location

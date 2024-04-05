@@ -6,18 +6,16 @@ locals {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
-  no_of_resources     = 4
   key_rotation_policy = var.encryption_config.encryption_key.rotation_policy
 }
 
 module "res-id" {
   source = "../../utility/random-identifier"
-  count  = local.no_of_resources
 }
 
 resource "azurerm_key_vault_key" "encryption_key" {
   count    = var.encryption_config != null ? 1 : 0
-  name     = format("rsv-kvkey-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.0.result)
+  name     = format("rsv-kvkey-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   key_opts = [
     "decrypt",
     "encrypt",
@@ -42,7 +40,7 @@ resource "azurerm_key_vault_key" "encryption_key" {
 
 resource "azurerm_recovery_services_vault" "vault" {
   #required
-  name                = format("rsv-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.1.result)
+  name                = format("rsv-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
   sku                 = var.sku
@@ -86,13 +84,13 @@ resource "azurerm_recovery_services_vault" "vault" {
 }
 
 resource "azurerm_private_endpoint" "pep" {
-  name                = format("rsv-pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.2.result)
+  name                = format("rsv-pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   location            = local.location
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.privatelink_subnet.id
 
   private_service_connection {
-    name                           = format("rsv-pl-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.3.result)
+    name                           = format("rsv-pl-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
     is_manual_connection           = false
     private_connection_resource_id = azurerm_recovery_services_vault.vault.id
     subresource_names              = ["AzureSiteRecovery"]
