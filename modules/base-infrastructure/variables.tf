@@ -1,11 +1,11 @@
 variable "subscription_id" {
-  description = "The ID of the Subscription."
+  description = "ID of the Application Subscription."
   type        = string
   default     = null
 }
 
 variable "azure_mgmt_group" {
-  description = "Name of the Management Group where subscription needs to be associated"
+  description = "Name of the Management Group where application subscription needs to be associated"
   type        = string
   default     = null
 }
@@ -31,14 +31,10 @@ variable "environment" {
   type        = string
 }
 
-variable "virtual_network_name" {
-  description = "Name of your Azure Virtual Network"
-  type        = string
-}
-
 variable "hub_vnet_id" {
   description = "Remote Hub VNET ID"
   type        = string
+  default     = null
 }
 
 variable "vnet_address_spaces" {
@@ -71,9 +67,30 @@ variable "create_network_watcher" {
 }
 
 variable "subnets" {
-  description = "For each subnet, create an object that contain fields"
+  description = "A map of subnets to be created"
   default     = {}
+  type = map(object({
+    subnet_name                                   = string
+    subnet_address_prefix                         = list(string)
+    service_endpoints                             = optional(list(string))
+    service_endpoint_policy_ids                   = optional(list(string))
+    private_endpoint_network_policies_enabled     = optional(bool)
+    private_link_service_network_policies_enabled = optional(bool)
+    nsg_inbound_rules                             = optional(list(list(string)), [])
+    nsg_outbound_rules                            = optional(list(list(string)), [])
+    route_table_rules                             = optional(list(list(string)), [])
+
+    delegation = optional(object({
+      name = string
+      service_delegation = object({
+        name    = string
+        actions = optional(list(string), [])
+      })
+    }))
+
+  }))
 }
+
 
 variable "tags" {
   description = "A map of tags to add to all resources"
