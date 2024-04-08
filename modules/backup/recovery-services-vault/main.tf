@@ -1,7 +1,7 @@
 locals {
-  common_tags    = { module = "redis-cache" }
-  rg             = var.resource_group_name
-  location       = var.resource_location
+  common_tags = { module = "redis-cache" }
+  rg          = var.resource_group_name
+  location    = var.resource_location
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
@@ -14,8 +14,8 @@ module "res-id" {
 }
 
 resource "azurerm_key_vault_key" "encryption_key" {
-  count    = var.encryption_config != null ? 1 : 0
-  name     = format("rsv-kvkey-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  count = var.encryption_config != null ? 1 : 0
+  name  = format("rsv-kvkey-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   key_opts = [
     "decrypt",
     "encrypt",
@@ -31,10 +31,10 @@ resource "azurerm_key_vault_key" "encryption_key" {
   dynamic "rotation_policy" {
     for_each = var.encryption_config != null ? [1] : []
     content {
-      expire_after         = local.key_rotation_policy.expire_after
-      notify_before_expiry = local.key_rotation_policy.notify_before_expiry
+      expire_after         = coalesce(local.key_rotation_policy.expire_after, "P90D")
+      notify_before_expiry = coalesce(local.key_rotation_policy.notify_before_expiry, "P29D")
       automatic {
-        time_before_expiry = local.key_rotation_policy.time_before_expiry
+        time_before_expiry = coalesce(local.key_rotation_policy.time_before_expiry, "P30D")
       }
     }
   }
@@ -70,7 +70,7 @@ resource "azurerm_recovery_services_vault" "vault" {
   dynamic "identity" {
     for_each = var.encryption_config != null ? [1] : []
     content {
-      type         = "UserAssigned"
+      type = "UserAssigned"
       identity_ids = [
         azurerm_user_assigned_identity.rsv_managed_identity.id
       ]
@@ -97,20 +97,4 @@ resource "azurerm_recovery_services_vault" "vault" {
 
   tags       = merge(var.tags, local.common_tags, { "resource_type" = "recovery-services-vault" })
   depends_on = [azurerm_key_vault_key.encryption_key]
-}
-
-resource "azurerm_private_endpoint" "pep" {
-  name                = format("rsv-pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
-  location            = local.location
-  resource_group_name = local.rg
-  subnet_id           = data.azurerm_subnet.privatelink_subnet.id
-
-  private_service_connection {
-    name                           = format("rsv-pl-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
-    is_manual_connection           = false
-    private_connection_resource_id = azurerm_recovery_services_vault.vault.id
-    subresource_names              = ["AzureSiteRecovery"]
-  }
-
-  tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
 }

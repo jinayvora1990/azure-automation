@@ -62,7 +62,7 @@ variable "encryption_config" {
     infrastructure_encryption = bool
     encryption_key            = object({
       vault = object({
-        key_vault_name          = string
+        key_vault_name      = string
         resource_group_name = string
       })
       rotation_policy = optional(object({
@@ -85,18 +85,8 @@ variable "monitoring" {
   default     = null
 }
 
-variable "privatelink_subnet" {
-  type = object({
-    name           = string
-    vnet_name      = string
-    resource_group = string
-  })
-  description = "Subnet where the private link is required."
-  default     = null
-}
-
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default     = {}
+  default = {}
 }

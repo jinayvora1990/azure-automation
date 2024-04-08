@@ -1,7 +1,7 @@
 locals {
-  common_tags    = { module = "backup-vault" }
-  rg             = var.resource_group_name
-  location       = var.resource_location
+  common_tags = { module = "backup-vault" }
+  rg          = var.resource_group_name
+  location    = var.resource_location
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
