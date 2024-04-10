@@ -3,6 +3,7 @@ variable "business_divsion" {
   type        = string
   default     = ""
 }
+
 # Environment Variable
 variable "environment" {
   description = "Environment Variable used as a prefix"
@@ -25,6 +26,12 @@ variable "location" {
   description = "The location/region to keep all your network resources. To get the list of all locations with table format from azure cli, run 'az account list-locations -o table'"
   default     = "uaenorth"
   type        = string
+}
+
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+  default     = ""
 }
 
 variable "storage_account_name" {
@@ -135,7 +142,6 @@ variable "managed_identity_ids" {
   type        = list(string)
 }
 
-
 variable "privatelink_subnet" {
   type = object({
     name           = string
@@ -145,5 +151,3 @@ variable "privatelink_subnet" {
   description = "Subnet where the private link is required."
   default     = null
 }
-
-variable "application_name" {}
