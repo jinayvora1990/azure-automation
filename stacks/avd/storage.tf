@@ -1,4 +1,4 @@
-module "tf_state_storage_account" {
+module "azure_storage_account" {
   source = "../../modules/storage"
 
   for_each = { for sa in var.storage_accounts : sa.name => sa }

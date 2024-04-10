@@ -1,6 +1,6 @@
 variable "rg_name" {
   description = "(Mandatory) Name of the resource group"
-  type        = list(string)
+  type        = string
 }
 
 variable "location" {
