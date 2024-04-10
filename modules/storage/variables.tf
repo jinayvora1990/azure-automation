@@ -3,6 +3,7 @@ variable "business_divsion" {
   type        = string
   default     = ""
 }
+
 # Environment Variable
 variable "environment" {
   description = "Environment Variable used as a prefix"
@@ -13,6 +14,12 @@ variable "environment" {
 variable "owners" {
   description = "Project owners email address/AAD Group name"
   type        = string
+  default     = ""
+}
+
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
   default     = ""
 }
 
@@ -146,4 +153,8 @@ variable "privatelink_subnet" {
   default     = null
 }
 
-variable "application_name" {}
+variable "tags" {
+  type        = map(string)
+  description = "User defined extra tags to be added to all resources created in the module"
+  default     = {}
+}

@@ -18,6 +18,12 @@ variable "resource_group_name" {
   description = "resource group name of key vault"
 }
 
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+  default     = ""
+}
+
 variable "enabled_for_deployment" {
   type        = bool
   description = "(Optional) Boolean flag to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
@@ -226,4 +232,8 @@ variable "privatelink_subnet" {
   default     = null
 }
 
-variable "application_name" {}
+variable "tags" {
+  type        = map(string)
+  description = "User defined extra tags to be added to all resources created in the module"
+  default     = {}
+}
