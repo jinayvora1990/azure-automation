@@ -135,7 +135,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
 
     content {
       managed                = true
-      admin_group_object_ids = var.add_subscription_pipeline_group_to_azure_active_directory_admin_group_object_ids ? concat([data.azuread_group.group-pipeline.object_id], var.azure_active_directory_admin_group_object_ids) : var.azure_active_directory_admin_group_object_ids
+      admin_group_object_ids = var.azure_active_directory_admin_group_object_ids
       azure_rbac_enabled     = var.azure_active_directory_rbac_enabled
       tenant_id              = local.tenant_id
     }

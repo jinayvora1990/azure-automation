@@ -285,12 +285,6 @@ variable "azure_active_directory_admin_group_object_ids" {
   description = "(optional) A list of Object IDs of Azure Active Directory Groups which should have Cluster Admin Role on the Cluster. Used only when azure_active_directory_managed is set to true."
 }
 
-variable "add_subscription_pipeline_group_to_azure_active_directory_admin_group_object_ids" {
-  type        = bool
-  description = "(optional) Determine if subscription pipeline group will have Cluster Admin Role on the Cluster. Used only when azure_active_directory_managed is set to true."
-  default     = true
-}
-
 variable "azure_active_directory_rbac_enabled" {
   type        = bool
   description = "Enable AKS managed Azure RBAC integration, https://docs.microsoft.com/en-us/azure/aks/manage-azure-rbac"
