@@ -1,7 +1,9 @@
 locals {
-  owners      = var.owners
-  project     = var.business_divsion
-  environment = var.environment
+  owners           = var.owners
+  project          = var.business_divsion
+  environment      = var.environment
+  location         = lower(var.location)
+  region_shortcode = (local.location == "uaenorth" ? "uan" : "unknown")
   common_tags = {
     owners      = local.owners
     project     = local.project

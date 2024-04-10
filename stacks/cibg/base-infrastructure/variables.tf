@@ -42,6 +42,5 @@ variable "subnets" {
         actions = optional(list(string), [])
       })
     }))
-
   }))
 }
