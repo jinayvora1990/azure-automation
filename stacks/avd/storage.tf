@@ -9,4 +9,10 @@ module "tf_state_storage_account" {
   skuname              = each.value.skuname
 
   depends_on = [module.resource_group]
+  application_name = "cibg"
+  privatelink_subnet = {
+    name = "default"
+    vnet_name = "aks-vnet-test"
+    resource_group = "aks-test-rg"
+  }
 }
