@@ -1,9 +1,9 @@
 data "azurerm_client_config" "current" {}
 
 locals {
-  owners      = var.owners
-  environment = var.environment
-  location    = lower(var.location)
+  owners           = var.owners
+  environment      = var.environment
+  location         = lower(var.location)
   region_shortcode = (local.location == "uaenorth" ? "uan" : "unknown")
   common_tags = {
     owners      = local.owners
