@@ -51,10 +51,16 @@ variable "web_app_subnet" {
   default     = null
 }
 
-variable "app_settings" {
+variable "env_vars" {
   type        = map(string)
   description = "App Settings map"
   default = {}
+}
+
+variable "artifact_url" {
+  type = string
+  description = "The url for the artificat to run"
+  default = null
 }
 
 variable "public_access" {
@@ -113,15 +119,6 @@ variable "ip_restriction" {
   })
   description = ""
   default     = null
-  validation {
-    condition = (
-    length([
-      for key, value in var.ip_restriction.rules :
-      ((key == var.ip_restriction.rules.virtual_network_subnet_id || key == var.ip_restriction.rules.ip_address || key == var.ip_restriction.rules.service_tag) && value != null)
-    ]) <= 1
-    )
-    error_message = "Only one of 'ip_address', 'service_tag' or 'virtual_network_subnet_id' is expected"
-  }
 }
 
 variable "load_balancing_mode" {
@@ -129,18 +126,6 @@ variable "load_balancing_mode" {
   description = "The load balancing mode for the app service. Possible values are WeightedRoundRobin, LeastRequests, LeastResponseTime, WeightedTotalTraffic, RequestHash, PerSiteRoundRobin"
   default     = "LeastRequests"
 }
-
-# variable "storage_accounts" {
-#   type = list(object({
-#     access_key   = string
-#     account_name = string
-#     name         = string
-#     share_name   = string
-#     type         = string
-#   }))
-#   description = ""
-#   default = []
-# }
 
 variable "custom_domain" {
   type = object({
@@ -158,26 +143,11 @@ variable "custom_domain" {
 }
 
 variable "cors" {
-
+  type = object({
+    support_credentials = string
+    allowed_origins = string
+  })
+  description = "Cors for the app service"
 }
-
-#variable "log_analytics" {
-#  type = object({
-#    workspace_name      = string
-#    resource_group_name = string
-#  })
-#  description = "Log Analytics workspace"
-#  default     = null
-#}
-#
-#variable "privatelink_subnet" {
-#  type = object({
-#    name           = string
-#    vnet_name      = string
-#    resource_group = string
-#  })
-#  description = "Subnet where the private link is required."
-#  default     = null
-#}
 
 
