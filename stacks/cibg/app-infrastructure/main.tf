@@ -24,7 +24,7 @@ module "base-infra" {
   resource_group_name                     = "aks-rg"
   environment                             = "dev"
   application_name                        = "cibg"
-  api_server_authorized_ip_ranges         = ["3.7.139.138"]
+  api_server_authorized_ip_ranges         = ["3.7.139.138/32"]
   enable_azure_key_vault_secrets_provider = true
 
   tags = local.tags
