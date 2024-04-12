@@ -276,12 +276,12 @@ variable "azure_key_vaults_secrets_rotation_interval" {
 variable "azure_active_directory_managed" {
   type        = bool
   description = "Enable AKS managed AAD integration, https://docs.microsoft.com/en-gb/azure/aks/managed-aad"
-  default     = false
+  default     = true
 }
 
 variable "azure_active_directory_admin_group_object_ids" {
   type        = list(string)
-  default     = []
+  default     = ["4d4d059e-4f2d-4f9c-9e32-c50b7a0129c5","52f018a1-7537-4668-b3b6-8b126f1025a7"]
   description = "(optional) A list of Object IDs of Azure Active Directory Groups which should have Cluster Admin Role on the Cluster. Used only when azure_active_directory_managed is set to true."
 }
 
@@ -369,7 +369,7 @@ variable "enable_azure_policy" {
 variable "enable_local_account" {
   type        = bool
   description = "If true local accounts will be enabled. Defaults to true."
-  default     = true
+  default     = false
 }
 
 variable "aks_pod_cidr" {
@@ -401,6 +401,7 @@ variable "diagnostic_settings" {
     name                                     = optional(string, null)
     log_categories                           = optional(set(string), [])
     log_groups                               = optional(set(string), ["allLogs"])
+    #metric_categories                        = optional(set(string), ["AllMetrics"])
     metric_categories                        = optional(set(string), ["AllMetrics"])
     log_analytics_destination_type           = optional(string, "Dedicated")
     workspace_resource_id                    = optional(string, null)
@@ -409,7 +410,6 @@ variable "diagnostic_settings" {
     event_hub_name                           = optional(string, null)
     marketplace_partner_resource_id          = optional(string, null)
   }))
-  default     = {}
   description = <<DESCRIPTION
 A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
@@ -446,3 +446,44 @@ variable "tags" {
   description = "User defined extra tags to be added to all resources created in the module"
   default     = {}
 }
+
+
+variable "aks_cluster_read_role" {
+  type        = string
+  description = "Name of the cluster role"
+  default     = "aks-k8s-read_role"
+}
+
+variable "aks_automation_role" {
+  type        = string
+  description = "Name of the cluster role"
+  default     = "aks-k8s-automation_role"
+}
+
+variable "cluster_read_role_binding_name" {
+  type        = string
+  description = "Name of the cluster role binding"
+  default     = "aks-k8s-read-role-binding"
+}
+
+variable "cluster_automation_role_binding_name" {
+  type        = string
+  description = "Name of the cluster role binding"
+  default     = "aks-automation-read-role-binding"
+}
+
+
+variable "aks_cluster_read_role_group" {
+  type        = string
+  description = "Name of the k8s group to bind cluster-role"
+  default     = "aks-blog-admin"
+}
+
+variable "aks_cluster_automation_role_group" {
+  type        = string
+  description = "Name of the k8s group to bind cluster-role"
+  default     = "aks-blog-users"
+}
+
+
+
