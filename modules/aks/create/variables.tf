@@ -281,7 +281,7 @@ variable "azure_active_directory_managed" {
 
 variable "azure_active_directory_admin_group_object_ids" {
   type        = list(string)
-  default     = ["4d4d059e-4f2d-4f9c-9e32-c50b7a0129c5","52f018a1-7537-4668-b3b6-8b126f1025a7"]
+  default     = []
   description = "(optional) A list of Object IDs of Azure Active Directory Groups which should have Cluster Admin Role on the Cluster. Used only when azure_active_directory_managed is set to true."
 }
 
@@ -400,8 +400,6 @@ variable "diagnostic_settings" {
   type = map(object({
     name                                     = optional(string, null)
     log_categories                           = optional(set(string), [])
-    log_groups                               = optional(set(string), ["allLogs"])
-    #metric_categories                        = optional(set(string), ["AllMetrics"])
     metric_categories                        = optional(set(string), ["AllMetrics"])
     log_analytics_destination_type           = optional(string, "Dedicated")
     workspace_resource_id                    = optional(string, null)
@@ -410,12 +408,12 @@ variable "diagnostic_settings" {
     event_hub_name                           = optional(string, null)
     marketplace_partner_resource_id          = optional(string, null)
   }))
+  default     = {}
   description = <<DESCRIPTION
 A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
 - `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.
 - `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.
-- `log_groups` - (Optional) A set of log groups to send to the log analytics workspace. Defaults to `["allLogs"]`.
 - `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.
 - `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.
 - `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.
@@ -445,44 +443,6 @@ variable "tags" {
   type        = map(string)
   description = "User defined extra tags to be added to all resources created in the module"
   default     = {}
-}
-
-
-variable "aks_cluster_read_role" {
-  type        = string
-  description = "Name of the cluster role"
-  default     = "aks-k8s-read_role"
-}
-
-variable "aks_automation_role" {
-  type        = string
-  description = "Name of the cluster role"
-  default     = "aks-k8s-automation_role"
-}
-
-variable "cluster_read_role_binding_name" {
-  type        = string
-  description = "Name of the cluster role binding"
-  default     = "aks-k8s-read-role-binding"
-}
-
-variable "cluster_automation_role_binding_name" {
-  type        = string
-  description = "Name of the cluster role binding"
-  default     = "aks-automation-read-role-binding"
-}
-
-
-variable "aks_cluster_read_role_group" {
-  type        = string
-  description = "Name of the k8s group to bind cluster-role"
-  default     = "aks-blog-admin"
-}
-
-variable "aks_cluster_automation_role_group" {
-  type        = string
-  description = "Name of the k8s group to bind cluster-role"
-  default     = "aks-blog-users"
 }
 
 

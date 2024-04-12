@@ -33,7 +33,6 @@ module "base-infra" {
   diagnostic_settings = {
     example = {
       log_categories                           = toset(["kube-apiserver", "kube-audit", "kube-controller-manager", "kube-scheduler"])
-     # log_groups                               = toset(["allLogs"])
       metric_categories                        = toset(["AllMetrics"])
       log_analytics_destination_type           = "Dedicated"
       workspace_resource_id                    = module.base-infra.log_analytics_workspace
