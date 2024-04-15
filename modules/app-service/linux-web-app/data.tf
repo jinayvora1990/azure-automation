@@ -11,24 +11,25 @@ data "azurerm_application_insights" "app_insights" {
   resource_group_name = split("/", var.application_insights_id)[4]
 }
 
-# data "azurerm_subnet" "app_service_subnet" {
-#   name                 = var.web_app_subnet.name
-#   virtual_network_name = var.web_app_subnet.vnet_name
-#   resource_group_name  = var.web_app_subnet.resource_group
-# }
+data "azurerm_subnet" "app_service_subnet" {
+  count = var.web_app_subnet != null ? 1:0
+  name                 = var.web_app_subnet.name
+  virtual_network_name = var.web_app_subnet.vnet_name
+  resource_group_name  = var.web_app_subnet.resource_group
+}
 
-# data "azurerm_key_vault" "key_vault" {
-#   name                = var.custom_domain.certificate.vault.name
-#   resource_group_name = var.custom_domain.certificate.vault.resource_group
-# }
+data "azurerm_key_vault" "key_vault" {
+  count               = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
+  name                = var.custom_domain.certificate.vault.name
+  resource_group_name = var.custom_domain.certificate.vault.resource_group
+}
 
-# // Now Read the Certificate
-# data "azurerm_key_vault_secret" "certificate" {
-#   name         = var.custom_domain.certificate.name
-#   key_vault_id = data.azurerm_key_vault.key_vault.id
-# }
-
-
+// Now Read the Certificate
+data "azurerm_key_vault_secret" "certificate" {
+  count        = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
+  name         = var.custom_domain.certificate.name
+  key_vault_id = data.azurerm_key_vault.key_vault.0.id
+}
 
 
 # data "azurerm_storage_account" "rdb_sa" {

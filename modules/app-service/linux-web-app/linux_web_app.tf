@@ -4,18 +4,19 @@ module "service-plan" {
   resource_location   = local.location
   resource_group_name = local.rg
   application_name    = var.application_name
-  env                 = var.env
-  tags                = var.tags
-  service_plan_sku    = var.service_plan_sku
-  worker_count        = var.worker_count
-  os_type             = "Linux"
+  #   prefix              = "app"
+  env              = var.env
+  tags             = var.tags
+  service_plan_sku = var.service_plan_sku
+  worker_count     = var.worker_count
+  os_type          = "Linux"
 }
 
 resource "azurerm_linux_web_app" "linux-web-app" {
   location            = local.location
   name                = format("app-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
   resource_group_name = local.rg
-  service_plan_id     = var.existing_service_plan == null ? module.service-plan.id : data.azurerm_service_plan.existing_service_plan[0].id
+  service_plan_id     = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
 
   app_settings = local.app_settings
 
@@ -51,17 +52,18 @@ resource "azurerm_linux_web_app" "linux-web-app" {
     }
 
     dynamic "ip_restriction" {
-      for_each = concat(local.subnets, local.cidrs, local.service_tags)
+      for_each = concat(var.site_config.cidr_restriction, var.site_config.service_tags_restriction, var.site_config.subnet_restriction)
       content {
-        name                      = ip_restriction.value.name
-        ip_address                = ip_restriction.value.ip_address
-        virtual_network_subnet_id = ip_restriction.value.virtual_network_subnet_id
-        service_tag               = ip_restriction.value.service_tag
-        priority                  = ip_restriction.value.priority
-        action                    = ip_restriction.value.action
-        headers                   = ip_restriction.value.headers
+        name                      = lookup(ip_restriction.value, "name", null)
+        ip_address                = lookup(ip_restriction.value, "cidr", null)
+        virtual_network_subnet_id = lookup(ip_restriction.value, "subnet_id", null)
+        service_tag               = lookup(ip_restriction.value, "service_tag", null)
+        priority                  = lookup(ip_restriction.value, "priority", null)
+        action                    = lookup(ip_restriction.value, "action", null)
+        #         headers                   = [local.default_ip_restrictions_headers]
       }
     }
+    ip_restriction_default_action = var.site_config.default_ip_restriction_action
 
     dynamic "cors" {
       for_each = lookup(var.site_config, "cors", null) == null ? [] : ["cors"]
@@ -83,37 +85,56 @@ resource "azurerm_linux_web_app" "linux-web-app" {
 
   https_only                    = true
   public_network_access_enabled = var.public_network_access_enabled
-  # virtual_network_subnet_id     = data.azurerm_subnet.app_service_subnet.id
+  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
+
+  #   backup {
+  #     enabled = var.backup.enabled
+  #     name                = ""
+  #     storage_account_url = ""
+  #     schedule {
+  #       frequency_interval = 0
+  #       frequency_unit     = ""
+  #       keep_at_least_one_backup = false
+  #       retention_period_days = 23
+  #     }
+  #   }
+  #
+  #   logs {
+  #
+  #   }
 
   tags       = merge(var.tags, local.common_tags, { "resource_type" = "linux-web-app" })
   depends_on = [module.service-plan]
 }
 
-
 # Custom Domain Mapping
-# resource "azurerm_app_service_custom_hostname_binding" "app_service_custom_hostname_binding" {
-#   # Check if multiple are supported?
-#   hostname            = var.custom_domain.hostname
-#   app_service_name    = azurerm_linux_web_app.linux-web-app.name
-#   resource_group_name = local.rg
-# }
+resource "azurerm_app_service_custom_hostname_binding" "app_service_custom_hostname_binding" {
+  # Check if multiple are supported?
+  count               = var.custom_domain != null ? 1 : 0
+  hostname            = var.custom_domain.hostname
+  app_service_name    = azurerm_linux_web_app.linux-web-app.name
+  resource_group_name = local.rg
+}
 
-# resource "azurerm_app_service_managed_certificate" "managed_certificate" {
-#   # Doesn't work if the application is not publicly exposed
-#   count = (var.custom_domain != null && var.custom_domain.certificate != null) ? 0 : 1
-#   custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.id
-# }
+resource "azurerm_app_service_managed_certificate" "managed_certificate" {
+  # Doesn't work if the application is not publicly exposed
+  count                      = var.custom_domain != null && try(var.custom_domain.certificate == null, false) ? 1 : 0
+  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
+  depends_on                 = [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding]
+}
 
-# resource "azurerm_app_service_certificate" "certificate" {
-#   count = (var.custom_domain !=null && var.custom_domain.certificate != null) ? 1 : 0
-#   name                = "ff"
-#   resource_group_name = local.rg
-#   location            = local.location
-#   pfx_blob            = data.azurerm_key_vault_secret.certificate.value
-# }
+resource "azurerm_app_service_certificate" "certificate" {
+  count               = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
+  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  resource_group_name = local.rg
+  location            = local.location
+  pfx_blob            = data.azurerm_key_vault_secret.certificate.0.value
+}
 
-# resource "azurerm_app_service_certificate_binding" "certificate_binding" {
-#   certificate_id      = var.custom_domain.certificate !=null ? azurerm_app_service_certificate.certificate.0.id : azurerm_app_service_managed_certificate.managed_certificate.0.id
-#   hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.id
-#   ssl_state           = "SniEnabled"
-# }
+resource "azurerm_app_service_certificate_binding" "certificate_binding" {
+  count               = var.custom_domain != null ? 1 : 0
+  certificate_id      = var.custom_domain.certificate != null ? azurerm_app_service_certificate.certificate.0.id : azurerm_app_service_managed_certificate.managed_certificate.0.id
+  hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
+  ssl_state           = "SniEnabled"
+  depends_on          = [azurerm_app_service_certificate.certificate, azurerm_app_service_managed_certificate.managed_certificate]
+}

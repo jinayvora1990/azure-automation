@@ -21,6 +21,7 @@
 | Route Tables               | rt           |
 | Postgresql Flexi Server    | psql         |
 | MySQL Flexi Server         | mysql        |
+| App Service Certificate    | sslcert      |
 
 
 

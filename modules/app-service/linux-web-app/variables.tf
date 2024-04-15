@@ -24,7 +24,7 @@ variable "env" {
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default     = {}
+  default = {}
 }
 
 #service plan
@@ -48,7 +48,7 @@ variable "web_app_subnet" {
 variable "env_vars" {
   type        = map(string)
   description = "App Settings map"
-  default     = {}
+  default = {}
 }
 
 variable "artifact_url" {
@@ -80,9 +80,9 @@ variable "worker_count" {
 
 variable "custom_domain" {
   type = object({
-    hostname = string
+    hostname    = string
     certificate = optional(object({
-      name = string
+      name  = string
       vault = object({
         name           = string
         resource_group = string
@@ -90,6 +90,14 @@ variable "custom_domain" {
     }))
   })
   description = "Map a custom domain with the app service. If you do not pass the certificate, a managed certificate is created by azure"
+  default     = null
+}
+
+variable "backup" {
+  type = object({
+
+  })
+  description = "The backup configuration for the app service"
   default     = null
 }
 
@@ -106,15 +114,55 @@ variable "application_insights_id" {
 }
 
 variable "site_config" {
-  type        = any
-  default     = {}
+  type = object({
+    always_on                         = optional(bool)
+    app_command_line                  = optional(string)
+    default_documents                 = optional(list(string))
+    ftps_state                        = optional(string)
+    health_check_path                 = optional(string)
+    health_check_eviction_time_in_min = optional(string)
+    http2_enabled                     = optional(string)
+    load_balancing_mode               = optional(string)
+    application_stack                 = optional(object({}))
+    cidr_restriction                  = optional(list(object({
+      name     = optional(string)
+      priority = optional(number)
+      action   = optional(string)
+      cidr     = optional(string)
+#       headers  = optional(object({}))
+    })), [])
+    subnet_restriction = optional(list(object({
+      name      = optional(string)
+      priority  = optional(number)
+      action    = optional(string)
+      subnet_id = optional(string)
+#       headers   = optional(object({}))
+    })), [])
+    service_tags_restriction = optional(list(object({
+      name        = optional(string)
+      priority    = optional(number)
+      action      = optional(string)
+      service_tag = optional(string)
+#       headers     = optional(object({}))
+    })), [])
+    default_ip_restriction_action = optional(string)
+    cors                          = optional(object({
+      allowed_origins     = optional(list(string))
+      support_credentials = optional(bool)
+    }))
+  })
+  default = {}
   description = "Site config for App Service."
 }
 
 variable "connection_strings" {
   description = "Connection strings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#connection_string"
-  type        = list(map(string))
-  default     = []
+  type        = list(object({
+    name  = string
+    type  = string
+    value = string
+  }))
+  default = []
 }
 
 variable "ip_restriction_headers" {

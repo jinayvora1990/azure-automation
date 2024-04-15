@@ -1,5 +1,5 @@
 locals {
-  common_tags = { module = "redis-cache" }
+  common_tags = { module = "service-plan" }
   rg          = var.resource_group_name
   location    = var.resource_location
   location_short = {
@@ -10,7 +10,7 @@ locals {
 
 resource "azurerm_service_plan" "sp" {
   location                     = local.location
-  name                         = format("asp-app-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  name                         = format("asp-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
   os_type                      = var.os_type
   resource_group_name          = local.rg
   sku_name                     = var.service_plan_sku
