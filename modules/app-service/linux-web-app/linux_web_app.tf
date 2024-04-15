@@ -87,24 +87,56 @@ resource "azurerm_linux_web_app" "linux-web-app" {
   public_network_access_enabled = var.public_network_access_enabled
   virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
 
-  #   backup {
-  #     enabled = var.backup.enabled
-  #     name                = ""
-  #     storage_account_url = ""
-  #     schedule {
-  #       frequency_interval = 0
-  #       frequency_unit     = ""
-  #       keep_at_least_one_backup = false
-  #       retention_period_days = 23
-  #     }
-  #   }
-  #
-  #   logs {
-  #
-  #   }
+  dynamic "backup" {
+    for_each = var.backup == null ? [] : ["backup"]
+    content {
+      enabled             = lookup(var.backup, "enabled", true)
+      name                = "${var.application_name}-app-service-backup"
+      storage_account_url = "https://${var.backup.backup_sa.name}.blob.core.windows.net/${azurerm_storage_container.backup_container.0.name}${data.azurerm_storage_account_blob_container_sas.container_sas.0.sas}"
+      schedule {
+        frequency_interval       = var.backup.schedule.frequency_interval
+        frequency_unit           = var.backup.schedule.frequency_unit
+        keep_at_least_one_backup = var.backup.schedule.keep_at_least_one_backup
+        retention_period_days    = var.backup.schedule.retention_period_days
+        start_time               = var.backup.schedule.start_time
+      }
+    }
+  }
+
+  dynamic "logs" {
+    for_each = var.logs == null ? [] : ["logs"]
+    content {
+      application_logs {
+        file_system_level = var.logs.application_logs.file_system_level
+        # Only available for .NET apps
+        #       azure_blob_storage {
+        #         level             = ""
+        #         retention_in_days = 0
+        #         sas_url           = ""
+        #       }
+      }
+      # Only available for Windows platforms
+      #     http_logs {}
+      #     detailed_error_messages = false
+      #     failed_request_tracing = false
+
+    }
+  }
 
   tags       = merge(var.tags, local.common_tags, { "resource_type" = "linux-web-app" })
   depends_on = [module.service-plan]
+}
+
+# resource "azurerm_monitor_diagnostic_setting" "" {
+#   name               = ""
+#   target_resource_id = ""
+# }
+
+resource "azurerm_storage_container" "backup_container" {
+  count                 = var.backup == null ? 0 : 1
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  storage_account_name  = var.backup.backup_sa.name
+  container_access_type = "container"
 }
 
 # Custom Domain Mapping
@@ -136,5 +168,7 @@ resource "azurerm_app_service_certificate_binding" "certificate_binding" {
   certificate_id      = var.custom_domain.certificate != null ? azurerm_app_service_certificate.certificate.0.id : azurerm_app_service_managed_certificate.managed_certificate.0.id
   hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
   ssl_state           = "SniEnabled"
-  depends_on          = [azurerm_app_service_certificate.certificate, azurerm_app_service_managed_certificate.managed_certificate]
+  depends_on = [
+    azurerm_app_service_certificate.certificate, azurerm_app_service_managed_certificate.managed_certificate
+  ]
 }

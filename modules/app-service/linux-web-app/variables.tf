@@ -24,7 +24,7 @@ variable "env" {
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default = {}
+  default     = {}
 }
 
 #service plan
@@ -47,13 +47,13 @@ variable "web_app_subnet" {
 
 variable "env_vars" {
   type        = map(string)
-  description = "App Settings map"
-  default = {}
+  description = "The environment variables map"
+  default     = {}
 }
 
 variable "artifact_url" {
   type        = string
-  description = "The url for the artificat to run"
+  description = "The url for the artifact to run"
   default     = null
 }
 
@@ -68,21 +68,21 @@ variable "existing_service_plan" {
     name                = string
     resource_group_name = string
   })
-  description = ""
+  description = "The details of an existing service plan"
   default     = null
 }
 
 variable "worker_count" {
   type        = number
-  description = ""
+  description = "The number of workers assigned to the service plan and the app-service"
   default     = 1
 }
 
 variable "custom_domain" {
   type = object({
-    hostname    = string
+    hostname = string
     certificate = optional(object({
-      name  = string
+      name = string
       vault = object({
         name           = string
         resource_group = string
@@ -95,9 +95,30 @@ variable "custom_domain" {
 
 variable "backup" {
   type = object({
-
+    backup_sa = object({
+      name           = string
+      resource_group = string
+    })
+    enabled = optional(bool)
+    schedule = object({
+      frequency_interval       = number
+      frequency_unit           = string
+      start_time               = optional(string)
+      retention_period_days    = optional(number)
+      keep_at_least_one_backup = optional(bool)
+    })
   })
-  description = "The backup configuration for the app service"
+  description = "The backup configuration for the app service. Skip this for the default backup configuration"
+  default     = null
+}
+
+variable "logs" {
+  type = object({
+    application_logs = object({
+      file_system_level = string
+    })
+  })
+  description = "The logging configuration for the app service"
   default     = null
 }
 
@@ -123,68 +144,44 @@ variable "site_config" {
     health_check_eviction_time_in_min = optional(string)
     http2_enabled                     = optional(string)
     load_balancing_mode               = optional(string)
-    application_stack                 = optional(object({}))
-    cidr_restriction                  = optional(list(object({
+    application_stack                 = optional(map(string))
+    cidr_restriction = optional(list(object({
       name     = optional(string)
       priority = optional(number)
       action   = optional(string)
       cidr     = optional(string)
-#       headers  = optional(object({}))
+      #       headers  = optional(object({}))
     })), [])
     subnet_restriction = optional(list(object({
       name      = optional(string)
       priority  = optional(number)
       action    = optional(string)
       subnet_id = optional(string)
-#       headers   = optional(object({}))
+      #       headers   = optional(object({}))
     })), [])
     service_tags_restriction = optional(list(object({
       name        = optional(string)
       priority    = optional(number)
       action      = optional(string)
       service_tag = optional(string)
-#       headers     = optional(object({}))
+      #       headers     = optional(object({}))
     })), [])
     default_ip_restriction_action = optional(string)
-    cors                          = optional(object({
+    cors = optional(object({
       allowed_origins     = optional(list(string))
       support_credentials = optional(bool)
     }))
   })
-  default = {}
+  default     = {}
   description = "Site config for App Service."
 }
 
 variable "connection_strings" {
   description = "Connection strings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#connection_string"
-  type        = list(object({
+  type = list(object({
     name  = string
     type  = string
     value = string
   }))
   default = []
-}
-
-variable "ip_restriction_headers" {
-  description = "IPs restriction headers for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#headers"
-  type        = map(list(string))
-  default     = null
-}
-
-variable "authorized_ips" {
-  description = "IPs restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "authorized_subnet_ids" {
-  description = "Subnets restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "authorized_service_tags" {
-  description = "Service Tags restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#ip_restriction"
-  type        = list(string)
-  default     = []
 }

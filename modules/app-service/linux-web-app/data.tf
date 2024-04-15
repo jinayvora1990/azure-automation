@@ -12,7 +12,7 @@ data "azurerm_application_insights" "app_insights" {
 }
 
 data "azurerm_subnet" "app_service_subnet" {
-  count = var.web_app_subnet != null ? 1:0
+  count                = var.web_app_subnet != null ? 1 : 0
   name                 = var.web_app_subnet.name
   virtual_network_name = var.web_app_subnet.vnet_name
   resource_group_name  = var.web_app_subnet.resource_group
@@ -31,37 +31,25 @@ data "azurerm_key_vault_secret" "certificate" {
   key_vault_id = data.azurerm_key_vault.key_vault.0.id
 }
 
+data "azurerm_storage_account" "backup_sa" {
+  count               = var.backup == null ? 0 : 1
+  name                = try(var.backup.backup_sa.name, "")
+  resource_group_name = try(var.backup.backup_sa.resource_group, "")
+}
 
-# data "azurerm_storage_account" "rdb_sa" {
-#   name                = var.rdb_storage_account.storage_account_name
-#   resource_group_name = var.rdb_storage_account.resource_group_name
-# }
-#
-# data "azurerm_storage_account" "aof_sa" {
-#   name                = var.aof_storage_account.storage_account_name
-#   resource_group_name = var.aof_storage_account.resource_group_name
-# }
-#
-# data "azurerm_subnet" "redis_subnet" {
-#   name                 = var.redis_subnet.name
-#   virtual_network_name = var.redis_subnet.vnet_name
-#   resource_group_name  = var.redis_subnet.resource_group
-# }
-#
-# data "azurerm_subnet" "privatelink_subnet" {
-#   name                 = var.privatelink_subnet.name
-#   virtual_network_name = var.privatelink_subnet.vnet_name
-#   resource_group_name  = var.privatelink_subnet.resource_group
-# }
-#
-# data "azurerm_private_endpoint_connection" "pep_connection" {
-#   name                = azurerm_private_endpoint.pep.name
-#   resource_group_name = var.resource_group_name
-#   depends_on          = [azurerm_redis_cache.rediscache]
-# }
-#
-# data "azurerm_log_analytics_workspace" "log_ws" {
-#   count               = var.log_analytics.workspace_name != null ? 1 : 0
-#   name                = var.log_analytics.workspace_name
-#   resource_group_name = var.log_analytics.resource_group_name
-# }
+data "azurerm_storage_account_blob_container_sas" "container_sas" {
+  count             = var.backup == null ? 0 : 1
+  connection_string = data.azurerm_storage_account.backup_sa.0.primary_connection_string
+  container_name    = azurerm_storage_container.backup_container.0.name
+  https_only        = true
+  start             = "2024-01-23T12:20:23Z"
+  expiry            = "2025-12-24T00:00:00Z"
+  permissions {
+    read   = true
+    add    = true
+    create = true
+    write  = true
+    delete = true
+    list   = true
+  }
+}

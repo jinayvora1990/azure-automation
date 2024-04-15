@@ -36,7 +36,7 @@ module "base-infra-svc-plan" {
 
   site_config = {
     application_stack = {
-      "go_version" = "1.18"
+      go_version = "1.18"
     }
     cidr_restriction = [
       {
@@ -57,6 +57,22 @@ module "base-infra-svc-plan" {
     }
   }
 
+  logs = {
+    application_logs = {
+      file_system_level = "Warning"
+    }
+  }
+  backup = {
+    backup_sa = {
+      name = "asd"
+      resource_group = local.rg_name
+    }
+    schedule = {
+      frequency_interval = 5
+      frequency_unit = "Day"
+      retention_period_days = 90
+    }
+  }
   custom_domain = {
     hostname = "www.example.com"
     certificate = {
