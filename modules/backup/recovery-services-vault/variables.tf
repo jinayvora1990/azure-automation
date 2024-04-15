@@ -60,7 +60,7 @@ variable "classic_vmware_replication_enabled" {
 variable "encryption_config" {
   type = object({
     infrastructure_encryption = bool
-    encryption_key            = object({
+    encryption_key = object({
       vault = object({
         key_vault_name      = string
         resource_group_name = string
@@ -88,5 +88,5 @@ variable "monitoring" {
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default = {}
+  default     = {}
 }
