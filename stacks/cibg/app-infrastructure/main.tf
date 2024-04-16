@@ -30,18 +30,4 @@ module "base-infra" {
   tags = local.tags
 
   depends_on = [module.app_resource_group]
-  diagnostic_settings = {
-    example = {
-      log_categories                           = toset(["kube-apiserver", "kube-audit", "kube-controller-manager", "kube-scheduler"])
-      metric_categories                        = toset(["AllMetrics"])
-      log_analytics_destination_type           = "Dedicated"
-      workspace_resource_id                    = module.base-infra.log_analytics_workspace
-      storage_account_resource_id              = null
-      event_hub_authorization_rule_resource_id = null
-      event_hub_name                           = null
-      marketplace_partner_resource_id          = null
-    }
-  }
-
-
 }
