@@ -3,86 +3,45 @@ locals {
     project = "adcb"
     owners  = "jinay"
   }
-  rg_name = "app-svc-test"
 }
 
 module "app_resource_group" {
   source = "../../../modules/resource-groups"
 
-  rg_name = local.rg_name
+  rg_name = "aks-rg"
   tags    = local.tags
 }
 
 module "base-infra" {
-  source = "../../../modules/app-service/service-plan"
+  source = "../../../modules/aks/create"
 
-  resource_group_name = local.rg_name
-  application_name    = "cibg"
-  worker_count        = 1
+  aks_subnet = {
+    name           = "default"
+    vnet_name      = "aks-vnet-test"
+    resource_group = "aks-test-rg"
+  }
+
+  resource_group_name                     = "aks-test-rg"
+  environment                             = "dev"
+  application_name                        = "cibg"
+  api_server_authorized_ip_ranges         = ["3.7.139.138/32"]
+  enable_azure_key_vault_secrets_provider = true
+
+  tags = local.tags
 
   depends_on = [module.app_resource_group]
-}
-
-module "base-infra-svc-plan" {
-  source = "../../../modules/app-service/linux-web-app"
-
-  resource_group_name = local.rg_name
-  application_name    = "cibg"
-
-  #   existing_service_plan = {
-  #     name                = module.base-infra.name
-  #     resource_group_name = local.rg_name
-  #   }
-
-  site_config = {
-    application_stack = {
-      go_version = "1.18"
-    }
-    cidr_restriction = [
-      {
-        name     = "demo_restriction"
-        priority = 100
-        action   = "Allow"
-        cidr     = "10.0.0.0/24"
-      },
-      {
-        name     = "demo_restriction_2"
-        priority = 102
-        action   = "Deny"
-        cidr     = "10.0.0.0/26"
-      },
-    ]
-    cors = {
-      allowed_origins = ["www.jdsakl.com"]
+  diagnostic_settings = {
+    example = {
+      log_categories                           = toset(["kube-apiserver", "kube-audit", "kube-controller-manager", "kube-scheduler"])
+      metric_categories                        = toset(["AllMetrics"])
+      log_analytics_destination_type           = "Dedicated"
+      workspace_resource_id                    = module.base-infra.log_analytics_workspace
+      storage_account_resource_id              = null
+      event_hub_authorization_rule_resource_id = null
+      event_hub_name                           = null
+      marketplace_partner_resource_id          = null
     }
   }
 
-  logs = {
-    application_logs = {
-      file_system_level = "Warning"
-    }
-  }
-  backup = {
-    backup_sa = {
-      name           = "asd"
-      resource_group = local.rg_name
-    }
-    schedule = {
-      frequency_interval    = 5
-      frequency_unit        = "Day"
-      retention_period_days = 90
-    }
-  }
-  custom_domain = {
-    hostname = "www.example.com"
-    certificate = {
-      name = "abc"
-      vault = {
-        name           = "gfsd"
-        resource_group = local.rg_name
-      }
-    }
-  }
-  application_insights_enabled = true
-  depends_on                   = [module.base-infra]
+
 }
