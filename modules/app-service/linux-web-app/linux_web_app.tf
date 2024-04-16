@@ -6,10 +6,24 @@ module "service-plan" {
   application_name    = var.application_name
   #   prefix              = "app"
   env              = var.env
-  tags             = var.tags
+  tags             = merge(var.tags, local.common_tags)
   service_plan_sku = var.service_plan_sku
   worker_count     = var.worker_count
   os_type          = "Linux"
+}
+
+module "app-insights" {
+  count               = var.application_insights_enabled ? 1 : 0
+  source              = "../../monitoring/app-insights"
+  resource_group_name = local.rg
+  resource_location   = local.location
+  application_name    = var.application_name
+  env                 = var.env
+
+  application_type = "web"
+  tags             = merge(var.tags, local.common_tags)
+  #   workspace_id = ""
+
 }
 
 resource "azurerm_linux_web_app" "linux-web-app" {
@@ -152,7 +166,8 @@ resource "azurerm_app_service_managed_certificate" "managed_certificate" {
   # Doesn't work if the application is not publicly exposed
   count                      = var.custom_domain != null && try(var.custom_domain.certificate == null, false) ? 1 : 0
   custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
-  depends_on                 = [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding]
+  tags       = merge(var.tags, local.common_tags, { "resource_type" = "managed-certificate" })
+  depends_on = [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding]
 }
 
 resource "azurerm_app_service_certificate" "certificate" {
@@ -161,6 +176,7 @@ resource "azurerm_app_service_certificate" "certificate" {
   resource_group_name = local.rg
   location            = local.location
   pfx_blob            = data.azurerm_key_vault_secret.certificate.0.value
+  tags       = merge(var.tags, local.common_tags, { "resource_type" = "ssl-certificate" })
 }
 
 resource "azurerm_app_service_certificate_binding" "certificate_binding" {

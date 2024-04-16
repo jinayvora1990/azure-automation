@@ -128,12 +128,6 @@ variable "application_insights_enabled" {
   default     = false
 }
 
-variable "application_insights_id" {
-  description = "ID of the existing Application Insights to use instead of deploying a new one."
-  type        = string
-  default     = null
-}
-
 variable "site_config" {
   type = object({
     always_on                         = optional(bool)

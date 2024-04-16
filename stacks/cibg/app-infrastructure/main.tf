@@ -64,12 +64,12 @@ module "base-infra-svc-plan" {
   }
   backup = {
     backup_sa = {
-      name = "asd"
+      name           = "asd"
       resource_group = local.rg_name
     }
     schedule = {
-      frequency_interval = 5
-      frequency_unit = "Day"
+      frequency_interval    = 5
+      frequency_unit        = "Day"
       retention_period_days = 90
     }
   }
@@ -83,6 +83,6 @@ module "base-infra-svc-plan" {
       }
     }
   }
-
-  depends_on = [module.base-infra]
+  application_insights_enabled = true
+  depends_on                   = [module.base-infra]
 }
