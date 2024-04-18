@@ -42,7 +42,7 @@ variable "max_elastic_worker_count" {
 variable "worker_count" {
   type        = number
   description = "The number of Workers (instances) to be allocated"
-  default     = 1
+  default     = null
 }
 
 variable "os_type" {

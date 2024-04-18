@@ -7,14 +7,14 @@ locals {
 }
 
 module "app_resource_group" {
-  source = "../../../modules/resource-groups"
+  source = "../../../../modules/resource-groups"
 
   rg_name = local.rg_name
   tags    = local.tags
 }
 
 module "base-infra" {
-  source = "../../../modules/app-service/service-plan"
+  source = "../../../../modules/app-service/service-plan"
 
   resource_group_name = local.rg_name
   application_name    = "cibg"
@@ -24,7 +24,7 @@ module "base-infra" {
 }
 
 module "base-infra-svc-plan" {
-  source = "../../../modules/app-service/linux-web-app"
+  source = "../../../../modules/app-service/linux-web-app"
 
   resource_group_name = local.rg_name
   application_name    = "cibg"
