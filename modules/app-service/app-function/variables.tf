@@ -143,6 +143,15 @@ variable "application_insights_enabled" {
   default     = false
 }
 
+variable "log_analytics_ws" {
+  description = "The log analytics workspace to be used for the app insights"
+  type        = object({
+    name           = string
+    resource_group = string
+  })
+  default = null
+}
+
 variable "site_config" {
   type = object({
     always_on                         = optional(bool)
@@ -153,8 +162,15 @@ variable "site_config" {
     health_check_eviction_time_in_min = optional(string)
     http2_enabled                     = optional(string)
     load_balancing_mode               = optional(string)
+    app_scale_limit                   = optional(string)
+    elastic_instance_minimum          = optional(string)
+    pre_warmed_instance_count         = optional(string)
     application_stack                 = optional(map(string))
-    cidr_restriction                  = optional(list(object({
+    app_service_logs                  = optional(object({
+      disk_quota_mb         = number
+      retention_period_days = number
+    }))
+    cidr_restriction = optional(list(object({
       name     = optional(string)
       priority = optional(number)
       action   = optional(string)
@@ -176,11 +192,7 @@ variable "site_config" {
       #       headers     = optional(object({}))
     })), [])
     default_ip_restriction_action = optional(string)
-    app_service_logs              = optional(object({
-      disk_quota_mb         = number
-      retention_period_days = number
-    }))
-    cors = optional(object({
+    cors                          = optional(object({
       allowed_origins     = optional(list(string))
       support_credentials = optional(bool)
     }))
@@ -198,3 +210,4 @@ variable "connection_strings" {
   }))
   default = []
 }
+

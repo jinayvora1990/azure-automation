@@ -1,16 +1,19 @@
+module "res-id" {
+  source = "../../utility/random-identifier"
+}
+
 module "service-plan" {
-  count               = var.existing_service_plan == null ? 1 : 0
-  source              = "../service-plan"
-  resource_location   = local.location
-  resource_group_name = local.rg
-  application_name    = var.application_name
-  #   prefix              = "app"
-  env              = var.env
-  tags             = merge(var.tags, local.common_tags)
-  service_plan_sku = var.service_plan_sku
-  #   worker_count             = var.worker_count
+  count                    = var.existing_service_plan == null ? 1 : 0
+  source                   = "../service-plan"
+  resource_location        = local.location
+  resource_group_name      = local.rg
+  application_name         = var.application_name
+  env                      = var.env
+  service_plan_sku         = var.service_plan_sku
   max_elastic_worker_count = var.max_elastic_worker_count
   os_type                  = "Linux"
+  tags                     = merge(var.tags, local.common_tags)
+  #   prefix              = "app"
 }
 
 module "app-insights" {
@@ -20,10 +23,9 @@ module "app-insights" {
   resource_location   = local.location
   application_name    = var.application_name
   env                 = var.env
-
-  application_type = "web"
-  tags             = merge(var.tags, local.common_tags)
-  #   workspace_id = ""
+  application_type    = "web"
+  tags                = merge(var.tags, local.common_tags)
+  workspace_id        = var.application_insights_enabled && var.log_analytics_ws != null ? data.azurerm_log_analytics_workspace.workspace.0.id : null
 }
 
 module "storage_account" {
@@ -32,42 +34,37 @@ module "storage_account" {
   environment          = var.env
   location             = local.location
   application_name     = var.application_name
-  storage_account_name = format("func-sa-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  storage_account_name = format("func-sa-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   account_kind         = "StorageV2"
   skuname              = "Standard_LRS"
 }
 
 resource "azurerm_linux_function_app" "function-app" {
-  location            = local.location
-  name                = format("func-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "5" /*module.res-id.result*/)
-  resource_group_name = local.rg
-  service_plan_id     = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
-
-  #   app_settings                  = local.app_settings
-  https_only                    = true
-  public_network_access_enabled = var.public_network_access_enabled
-  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
-
-  builtin_logging_enabled = false
-  #   key_vault_reference_identity_id = ""
-  #   zip_deploy_file                 = ""
-  functions_extension_version = "~4"
-
-  daily_memory_time_quota    = local.is_service_plan_consumption ? var.daily_memory_time_quota : null
+  location                   = local.location
+  name                       = format("func-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  resource_group_name        = local.rg
+  service_plan_id            = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
   storage_account_name       = module.storage_account.storage_account_name
   storage_account_access_key = module.storage_account.storage_primary_access_key
 
+  app_settings                  = local.app_settings
+  https_only                    = true
+  public_network_access_enabled = var.public_network_access_enabled
+  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
+  functions_extension_version   = "~4"
+  daily_memory_time_quota       = local.is_service_plan_consumption ? var.daily_memory_time_quota : null
+  #   key_vault_reference_identity_id = ""
+  #   zip_deploy_file                 = ""
 
   site_config {
-    always_on                         = local.is_service_plan_elastic ? false : lookup(var.site_config, "always_on", null)
-    app_command_line                  = lookup(var.site_config, "app_command_line", null)
-    default_documents                 = lookup(var.site_config, "default_documents", null)
-    ftps_state                        = lookup(var.site_config, "ftps_state", null)
-    health_check_path                 = lookup(var.site_config, "health_check_path", null)
-    health_check_eviction_time_in_min = lookup(var.site_config, "health_check_eviction_time_in_min", null)
-    http2_enabled                     = lookup(var.site_config, "http2", null)
-    load_balancing_mode               = lookup(var.site_config, "load_balancing_mode", null)
-
+    always_on                              = local.is_service_plan_elastic ? false : lookup(var.site_config, "always_on", null)
+    app_command_line                       = lookup(var.site_config, "app_command_line", null)
+    default_documents                      = lookup(var.site_config, "default_documents", null)
+    ftps_state                             = lookup(var.site_config, "ftps_state", null)
+    health_check_path                      = lookup(var.site_config, "health_check_path", null)
+    health_check_eviction_time_in_min      = lookup(var.site_config, "health_check_eviction_time_in_min", null)
+    http2_enabled                          = lookup(var.site_config, "http2", null)
+    load_balancing_mode                    = lookup(var.site_config, "load_balancing_mode", null)
     application_insights_key               = var.application_insights_enabled ? try(module.app-insights.instrumentation_key, null) : null
     application_insights_connection_string = var.application_insights_enabled ? try(module.app-insights.connection_string, null) : null
     app_scale_limit                        = local.is_service_plan_elastic ? lookup(var.site_config, "app_scale_limit", null) : null
@@ -77,7 +74,6 @@ resource "azurerm_linux_function_app" "function-app" {
     #     container_registry_managed_identity_client_id = ""
     #     container_registry_use_managed_identity       = false
     #     managed_pipeline_mode                         = ""
-
 
     dynamic "application_stack" {
       for_each = lookup(var.site_config, "application_stack", null) == null ? [] : ["application_stack"]
@@ -162,7 +158,7 @@ resource "azurerm_linux_function_app" "function-app" {
 
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }
