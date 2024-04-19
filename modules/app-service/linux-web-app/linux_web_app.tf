@@ -1,15 +1,19 @@
+module "res-id" {
+  source = "../../utility/random-identifier"
+}
+
 module "service-plan" {
   count               = var.existing_service_plan == null ? 1 : 0
   source              = "../service-plan"
   resource_location   = local.location
   resource_group_name = local.rg
   application_name    = var.application_name
+  env                 = var.env
+  tags                = merge(var.tags, local.common_tags)
+  service_plan_sku    = var.service_plan_sku
+  worker_count        = var.worker_count
+  os_type             = "Linux"
   #   prefix              = "app"
-  env              = var.env
-  tags             = merge(var.tags, local.common_tags)
-  service_plan_sku = var.service_plan_sku
-  worker_count     = var.worker_count
-  os_type          = "Linux"
 }
 
 module "app-insights" {
@@ -19,16 +23,14 @@ module "app-insights" {
   resource_location   = local.location
   application_name    = var.application_name
   env                 = var.env
-
-  application_type = "web"
-  tags             = merge(var.tags, local.common_tags)
-  #   workspace_id = ""
-
+  application_type    = "web"
+  tags                = merge(var.tags, local.common_tags)
+  workspace_id        = var.application_insights_enabled && var.log_analytics_ws != null ? data.azurerm_log_analytics_workspace.workspace.0.id : null
 }
 
 resource "azurerm_linux_web_app" "linux-web-app" {
   location            = local.location
-  name                = format("app-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  name                = format("app-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   service_plan_id     = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
 
@@ -44,6 +46,9 @@ resource "azurerm_linux_web_app" "linux-web-app" {
     http2_enabled                     = lookup(var.site_config, "http2", null)
     load_balancing_mode               = lookup(var.site_config, "load_balacing_mode", null)
     worker_count                      = var.worker_count
+    https_only                        = true
+    public_network_access_enabled     = var.public_network_access_enabled
+    virtual_network_subnet_id         = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
 
     dynamic "application_stack" {
       for_each = lookup(var.site_config, "application_stack", null) == null ? [] : ["application_stack"]
@@ -97,10 +102,6 @@ resource "azurerm_linux_web_app" "linux-web-app" {
     }
   }
 
-  https_only                    = true
-  public_network_access_enabled = var.public_network_access_enabled
-  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
-
   dynamic "backup" {
     for_each = var.backup == null ? [] : ["backup"]
     content {
@@ -136,19 +137,13 @@ resource "azurerm_linux_web_app" "linux-web-app" {
 
     }
   }
-
   tags       = merge(var.tags, local.common_tags, { "resource_type" = "linux-web-app" })
   depends_on = [module.service-plan]
 }
 
-# resource "azurerm_monitor_diagnostic_setting" "" {
-#   name               = ""
-#   target_resource_id = ""
-# }
-
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }
@@ -166,17 +161,17 @@ resource "azurerm_app_service_managed_certificate" "managed_certificate" {
   # Doesn't work if the application is not publicly exposed
   count                      = var.custom_domain != null && try(var.custom_domain.certificate == null, false) ? 1 : 0
   custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
-  tags       = merge(var.tags, local.common_tags, { "resource_type" = "managed-certificate" })
-  depends_on = [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding]
+  tags                       = merge(var.tags, local.common_tags, { "resource_type" = "managed-certificate" })
+  depends_on                 = [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding]
 }
 
 resource "azurerm_app_service_certificate" "certificate" {
   count               = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
-  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "-1" /*module.res-id.result*/)
+  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
   pfx_blob            = data.azurerm_key_vault_secret.certificate.0.value
-  tags       = merge(var.tags, local.common_tags, { "resource_type" = "ssl-certificate" })
+  tags                = merge(var.tags, local.common_tags, { "resource_type" = "ssl-certificate" })
 }
 
 resource "azurerm_app_service_certificate_binding" "certificate_binding" {
