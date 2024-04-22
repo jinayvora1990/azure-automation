@@ -128,6 +128,15 @@ variable "application_insights_enabled" {
   default     = false
 }
 
+variable "log_analytics_ws" {
+  description = "The log analytics workspace to be used for the app insights"
+  type = object({
+    name           = string
+    resource_group = string
+  })
+  default = null
+}
+
 variable "site_config" {
   type = object({
     always_on                         = optional(bool)

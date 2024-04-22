@@ -11,13 +11,18 @@ data "azurerm_subnet" "app_service_subnet" {
   resource_group_name  = var.web_app_subnet.resource_group
 }
 
+data "azurerm_log_analytics_workspace" "workspace" {
+  count               = var.application_insights_enabled && var.log_analytics_ws != null ? 1 : 0
+  name                = try(var.log_analytics_ws.name, "")
+  resource_group_name = try(var.log_analytics_ws.resource_group, "")
+}
+
 data "azurerm_key_vault" "key_vault" {
   count               = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
   name                = var.custom_domain.certificate.vault.name
   resource_group_name = var.custom_domain.certificate.vault.resource_group
 }
 
-// Now Read the Certificate
 data "azurerm_key_vault_secret" "certificate" {
   count        = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
   name         = var.custom_domain.certificate.name
