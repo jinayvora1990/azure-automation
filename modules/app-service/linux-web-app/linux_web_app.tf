@@ -34,7 +34,10 @@ resource "azurerm_linux_web_app" "linux-web-app" {
   resource_group_name = local.rg
   service_plan_id     = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
 
-  app_settings = local.app_settings
+  app_settings                  = local.app_settings
+  https_only                    = true
+  public_network_access_enabled = var.public_network_access_enabled
+  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
 
   site_config {
     always_on                         = lookup(var.site_config, "always_on", null)
@@ -46,9 +49,6 @@ resource "azurerm_linux_web_app" "linux-web-app" {
     http2_enabled                     = lookup(var.site_config, "http2", null)
     load_balancing_mode               = lookup(var.site_config, "load_balacing_mode", null)
     worker_count                      = var.worker_count
-    https_only                        = true
-    public_network_access_enabled     = var.public_network_access_enabled
-    virtual_network_subnet_id         = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
 
     dynamic "application_stack" {
       for_each = lookup(var.site_config, "application_stack", null) == null ? [] : ["application_stack"]

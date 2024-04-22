@@ -130,7 +130,7 @@ variable "application_insights_enabled" {
 
 variable "log_analytics_ws" {
   description = "The log analytics workspace to be used for the app insights"
-  type        = object({
+  type = object({
     name           = string
     resource_group = string
   })
