@@ -9,11 +9,6 @@ variable "resource_group_name" {
   description = "The resource group for the redis cache"
 }
 
-variable "redis_cache_name" {
-  type        = string
-  description = "The name of the redis cache resource created"
-}
-
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
@@ -24,12 +19,6 @@ variable "env" {
   type        = string
   description = "Environment where redis cache is provisioned"
   default     = "dev"
-}
-
-variable "instance_number" {
-  type        = number
-  description = "The numeric id of the resource being provisioned"
-  default     = 1
 }
 
 variable "cache_tier" {
@@ -78,7 +67,7 @@ variable "rdb_backup_configuration" {
     storage_connection_string = string
   })
   description = "RDB Backup Confifuration"
-  default = {
+  default     = {
     backup_frequency          = 0
     max_snapshot_count        = 0
     storage_connection_string = ""

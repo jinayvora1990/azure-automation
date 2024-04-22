@@ -18,6 +18,12 @@ variable "resource_group_name" {
   description = "resource group name of key vault"
 }
 
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+  default     = ""
+}
+
 variable "enabled_for_deployment" {
   type        = bool
   description = "(Optional) Boolean flag to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
@@ -214,4 +220,20 @@ DESCRIPTION
     )
     error_message = "At least one of `workspace_resource_id`, `storage_account_resource_id`, `marketplace_partner_resource_id`, or `event_hub_authorization_rule_resource_id`, must be set."
   }
+}
+
+variable "privatelink_subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet where the private link is required."
+  default     = null
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "User defined extra tags to be added to all resources created in the module"
+  default     = {}
 }

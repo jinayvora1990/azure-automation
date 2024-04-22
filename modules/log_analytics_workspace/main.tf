@@ -1,5 +1,3 @@
-
-
 resource "azurerm_log_analytics_workspace" "this" {
   name                          = var.workspace_name
   resource_group_name           = var.resource_group_name
@@ -10,7 +8,6 @@ resource "azurerm_log_analytics_workspace" "this" {
 
   tags = var.tags
 }
-
 
 resource "azurerm_role_assignment" "logs" {
   count                = length(var.contributors)
