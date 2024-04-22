@@ -16,7 +16,7 @@ module "base-infra" {
   source = "../../../modules/aks/create"
 
   aks_subnet = {
-    name           = "default"
+    name           = "aks-subnet"
     vnet_name      = "aks-vnet-test"
     resource_group = "aks-test-rg"
   }

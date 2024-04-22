@@ -210,7 +210,7 @@ variable "maintenance_window" {
 
 variable "enable_kubelet_identity" {
   type        = bool
-  default     = true
+  default     = false
   description = "(optional) Enable creation the kubelet identity in the AKS resource group instead of node resource group"
 }
 
