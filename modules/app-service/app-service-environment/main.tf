@@ -9,7 +9,7 @@ locals {
 }
 
 resource "azurerm_app_service_environment_v3" "ase" {
-  name                = format("ase-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "1")
+  name                = format("ase-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "1")
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.ase_subnet.id
 
@@ -30,7 +30,7 @@ resource "azurerm_app_service_environment_v3" "ase" {
 resource "azurerm_monitor_diagnostic_setting" "this" {
   for_each = var.diagnostic_settings
 
-  name                           = each.value.name != null ? each.value.name : "diag-asev3-${var.env}"
+  name                           = each.value.name != null ? each.value.name : "diag-asev3-${var.environment}"
   target_resource_id             = azurerm_app_service_environment_v3.ase.id
   eventhub_authorization_rule_id = each.value.event_hub_authorization_rule_resource_id
   eventhub_name                  = each.value.event_hub_name

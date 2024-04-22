@@ -1,9 +1,4 @@
-variable "rg_name" {
-  type    = string
-  default = "test_module"
-}
-
-variable "app_name" {
+variable "application_name" {
   description = "Name of the application"
   type        = string
   default     = "cibg"
@@ -12,7 +7,13 @@ variable "app_name" {
 variable "environment" {
   description = "Application Environment"
   type        = string
-  default     = "sit"
+  default     = "dev"
+}
+
+variable "location" {
+  description = "Azure Region"
+  type        = string
+  default     = "uaenorth"
 }
 
 variable "vnet_address_spaces" {
@@ -43,4 +44,35 @@ variable "subnets" {
       })
     }))
   }))
+}
+
+variable "aks_subnet_name" {
+  description = "Subnet to use for AKS Default Node Pool"
+  type        = string
+}
+
+variable "aks_api_server_authorized_ip_ranges" {
+  description = "Set of authorized IP ranges to allow access to AKS API server"
+  type        = list(string)
+}
+
+variable "log_analytics_ws_sku" {
+  description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
+  default     = "PerGB2018"
+  type        = string
+}
+
+variable "ase_subnet_name" {
+  description = "Subnet to use for App Service Environment"
+  type        = string
+}
+
+variable "ase_cluster_setting" {
+  description = "(Optional) Cluster settings for ASE v3"
+  type = list(object({
+    name  = string
+    value = string
+    }
+  ))
+  default = []
 }
