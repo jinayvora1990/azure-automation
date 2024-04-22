@@ -40,8 +40,11 @@
 | Postgresql Flexi Server    | psql         |
 | MySQL Flexi Server         | mysql        |
 | Managed Identity           | id           |
-| App Service Certificate    | sslcert      |
 | Storage Container          | sc           |
+| App Service Certificate    | sslcert      |
+| App Service Plan           | asp          |
+| App Service Environment    | ase          |
+
 
 
 

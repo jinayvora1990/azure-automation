@@ -62,10 +62,11 @@ variable "internal_load_balancing_mode" {
 
 variable "cluster_setting" {
   description = "(Optional) Cluster settings for ASE v3"
-  type = list(map(object({
+  type = list(object({
     name  = string
     value = string
-  })))
+    }
+  ))
   default = []
 }
 
