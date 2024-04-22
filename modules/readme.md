@@ -45,6 +45,8 @@
 | App Service Plan           | asp          |
 | App Service Environment    | ase          |
 
+| App Service Certificate    | sslcert      |
+| Storage Container          | sc           |
 
 
 
