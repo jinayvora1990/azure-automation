@@ -83,13 +83,13 @@ variable "worker_count" {
 variable "custom_domain" {
   type = object({
     hostname = string
-    certificate = optional(object({
+    certificate = object({
       name = string
       vault = object({
         name           = string
         resource_group = string
       })
-    }))
+    })
   })
   description = "Map a custom domain with the app service. If you do not pass the certificate, a managed certificate is created by azure"
   default     = null
@@ -124,19 +124,22 @@ variable "logs" {
   default     = null
 }
 
-variable "application_insights_enabled" {
-  description = "Use Application Insights for this App Service"
-  type        = bool
-  default     = false
-}
-
-variable "log_analytics_ws" {
+variable "application_insights" {
   description = "The log analytics workspace to be used for the app insights"
   type = object({
-    name           = string
-    resource_group = string
+    enabled = bool
+    log_analytics_ws = optional(object({
+      name           = string
+      resource_group = string
+    }))
   })
-  default = null
+  validation {
+    condition     = var.application_insights.enabled ? var.application_insights.log_analytics_ws != null : true
+    error_message = "The log analytics ws details are required to enable application insights"
+  }
+  default = {
+    enabled = false
+  }
 }
 
 variable "site_config" {

@@ -8,10 +8,10 @@ locals {
   }
 
 
-  default_app_settings = var.application_insights_enabled ? {
-    APPLICATION_INSIGHTS_IKEY             = try(module.app-insights.instrumentation_key, "")
-    APPINSIGHTS_INSTRUMENTATIONKEY        = try(module.app-insights.instrumentation_key, "")
-    APPLICATIONINSIGHTS_CONNECTION_STRING = try(module.app-insights.connection_string, "")
+  default_app_settings = var.application_insights.enabled ? {
+    APPLICATION_INSIGHTS_IKEY             = module.app-insights.0.instrumentation_key
+    APPINSIGHTS_INSTRUMENTATIONKEY        = module.app-insights.0.instrumentation_key
+    APPLICATIONINSIGHTS_CONNECTION_STRING = module.app-insights.0.connection_string
   } : {}
 
   artifacts = {

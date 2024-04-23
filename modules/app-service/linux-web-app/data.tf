@@ -12,9 +12,9 @@ data "azurerm_subnet" "app_service_subnet" {
 }
 
 data "azurerm_log_analytics_workspace" "workspace" {
-  count               = var.application_insights_enabled && var.log_analytics_ws != null ? 1 : 0
-  name                = try(var.log_analytics_ws.name, "")
-  resource_group_name = try(var.log_analytics_ws.resource_group, "")
+  count               = var.application_insights.enabled ? 1 : 0
+  name                = try(var.application_insights.log_analytics_ws.name, "")
+  resource_group_name = try(var.application_insights.log_analytics_ws.resource_group, "")
 }
 
 data "azurerm_key_vault" "key_vault" {

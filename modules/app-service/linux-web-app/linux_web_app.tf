@@ -17,7 +17,7 @@ module "service-plan" {
 }
 
 module "app-insights" {
-  count               = var.application_insights_enabled ? 1 : 0
+  count               = var.application_insights.enabled ? 1 : 0
   source              = "../../monitoring/app-insights"
   resource_group_name = local.rg
   resource_location   = local.location
@@ -25,7 +25,7 @@ module "app-insights" {
   env                 = var.environment
   application_type    = "web"
   tags                = merge(var.tags, local.common_tags)
-  workspace_id        = var.application_insights_enabled && var.log_analytics_ws != null ? data.azurerm_log_analytics_workspace.workspace.0.id : null
+  workspace_id        = var.application_insights.enabled ? data.azurerm_log_analytics_workspace.workspace.0.id : null
 }
 
 resource "azurerm_linux_web_app" "linux-web-app" {
@@ -157,17 +157,9 @@ resource "azurerm_app_service_custom_hostname_binding" "app_service_custom_hostn
   resource_group_name = local.rg
 }
 
-resource "azurerm_app_service_managed_certificate" "managed_certificate" {
-  # Doesn't work if the application is not publicly exposed
-  count                      = var.custom_domain != null && try(var.custom_domain.certificate == null, false) ? 1 : 0
-  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
-  tags                       = merge(var.tags, local.common_tags, { "resource_type" = "managed-certificate" })
-  depends_on                 = [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding]
-}
-
 resource "azurerm_app_service_certificate" "certificate" {
-  count               = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
-  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  count               = var.custom_domain != null ? 1 : 0
+  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
   pfx_blob            = data.azurerm_key_vault_secret.certificate.0.value
@@ -176,10 +168,10 @@ resource "azurerm_app_service_certificate" "certificate" {
 
 resource "azurerm_app_service_certificate_binding" "certificate_binding" {
   count               = var.custom_domain != null ? 1 : 0
-  certificate_id      = var.custom_domain.certificate != null ? azurerm_app_service_certificate.certificate.0.id : azurerm_app_service_managed_certificate.managed_certificate.0.id
+  certificate_id      = azurerm_app_service_certificate.certificate.0.id
   hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
   ssl_state           = "SniEnabled"
   depends_on = [
-    azurerm_app_service_certificate.certificate, azurerm_app_service_managed_certificate.managed_certificate
+    azurerm_app_service_certificate.certificate
   ]
 }
