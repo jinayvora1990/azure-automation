@@ -17,8 +17,3 @@ output "backend_storage_account_name" {
   description = "The name of the backend storage account used for the function app"
   value       = module.storage_account.storage_account_name
 }
-
-output "backup_container_name" {
-  description = "The name of the storage container for backup of the function app"
-  value       = azurerm_storage_container.backup_container.0.name
-}

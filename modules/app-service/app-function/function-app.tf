@@ -50,7 +50,7 @@ resource "azurerm_linux_function_app" "function-app" {
   app_settings                  = local.app_settings
   https_only                    = true
   public_network_access_enabled = var.public_network_access_enabled
-  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
+  virtual_network_subnet_id     = var.app_function_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
   functions_extension_version   = "~4"
   daily_memory_time_quota       = local.is_service_plan_consumption ? var.daily_memory_time_quota : null
   #   key_vault_reference_identity_id = ""

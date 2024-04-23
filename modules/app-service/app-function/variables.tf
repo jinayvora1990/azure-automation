@@ -45,13 +45,13 @@ variable "max_elastic_worker_count" {
 }
 
 #function app
-variable "web_app_subnet" {
+variable "app_function_subnet" {
   type = object({
     name           = string
     vnet_name      = string
     resource_group = string
   })
-  description = "The subnet id which will be used by this Web App for regional virtual network integration."
+  description = "The subnet id which will be used by this function app for regional virtual network integration."
   default     = null
 }
 
@@ -69,7 +69,7 @@ variable "artifact_url" {
 
 variable "public_network_access_enabled" {
   type        = bool
-  description = "Status of public network access to the web app"
+  description = "Status of public network access to the app function"
   default     = true
 }
 
@@ -84,7 +84,7 @@ variable "existing_service_plan" {
 
 variable "worker_count" {
   type        = number
-  description = "The number of workers assigned to the service plan and the app-service"
+  description = "The number of workers assigned to the service plan and the app-function"
   default     = 1
 }
 

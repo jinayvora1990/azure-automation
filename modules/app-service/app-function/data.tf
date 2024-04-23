@@ -5,10 +5,10 @@ data "azurerm_service_plan" "existing_service_plan" {
 }
 
 data "azurerm_subnet" "app_service_subnet" {
-  count                = var.web_app_subnet != null ? 1 : 0
-  name                 = var.web_app_subnet.name
-  virtual_network_name = var.web_app_subnet.vnet_name
-  resource_group_name  = var.web_app_subnet.resource_group
+  count                = var.app_function_subnet != null ? 1 : 0
+  name                 = var.app_function_subnet.name
+  virtual_network_name = var.app_function_subnet.vnet_name
+  resource_group_name  = var.app_function_subnet.resource_group
 }
 
 data "azurerm_storage_account" "backup_sa" {
