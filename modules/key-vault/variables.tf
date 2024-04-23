@@ -1,13 +1,4 @@
-variable "name" {
-  type        = string
-  description = "Name of the key vault"
-  validation {
-    condition     = can(regex("^[a-z0-9-]{3,24}$", var.name))
-    error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
-  }
-}
-
-variable "location" {
+variable "resource_location" {
   type        = string
   description = "location of key vault"
   default     = "uaenorth"
@@ -21,7 +12,15 @@ variable "resource_group_name" {
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
-  default     = ""
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment to provision resources"
+  validation {
+    condition     = can(regex("^(?:dev|qa|sit|uat|prod)$", var.environment))
+    error_message = "Allowed values for environment: dev,qa,uat,sit,prod"
+  }
 }
 
 variable "enabled_for_deployment" {
@@ -138,12 +137,6 @@ variable "secret_values" {
   }))
   default     = []
   description = "(optional) values of key vault secrets"
-}
-
-variable "environment" {
-  description = "Environment Variable used as a prefix"
-  type        = string
-  default     = "shared"
 }
 
 variable "owners" {

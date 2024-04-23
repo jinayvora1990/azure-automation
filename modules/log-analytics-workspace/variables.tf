@@ -16,7 +16,7 @@ variable "application_name" {
 
 variable "environment" {
   type        = string
-  description = "Environment where backup vault is provisioned"
+  description = "Environment to provision resources"
   validation {
     condition     = can(regex("^(?:dev|qa|sit|uat|prod)$", var.environment))
     error_message = "Allowed values for environment: dev,qa,uat,sit,prod"

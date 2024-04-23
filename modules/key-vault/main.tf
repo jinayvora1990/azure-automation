@@ -3,18 +3,19 @@ data "azurerm_client_config" "current" {}
 locals {
   owners           = var.owners
   environment      = var.environment
-  location         = lower(var.location)
+  location         = lower(var.resource_location)
   region_shortcode = (local.location == "uaenorth" ? "uan" : "unknown")
   common_tags = {
     owners      = local.owners
     environment = local.environment
   }
   role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
+  kv_name                            = format("kv-%s-%s-%s-%s", var.application_name, var.environment, local.location, "1")
 }
 
 resource "azurerm_key_vault" "this" {
-  name                          = var.name
-  location                      = var.location
+  name                          = local.kv_name
+  location                      = local.location
   resource_group_name           = var.resource_group_name
   enabled_for_deployment        = var.enabled_for_deployment
   enabled_for_disk_encryption   = var.enabled_for_disk_encryption
@@ -52,7 +53,7 @@ resource "azurerm_management_lock" "this" {
   count = var.lock.kind != "None" ? 1 : 0
 
   lock_level = var.lock.kind
-  name       = coalesce(var.lock.name, "lock-${var.name}")
+  name       = coalesce(var.lock.name, "lock-${local.kv_name}")
   scope      = azurerm_key_vault.this.id
 }
 
@@ -72,7 +73,7 @@ resource "azurerm_role_assignment" "this" {
 resource "azurerm_monitor_diagnostic_setting" "this" {
   for_each = var.diagnostic_settings
 
-  name                           = each.value.name != null ? each.value.name : "diag-${var.name}"
+  name                           = each.value.name != null ? each.value.name : "diag-${local.kv_name}"
   target_resource_id             = azurerm_key_vault.this.id
   eventhub_authorization_rule_id = each.value.event_hub_authorization_rule_resource_id
   eventhub_name                  = each.value.event_hub_name
