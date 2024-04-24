@@ -1,7 +1,7 @@
 resource "azurerm_log_analytics_workspace" "this" {
-  name                          = var.workspace_name
+  name                          = format("law-%s-%s-%s-%s", var.application_name, var.environment, var.resource_location, "1")
   resource_group_name           = var.resource_group_name
-  location                      = var.location
+  location                      = var.resource_location
   local_authentication_disabled = var.local_authentication_disabled
   sku                           = var.sku
   retention_in_days             = var.retention_in_days
@@ -15,4 +15,3 @@ resource "azurerm_role_assignment" "logs" {
   role_definition_name = "Log Analytics Contributor"
   principal_id         = var.contributors[count.index]
 }
-

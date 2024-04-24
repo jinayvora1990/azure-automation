@@ -1,20 +1,31 @@
-variable "workspace_name" {
-  description = "The name of this Log Analytics workspace."
+variable "resource_location" {
   type        = string
+  description = "Region for the backup vault"
+  default     = "uaenorth"
+}
+
+variable "resource_group_name" {
+  type        = string
+  description = "The resource group for the backup vault"
+}
+
+variable "application_name" {
+  type        = string
+  description = "The application that requires this resource"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment to provision resources"
+  validation {
+    condition     = can(regex("^(?:dev|qa|sit|uat|prod)$", var.environment))
+    error_message = "Allowed values for environment: dev,qa,uat,sit,prod"
+  }
 }
 
 variable "sku" {
   description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
-}
-
-variable "resource_group_name" {
-  description = "The name of the resource group to create the resources in."
-  type        = string
-}
-
-variable "location" {
-  description = "The location to create the resources in."
-  type        = string
+  default     = "PerGB2018"
 }
 
 variable "local_authentication_disabled" {

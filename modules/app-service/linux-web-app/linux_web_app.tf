@@ -8,7 +8,7 @@ module "service-plan" {
   resource_location   = local.location
   resource_group_name = local.rg
   application_name    = var.application_name
-  env                 = var.env
+  environment         = var.environment
   tags                = merge(var.tags, local.common_tags)
   service_plan_sku    = var.service_plan_sku
   worker_count        = var.worker_count
@@ -22,7 +22,7 @@ module "app-insights" {
   resource_group_name = local.rg
   resource_location   = local.location
   application_name    = var.application_name
-  env                 = var.env
+  env                 = var.environment
   application_type    = "web"
   tags                = merge(var.tags, local.common_tags)
   workspace_id        = var.application_insights_enabled && var.log_analytics_ws != null ? data.azurerm_log_analytics_workspace.workspace.0.id : null
@@ -30,7 +30,7 @@ module "app-insights" {
 
 resource "azurerm_linux_web_app" "linux-web-app" {
   location            = local.location
-  name                = format("app-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("app-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   service_plan_id     = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
 
@@ -143,7 +143,7 @@ resource "azurerm_linux_web_app" "linux-web-app" {
 
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }
@@ -167,7 +167,7 @@ resource "azurerm_app_service_managed_certificate" "managed_certificate" {
 
 resource "azurerm_app_service_certificate" "certificate" {
   count               = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
-  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
   pfx_blob            = data.azurerm_key_vault_secret.certificate.0.value
