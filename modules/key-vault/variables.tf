@@ -119,26 +119,6 @@ A map of role assignments to create on the Key Vault. The map key is deliberatel
 DESCRIPTION
 }
 
-variable "key_values" {
-  type = list(object({
-    name     = string
-    key_type = string
-    key_size = optional(number)
-    key_opts = optional(list(string), [])
-  }))
-  default     = []
-  description = "(optional) values of key vault key"
-}
-
-variable "secret_values" {
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default     = []
-  description = "(optional) values of key vault secrets"
-}
-
 variable "owners" {
   description = "Project owners email address/AAD Group name"
   type        = string

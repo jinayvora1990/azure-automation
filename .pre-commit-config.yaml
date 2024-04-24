@@ -5,8 +5,7 @@ repos:
       - id: terraform_fmt
       - id: terraform_tflint
         args:
-          - --args=--module
-          - --args=--enable-rule=terraform_documented_variables
+          - args=--recursive
           - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
       - id: terraform_validate
         args:

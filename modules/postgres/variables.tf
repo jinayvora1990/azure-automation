@@ -25,18 +25,6 @@ variable "application_name" {
   default     = ""
 }
 
-variable "virtual_network_name" {
-  type        = string
-  default     = null
-  description = "Name of virtual network. You must also provide virtual_network_resource_group"
-}
-
-variable "virtual_network_resource_group" {
-  type        = string
-  default     = null
-  description = "Name of virtual network resource group"
-}
-
 variable "psql_subnet" {
   type = object({
     name           = string

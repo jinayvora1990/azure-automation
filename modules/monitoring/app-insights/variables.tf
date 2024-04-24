@@ -12,13 +12,11 @@ variable "resource_group_name" {
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
-  default     = ""
 }
 
-variable "env" {
+variable "environment" {
   type        = string
   description = "Environment where redis cache is provisioned"
-  default     = "dev"
 }
 
 variable "application_type" {

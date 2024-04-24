@@ -5,7 +5,7 @@ locals {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                          = format("acr%s%s%s%s", var.application_name, var.environment, var.resource_location, "1")
+  name                          = format("acr%s%s%s%s", var.application_name, local.environment, local.region_shortcode, "1")
   resource_group_name           = var.resource_group_name
   location                      = local.location
   sku                           = var.sku
@@ -20,7 +20,7 @@ resource "azurerm_container_registry" "acr" {
     content {
       type = "UserAssigned"
       identity_ids = [
-        azurerm_user_assigned_identity.acr_managed_identity.0.id
+        azurerm_user_assigned_identity.acr_managed_identity[0].id
       ]
     }
   }
@@ -58,8 +58,8 @@ resource "azurerm_container_registry" "acr" {
 
     content {
       enabled            = var.encryption_enabled
-      key_vault_key_id   = azurerm_key_vault_key.vault_key.0.id
-      identity_client_id = azurerm_user_assigned_identity.acr_managed_identity.0.client_id
+      key_vault_key_id   = azurerm_key_vault_key.vault_key[0].id
+      identity_client_id = azurerm_user_assigned_identity.acr_managed_identity[0].client_id
     }
   }
 
@@ -108,15 +108,15 @@ resource "azurerm_user_assigned_identity" "acr_managed_identity" {
 resource "azurerm_role_assignment" "crypto_encryption_role_assignment" {
   count = var.encryption_enabled ? 1 : 0
 
-  scope                = data.azurerm_key_vault.keyvault.0.id
+  scope                = data.azurerm_key_vault.keyvault[0].id
   role_definition_name = "Key Vault Crypto Service Encryption User"
-  principal_id         = azurerm_user_assigned_identity.acr_managed_identity.0.principal_id
+  principal_id         = azurerm_user_assigned_identity.acr_managed_identity[0].principal_id
 }
 
 resource "azurerm_role_assignment" "kv_administrator_role_assignment" {
   count = var.encryption_enabled ? 1 : 0
 
-  scope                = data.azurerm_key_vault.keyvault.0.id
+  scope                = data.azurerm_key_vault.keyvault[0].id
   role_definition_name = "Key Vault Administrator"
   principal_id         = data.azurerm_client_config.current.object_id
 }
@@ -125,7 +125,7 @@ resource "azurerm_key_vault_key" "vault_key" {
   count = var.encryption_enabled ? 1 : 0
 
   name         = var.azurerm_key_vault_key
-  key_vault_id = data.azurerm_key_vault.keyvault.0.id
+  key_vault_id = data.azurerm_key_vault.keyvault[0].id
   key_type     = "RSA"
   key_size     = 2048
 

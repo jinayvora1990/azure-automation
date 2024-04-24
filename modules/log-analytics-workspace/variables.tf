@@ -25,6 +25,7 @@ variable "environment" {
 
 variable "sku" {
   description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
+  type        = string
   default     = "PerGB2018"
 }
 
@@ -38,18 +39,6 @@ variable "retention_in_days" {
   description = "The number of days that logs should be retained."
   type        = number
   default     = 90
-}
-
-variable "diagnostic_setting_enabled_log_categories" {
-  description = "A list of log categories to be enabled for this diagnostic setting."
-  type        = list(string)
-  default     = ["Audit"]
-}
-
-variable "diagnostic_setting_enabled_metric_categories" {
-  description = "A list of metric categories to be enabled for this diagnostic setting."
-  type        = list(string)
-  default     = []
 }
 
 variable "tags" {
