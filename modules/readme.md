@@ -44,9 +44,7 @@
 | App Service Certificate    | sslcert      |
 | App Service Plan           | asp          |
 | App Service Environment    | ase          |
-
-| App Service Certificate    | sslcert      |
 | Storage Container          | sc           |
-
+| Log Analytics Workspace    | law          |
 
 
