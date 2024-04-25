@@ -1,7 +1,7 @@
 locals {
   common_tags = { module = "app-service-environment" }
   rg          = var.resource_group_name
-  location    = var.resource_location
+  location    = lower(var.resource_location)
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
@@ -9,7 +9,7 @@ locals {
 }
 
 resource "azurerm_app_service_environment_v3" "ase" {
-  name                = format("ase-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "1")
+  name                = format("ase-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), "1")
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.ase_subnet.id
 
@@ -25,6 +25,8 @@ resource "azurerm_app_service_environment_v3" "ase" {
       value = cluster_setting.value.value
     }
   }
+
+  tags = merge(var.tags, local.common_tags, { "resource_type" = "app-service-environment-v3" })
 }
 
 resource "azurerm_monitor_diagnostic_setting" "this" {
