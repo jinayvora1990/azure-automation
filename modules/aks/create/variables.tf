@@ -333,13 +333,13 @@ variable "regular_node_pools" {
 variable "enable_private_cluster" {
   type        = bool
   description = "Enable private Kubernetes cluster. Changing this forces a new resource to be created."
-  default     = false
+  default     = true
 }
 
 variable "enable_private_cluster_public_fqdn" {
   type        = bool
   description = "Enable private Kubernetes cluster public fqdn."
-  default     = false
+  default     = true
 }
 
 variable "aks_private_dns_zone_id" {

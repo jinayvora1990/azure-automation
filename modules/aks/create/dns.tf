@@ -20,8 +20,8 @@ resource "azurerm_role_assignment" "private_dns_zone_contributor" {
 
 resource "azurerm_role_assignment" "custom_private_dns_zone_contributor" {
   count = local.custom_private_dns_zone_role_assignment_count
-
-  scope                = var.aks_private_dns_zone_id
+  scope = local.aks_private_dns_zone_id
+  #scope                = var.aks_private_dns_zone_id
   role_definition_name = "Private DNS Zone Contributor"
   principal_id         = azurerm_user_assigned_identity.aks.principal_id
 }
