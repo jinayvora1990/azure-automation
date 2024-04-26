@@ -10,5 +10,5 @@ output "vault_id" {
 
 output "encryption_key" {
   description = "The name of the encryption key for the recovery services vault"
-  value       = coalesce(azurerm_key_vault_key.encryption_key.0.name, null)
+  value       = coalesce(azurerm_key_vault_key.encryption_key[0].name, null)
 }

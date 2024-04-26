@@ -12,13 +12,15 @@ variable "resource_group_name" {
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
-  default     = ""
 }
 
-variable "env" {
+variable "environment" {
   type        = string
-  description = "Environment where backup vault is provisioned"
-  default     = "dev"
+  description = "Environment where redis cache is provisioned"
+  validation {
+    condition     = can(regex("^(?:dev|qa|sit|uat|prod)$", var.environment))
+    error_message = "Allowed values for environment: dev,qa,uat,sit,prod"
+  }
 }
 
 variable "datastore_type" {

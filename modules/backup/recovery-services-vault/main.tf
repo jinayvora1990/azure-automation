@@ -1,7 +1,7 @@
 locals {
   common_tags = { module = "redis-cache" }
   rg          = var.resource_group_name
-  location    = var.resource_location
+  location    = lower(var.resource_location)
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
@@ -15,7 +15,7 @@ module "res-id" {
 
 resource "azurerm_key_vault_key" "encryption_key" {
   count = var.encryption_config != null ? 1 : 0
-  name  = format("rsv-kvkey-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name  = format("rsv-kvkey-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   key_opts = [
     "decrypt",
     "encrypt",
@@ -41,7 +41,7 @@ resource "azurerm_key_vault_key" "encryption_key" {
 }
 
 resource "azurerm_user_assigned_identity" "rsv_managed_identity" {
-  name                = format("rsv-id-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("rsv-id-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
 }
@@ -54,7 +54,7 @@ resource "azurerm_role_assignment" "crypto_encryption_role_assignment" {
 
 resource "azurerm_recovery_services_vault" "vault" {
   #required
-  name                = format("rsv-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("rsv-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
   sku                 = var.sku

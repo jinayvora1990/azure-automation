@@ -1,7 +1,7 @@
 locals {
   common_tags = { module = "backup-vault" }
   rg          = var.resource_group_name
-  location    = var.resource_location
+  location    = lower(var.resource_location)
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
@@ -14,7 +14,7 @@ module "res-id" {
 
 resource "azurerm_data_protection_backup_vault" "backup_vault" {
   #Required
-  name                = format("bvault-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("bvault-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   datastore_type      = var.datastore_type
   location            = local.location

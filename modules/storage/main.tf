@@ -13,19 +13,14 @@ locals {
   account_replication_type = (local.account_tier == "Premium" ? "LRS" : split("_", var.skuname)[1])
 }
 
-#---------------------------------------------------------
-# Storage Account Creation or selection 
-#----------------------------------------------------------
-resource "random_string" "unique" {
-  length  = 6
-  special = false
-  upper   = false
+module "res-id" {
+  source = "../utility/random-identifier"
 }
 
 resource "azurerm_storage_account" "storeacc" {
-  name                      = substr(format("%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24)
+  name                      = substr(format("%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), module.res-id.result), 0, 24)
   resource_group_name       = var.resource_group
-  location                  = var.location
+  location                  = local.location
   account_kind              = var.account_kind
   account_tier              = local.account_tier
   account_replication_type  = local.account_replication_type

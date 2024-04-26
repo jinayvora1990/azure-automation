@@ -4,11 +4,11 @@ module "res-id" {
 
 module "service-plan" {
   count                    = var.existing_service_plan == null ? 1 : 0
-  source                   = "../service-plan"
+  source                   = "../app-service-plan"
   resource_location        = local.location
   resource_group_name      = local.rg
   application_name         = var.application_name
-  env                      = var.env
+  environment              = var.environment
   service_plan_sku         = var.service_plan_sku
   max_elastic_worker_count = var.max_elastic_worker_count
   os_type                  = "Linux"
@@ -22,35 +22,35 @@ module "app-insights" {
   resource_group_name = local.rg
   resource_location   = local.location
   application_name    = var.application_name
-  env                 = var.env
+  environment         = var.environment
   application_type    = "web"
   tags                = merge(var.tags, local.common_tags)
-  workspace_id        = var.application_insights_enabled && var.log_analytics_ws != null ? data.azurerm_log_analytics_workspace.workspace.0.id : null
+  workspace_id        = var.application_insights_enabled && var.log_analytics_ws != null ? data.azurerm_log_analytics_workspace.workspace[0].id : null
 }
 
 module "storage_account" {
   source               = "../../storage"
   resource_group       = local.rg
-  environment          = var.env
+  environment          = var.environment
   location             = local.location
   application_name     = var.application_name
-  storage_account_name = format("func-sa-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  storage_account_name = format("func-sa-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   account_kind         = "StorageV2"
   skuname              = "Standard_LRS"
 }
 
 resource "azurerm_linux_function_app" "function-app" {
   location                   = local.location
-  name                       = format("func-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                       = format("func-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name        = local.rg
-  service_plan_id            = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
+  service_plan_id            = var.existing_service_plan == null ? module.service-plan[0].id : data.azurerm_service_plan.existing_service_plan[0].id
   storage_account_name       = module.storage_account.storage_account_name
   storage_account_access_key = module.storage_account.storage_primary_access_key
 
   app_settings                  = local.app_settings
   https_only                    = true
   public_network_access_enabled = var.public_network_access_enabled
-  virtual_network_subnet_id     = var.app_function_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
+  virtual_network_subnet_id     = var.app_function_subnet != null ? data.azurerm_subnet.app_service_subnet[0].id : null
   functions_extension_version   = "~4"
   daily_memory_time_quota       = local.is_service_plan_consumption ? var.daily_memory_time_quota : null
   #   key_vault_reference_identity_id = ""
@@ -141,7 +141,7 @@ resource "azurerm_linux_function_app" "function-app" {
     content {
       enabled             = lookup(var.backup, "enabled", true)
       name                = "${var.application_name}-app-service-backup"
-      storage_account_url = "https://${var.backup.backup_sa.name}.blob.core.windows.net/${azurerm_storage_container.backup_container.0.name}${data.azurerm_storage_account_blob_container_sas.container_sas.0.sas}"
+      storage_account_url = "https://${var.backup.backup_sa.name}.blob.core.windows.net/${azurerm_storage_container.backup_container[0].name}${data.azurerm_storage_account_blob_container_sas.container_sas[0].sas}"
       schedule {
         frequency_interval       = var.backup.schedule.frequency_interval
         frequency_unit           = var.backup.schedule.frequency_unit
@@ -158,7 +158,7 @@ resource "azurerm_linux_function_app" "function-app" {
 
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }

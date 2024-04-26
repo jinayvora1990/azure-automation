@@ -26,7 +26,7 @@ data "azurerm_key_vault" "key_vault" {
 data "azurerm_key_vault_secret" "certificate" {
   count        = var.custom_domain != null && try(var.custom_domain.certificate != null, false) ? 1 : 0
   name         = var.custom_domain.certificate.name
-  key_vault_id = data.azurerm_key_vault.key_vault.0.id
+  key_vault_id = data.azurerm_key_vault.key_vault[0].id
 }
 
 data "azurerm_storage_account" "backup_sa" {
@@ -37,8 +37,8 @@ data "azurerm_storage_account" "backup_sa" {
 
 data "azurerm_storage_account_blob_container_sas" "container_sas" {
   count             = var.backup == null ? 0 : 1
-  connection_string = data.azurerm_storage_account.backup_sa.0.primary_connection_string
-  container_name    = azurerm_storage_container.backup_container.0.name
+  connection_string = data.azurerm_storage_account.backup_sa[0].primary_connection_string
+  container_name    = azurerm_storage_container.backup_container[0].name
   https_only        = true
   start             = "2024-01-23T12:20:23Z"
   expiry            = "2025-12-24T00:00:00Z"
