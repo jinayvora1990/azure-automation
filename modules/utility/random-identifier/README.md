@@ -1,12 +1,15 @@
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | 3.6.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.1 |
 
 ## Modules
 
@@ -16,7 +19,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [random_string.unique-id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [random_string.unique-id](https://registry.terraform.io/providers/hashicorp/random/3.6.1/docs/resources/string) | resource |
 
 ## Inputs
 
