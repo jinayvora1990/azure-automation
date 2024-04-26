@@ -10,24 +10,24 @@ variable "location" {
   description = "The location/region to keep all your network resources. To get the list of all locations with table format from azure cli, run 'az account list-locations -o table'"
 }
 
-variable "cosmosdb_account" {
-  type = map(object({
-    offer_type                            = string
-    kind                                  = optional(string)
-    enable_free_tier                      = optional(bool)
-    analytical_storage_enabled            = optional(bool)
-    enable_automatic_failover             = optional(bool)
-    public_network_access_enabled         = optional(bool)
-    is_virtual_network_filter_enabled     = optional(bool)
-    key_vault_key_id                      = optional(string)
-    enable_multiple_write_locations       = optional(bool)
-    access_key_metadata_writes_enabled    = optional(bool)
-    mongo_server_version                  = optional(string)
-    network_acl_bypass_for_azure_services = optional(bool)
-    network_acl_bypass_ids                = optional(list(string))
-  }))
-  description = "Manages a CosmosDB (formally DocumentDB) Account specifications"
-}
+#variable "cosmosdb_account" {
+#  type = map(object({
+#    offer_type                            = string
+#    kind                                  = optional(string)
+#    enable_free_tier                      = optional(bool)
+#    analytical_storage_enabled            = optional(bool)
+#    enable_automatic_failover             = optional(bool)
+#    public_network_access_enabled         = optional(bool)
+#    is_virtual_network_filter_enabled     = optional(bool)
+#    key_vault_key_id                      = optional(string)
+#    enable_multiple_write_locations       = optional(bool)
+#    access_key_metadata_writes_enabled    = optional(bool)
+#    mongo_server_version                  = optional(string)
+#    network_acl_bypass_for_azure_services = optional(bool)
+#    network_acl_bypass_ids                = optional(list(string))
+#  }))
+#  description = "Manages a CosmosDB (formally DocumentDB) Account specifications"
+#}
 
 #variable "databases" {
 #  description = "List of databases"
@@ -42,6 +42,39 @@ variable "cosmosdb_account" {
 #    }))
 #  }))
 #}
+
+variable "cosmosdb_specifications" {
+  description = "Specifications for Azure Cosmos DB and databases"
+  type = object({
+    cosmosdb_account = map(object({
+      offer_type                            = string
+      kind                                  = optional(string)
+      enable_free_tier                      = optional(bool)
+      analytical_storage_enabled            = optional(bool)
+      enable_automatic_failover             = optional(bool)
+      public_network_access_enabled         = optional(bool)
+      is_virtual_network_filter_enabled     = optional(bool)
+      key_vault_key_id                      = optional(string)
+      enable_multiple_write_locations       = optional(bool)
+      access_key_metadata_writes_enabled    = optional(bool)
+      mongo_server_version                  = optional(string)
+      network_acl_bypass_for_azure_services = optional(bool)
+      network_acl_bypass_ids                = optional(list(string))
+    }))
+    databases = map(object({
+      description = optional(string)
+      throughput     = optional(number)
+      max_throughput = optional(number)
+      collections = list(object({
+        name           = string
+        shard_key      = string
+        throughput     = optional(number)
+        max_throughput = optional(number)
+      }))
+    }))
+  })
+}
+
 
 
 variable "consistency_policy" {
