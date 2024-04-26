@@ -75,5 +75,5 @@ variable "internet_query_enabled" {
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default = {}
+  default     = {}
 }

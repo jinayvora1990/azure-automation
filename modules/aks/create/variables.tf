@@ -380,6 +380,7 @@ variable "aks_pod_cidr" {
 
 variable "aks_service_cidr" {
   description = "CIDR allocated for Kubernetes Services"
+  type        = string
   default     = "10.117.17.0/24"
   validation {
     condition     = can(regex("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(3[0-2]|[1-2][0-9]|[0-9]))$", var.aks_service_cidr))
@@ -389,6 +390,7 @@ variable "aks_service_cidr" {
 
 variable "aks_dns_ip" {
   description = "Kubernetes DNS service IP"
+  type        = string
   default     = "10.117.17.10"
   validation {
     condition     = can(regex("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", var.aks_dns_ip))
