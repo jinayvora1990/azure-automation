@@ -4,7 +4,7 @@ module "res-id" {
 
 module "service-plan" {
   count               = var.existing_service_plan == null ? 1 : 0
-  source              = "../service-plan"
+  source              = "../app-service-plan"
   resource_location   = local.location
   resource_group_name = local.rg
   application_name    = var.application_name
@@ -22,22 +22,22 @@ module "app-insights" {
   resource_group_name = local.rg
   resource_location   = local.location
   application_name    = var.application_name
-  env                 = var.environment
+  environment         = var.environment
   application_type    = "web"
   tags                = merge(var.tags, local.common_tags)
-  workspace_id        = var.application_insights.enabled ? data.azurerm_log_analytics_workspace.workspace.0.id : null
+  workspace_id        = var.application_insights.enabled ? data.azurerm_log_analytics_workspace.workspace[0].id : null
 }
 
 resource "azurerm_linux_web_app" "linux-web-app" {
   location            = local.location
-  name                = format("app-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("app-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
-  service_plan_id     = var.existing_service_plan == null ? module.service-plan.0.id : data.azurerm_service_plan.existing_service_plan[0].id
+  service_plan_id     = var.existing_service_plan == null ? module.service-plan[0].id : data.azurerm_service_plan.existing_service_plan[0].id
 
   app_settings                  = local.app_settings
   https_only                    = true
   public_network_access_enabled = var.public_network_access_enabled
-  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet.0.id : null
+  virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet[0].id : null
 
   site_config {
     always_on                         = lookup(var.site_config, "always_on", null)
@@ -107,7 +107,7 @@ resource "azurerm_linux_web_app" "linux-web-app" {
     content {
       enabled             = lookup(var.backup, "enabled", true)
       name                = "${var.application_name}-app-service-backup"
-      storage_account_url = "https://${var.backup.backup_sa.name}.blob.core.windows.net/${azurerm_storage_container.backup_container.0.name}${data.azurerm_storage_account_blob_container_sas.container_sas.0.sas}"
+      storage_account_url = "https://${var.backup.backup_sa.name}.blob.core.windows.net/${azurerm_storage_container.backup_container[0].name}${data.azurerm_storage_account_blob_container_sas.container_sas[0].sas}"
       schedule {
         frequency_interval       = var.backup.schedule.frequency_interval
         frequency_unit           = var.backup.schedule.frequency_unit
@@ -143,7 +143,7 @@ resource "azurerm_linux_web_app" "linux-web-app" {
 
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }
@@ -159,17 +159,17 @@ resource "azurerm_app_service_custom_hostname_binding" "app_service_custom_hostn
 
 resource "azurerm_app_service_certificate" "certificate" {
   count               = var.custom_domain != null ? 1 : 0
-  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
-  pfx_blob            = data.azurerm_key_vault_secret.certificate.0.value
+  pfx_blob            = data.azurerm_key_vault_secret.certificate[0].value
   tags                = merge(var.tags, local.common_tags, { "resource_type" = "ssl-certificate" })
 }
 
 resource "azurerm_app_service_certificate_binding" "certificate_binding" {
   count               = var.custom_domain != null ? 1 : 0
-  certificate_id      = azurerm_app_service_certificate.certificate.0.id
-  hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding.0.id
+  certificate_id      = azurerm_app_service_certificate.certificate[0].id
+  hostname_binding_id = azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding[0].id
   ssl_state           = "SniEnabled"
   depends_on = [
     azurerm_app_service_certificate.certificate

@@ -12,19 +12,21 @@ variable "resource_group_name" {
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
-  default     = ""
 }
 
-variable "env" {
+variable "environment" {
   type        = string
   description = "Environment where redis cache is provisioned"
-  default     = "dev"
+  validation {
+    condition     = can(regex("^(?:dev|qa|sit|uat|prod)$", var.environment))
+    error_message = "Allowed values for environment: dev,qa,uat,sit,prod"
+  }
 }
 
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default = {}
+  default     = {}
 }
 
 #service plan
@@ -58,7 +60,7 @@ variable "app_function_subnet" {
 variable "env_vars" {
   type        = map(string)
   description = "The environment variables map"
-  default = {}
+  default     = {}
 }
 
 variable "artifact_url" {
@@ -82,12 +84,6 @@ variable "existing_service_plan" {
   default     = null
 }
 
-variable "worker_count" {
-  type        = number
-  description = "The number of workers assigned to the service plan and the app-function"
-  default     = 1
-}
-
 variable "daily_memory_time_quota" {
   type        = number
   description = "The amount of memory in gigabyte-seconds that the application is allowed to consume per day."
@@ -105,9 +101,9 @@ variable "app_service_logs" {
 
 variable "custom_domain" {
   type = object({
-    hostname    = string
+    hostname = string
     certificate = optional(object({
-      name  = string
+      name = string
       vault = object({
         name           = string
         resource_group = string
@@ -124,7 +120,7 @@ variable "backup" {
       name           = string
       resource_group = string
     })
-    enabled  = optional(bool)
+    enabled = optional(bool)
     schedule = object({
       frequency_interval       = number
       frequency_unit           = string
@@ -145,7 +141,7 @@ variable "application_insights_enabled" {
 
 variable "log_analytics_ws" {
   description = "The log analytics workspace to be used for the app insights"
-  type        = object({
+  type = object({
     name           = string
     resource_group = string
   })
@@ -166,7 +162,7 @@ variable "site_config" {
     elastic_instance_minimum          = optional(string)
     pre_warmed_instance_count         = optional(string)
     application_stack                 = optional(map(string))
-    app_service_logs                  = optional(object({
+    app_service_logs = optional(object({
       disk_quota_mb         = number
       retention_period_days = number
     }))
@@ -192,18 +188,18 @@ variable "site_config" {
       #       headers     = optional(object({}))
     })), [])
     default_ip_restriction_action = optional(string)
-    cors                          = optional(object({
+    cors = optional(object({
       allowed_origins     = optional(list(string))
       support_credentials = optional(bool)
     }))
   })
-  default = {}
+  default     = {}
   description = "Site config for App Service."
 }
 
 variable "connection_strings" {
   description = "Connection strings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#connection_string"
-  type        = list(object({
+  type = list(object({
     name  = string
     type  = string
     value = string

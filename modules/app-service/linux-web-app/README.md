@@ -1,12 +1,15 @@
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
 
 ## Modules
 
@@ -14,7 +17,7 @@ No requirements.
 |------|--------|---------|
 | <a name="module_app-insights"></a> [app-insights](#module\_app-insights) | ../../monitoring/app-insights | n/a |
 | <a name="module_res-id"></a> [res-id](#module\_res-id) | ../../utility/random-identifier | n/a |
-| <a name="module_service-plan"></a> [service-plan](#module\_service-plan) | ../service-plan | n/a |
+| <a name="module_service-plan"></a> [service-plan](#module\_service-plan) | ../app-service-plan | n/a |
 
 ## Resources
 
@@ -23,7 +26,6 @@ No requirements.
 | [azurerm_app_service_certificate.certificate](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate) | resource |
 | [azurerm_app_service_certificate_binding.certificate_binding](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate_binding) | resource |
 | [azurerm_app_service_custom_hostname_binding.app_service_custom_hostname_binding](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_custom_hostname_binding) | resource |
-| [azurerm_app_service_managed_certificate.managed_certificate](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_managed_certificate) | resource |
 | [azurerm_linux_web_app.linux-web-app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app) | resource |
 | [azurerm_storage_container.backup_container](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container) | resource |
 | [azurerm_key_vault.key_vault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
@@ -38,16 +40,15 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_application_insights_enabled"></a> [application\_insights\_enabled](#input\_application\_insights\_enabled) | Use Application Insights for this App Service | `bool` | `false` | no |
-| <a name="input_application_name"></a> [application\_name](#input\_application\_name) | The application that requires this resource | `string` | `""` | no |
+| <a name="input_application_insights"></a> [application\_insights](#input\_application\_insights) | The log analytics workspace to be used for the app insights | <pre>object({<br>    enabled = bool<br>    log_analytics_ws = optional(object({<br>      name           = string<br>      resource_group = string<br>    }))<br>  })</pre> | <pre>{<br>  "enabled": false<br>}</pre> | no |
+| <a name="input_application_name"></a> [application\_name](#input\_application\_name) | The application that requires this resource | `string` | n/a | yes |
 | <a name="input_artifact_url"></a> [artifact\_url](#input\_artifact\_url) | The url for the artifact to run | `string` | `null` | no |
 | <a name="input_backup"></a> [backup](#input\_backup) | The backup configuration for the app service. Skip this for the default backup configuration | <pre>object({<br>    backup_sa = object({<br>      name           = string<br>      resource_group = string<br>    })<br>    enabled = optional(bool)<br>    schedule = object({<br>      frequency_interval       = number<br>      frequency_unit           = string<br>      start_time               = optional(string)<br>      retention_period_days    = optional(number)<br>      keep_at_least_one_backup = optional(bool)<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_connection_strings"></a> [connection\_strings](#input\_connection\_strings) | Connection strings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#connection_string | <pre>list(object({<br>    name  = string<br>    type  = string<br>    value = string<br>  }))</pre> | `[]` | no |
-| <a name="input_custom_domain"></a> [custom\_domain](#input\_custom\_domain) | Map a custom domain with the app service. If you do not pass the certificate, a managed certificate is created by azure | <pre>object({<br>    hostname = string<br>    certificate = optional(object({<br>      name = string<br>      vault = object({<br>        name           = string<br>        resource_group = string<br>      })<br>    }))<br>  })</pre> | `null` | no |
-| <a name="input_env"></a> [env](#input\_env) | Environment where redis cache is provisioned | `string` | `"dev"` | no |
+| <a name="input_custom_domain"></a> [custom\_domain](#input\_custom\_domain) | Map a custom domain with the app service. If you do not pass the certificate, a managed certificate is created by azure | <pre>object({<br>    hostname = string<br>    certificate = object({<br>      name = string<br>      vault = object({<br>        name           = string<br>        resource_group = string<br>      })<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | The environment variables map | `map(string)` | `{}` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment where redis cache is provisioned | `string` | n/a | yes |
 | <a name="input_existing_service_plan"></a> [existing\_service\_plan](#input\_existing\_service\_plan) | The details of an existing service plan | <pre>object({<br>    name                = string<br>    resource_group_name = string<br>  })</pre> | `null` | no |
-| <a name="input_log_analytics_ws"></a> [log\_analytics\_ws](#input\_log\_analytics\_ws) | The log analytics workspace to be used for the app insights | <pre>object({<br>    name           = string<br>    resource_group = string<br>  })</pre> | `null` | no |
 | <a name="input_logs"></a> [logs](#input\_logs) | The logging configuration for the app service | <pre>object({<br>    application_logs = object({<br>      file_system_level = string<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled) | Status of public network access to the web app | `bool` | `true` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The resource group for the redis cache | `string` | n/a | yes |

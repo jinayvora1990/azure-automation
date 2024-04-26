@@ -1,7 +1,7 @@
 locals {
   common_tags = { module = "app-service" }
   rg          = var.resource_group_name
-  location    = var.resource_location
+  location    = lower(var.resource_location)
   location_short = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
@@ -9,9 +9,9 @@ locals {
 
 
   default_app_settings = var.application_insights.enabled ? {
-    APPLICATION_INSIGHTS_IKEY             = module.app-insights.0.instrumentation_key
-    APPINSIGHTS_INSTRUMENTATIONKEY        = module.app-insights.0.instrumentation_key
-    APPLICATIONINSIGHTS_CONNECTION_STRING = module.app-insights.0.connection_string
+    APPLICATION_INSIGHTS_IKEY             = module.app-insights[0].instrumentation_key
+    APPINSIGHTS_INSTRUMENTATIONKEY        = module.app-insights[0].instrumentation_key
+    APPLICATIONINSIGHTS_CONNECTION_STRING = module.app-insights[0].connection_string
   } : {}
 
   artifacts = {
