@@ -6,4 +6,5 @@ locals {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
+  capture_config_list = [for eventhub in var.eventhub_config : eventhub.capture_config if eventhub.enable_capture]
 }

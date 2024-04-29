@@ -9,9 +9,14 @@ resource "azurerm_eventhub_namespace" "eh-namespace" {
   sku                           = var.sku
   capacity                      = var.capacity
   auto_inflate_enabled          = var.auto_inflate_enabled
-  maximum_throughput_units      = var.maximum_throughput_units
+  maximum_throughput_units      = var.maximum_throughput_units    #TODO: Max TPUs cannot be >0 if auto inflate is disabled
   public_network_access_enabled = var.public_network_access_enabled
   zone_redundant                = var.zone_redundant
+
+  identity {
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.sa_access.id]
+  }
 
   dynamic "network_rulesets" {
     for_each = var.network_rulesets != null && var.sku != "Basic" ? ["network_rulesets"] : []
@@ -71,4 +76,11 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
       category = metric.value
     }
   }
+  depends_on = [azurerm_user_assigned_identity.sa_access]
+}
+
+resource "azurerm_user_assigned_identity" "sa_access" {
+  location            = var.resource_location
+  name                = "storage-account-access-identity"
+  resource_group_name = local.rg
 }

@@ -26,7 +26,7 @@ variable "environment" {
 variable "tags" {
   type        = map(string)
   description = "Tags to be added to the resources"
-  default = {}
+  default     = {}
 }
 
 variable "sku" {
@@ -59,17 +59,17 @@ variable "public_network_access_enabled" {
   default     = false
 }
 
-variable "zone_redundant"{
-  type = bool
+variable "zone_redundant" {
+  type        = bool
   description = "Is the eventhub namespace zone redundant"
-  default = false
+  default     = false
 }
 
 variable "network_rulesets" {
   type = object({
     default_action                 = string
     trusted_service_access_enabled = optional(bool)
-    virtual_network_rules          = optional(list(object({
+    virtual_network_rules = optional(list(object({
       subnet_id                                       = string
       ignore_missing_virtual_network_service_endpoint = optional(bool)
     })), [])
@@ -82,22 +82,35 @@ variable "network_rulesets" {
   default     = null
 }
 
-variable "message_retention" {
-  type        = number
-  description = "Specifies the number of days to retain the events for this Event Hub."
-  default     = 1
+variable "eventhub_config" {
+  type = list(object({
+    name              = string
+    message_retention = number      #TODO: Can't be greater than 1 for basic tier
+    partition_count   = number
+    eventhub_status   = optional(string, "Active")
+    enable_capture    = optional(bool, false)
+    capture_config = optional(object({
+      encoding            = string
+      interval_in_seconds = optional(number)
+      size_limit_in_bytes = optional(number)
+      skip_empty_archives = optional(bool)
+      destination = object({
+        blob_container_name = string
+        storage_account_id  = string
+      })
+    }))
+  }))
+  description = "List of eventhub instances(topics) and their configuration to be created in the namespace"
+  default     = []
+  /*validation {
+    Check enable_capture is true, then capture_config is not null
+  }*/
 }
 
-variable "partition_count" {
-  type        = number
-  description = "Specifies the current number of shards on the Event Hub."
-  default     = 4
-}
-
-variable "eventhub_status" {
+variable "identity" { #TODO: CHange this
   type        = string
-  description = "Specifies the status of the Event Hub resource. Possible values are Active, Disabled and SendDisabled"
-  default     = "Active"
+  description = "The identity"
+  default     = null
 }
 
 variable "diagnostic_settings" {
@@ -131,7 +144,10 @@ DESCRIPTION
   nullable    = false
 
   validation {
-    condition     = alltrue([for _, v in var.diagnostic_settings : contains(["Dedicated", "AzureDiagnostics"], v.log_analytics_destination_type)])
+    condition = alltrue([
+      for _, v in var.diagnostic_settings :
+      contains(["Dedicated", "AzureDiagnostics"], v.log_analytics_destination_type)
+    ])
     error_message = "Log analytics destination type must be one of: 'Dedicated', 'AzureDiagnostics'."
   }
   validation {
