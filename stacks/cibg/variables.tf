@@ -79,5 +79,5 @@ variable "ase_cluster_setting" {
 
 variable "acr_names" {
   type = list(string)
-  default = ["akstest02"]
+  default = ["akstest02","akstest03"]
 }

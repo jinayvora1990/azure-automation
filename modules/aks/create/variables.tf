@@ -446,8 +446,6 @@ variable "tags" {
   description = "User defined extra tags to be added to all resources created in the module"
   default     = {}
 }
-
 variable "acr_names" {
-  type    = list(string)
+  type = list(string)
 }
-

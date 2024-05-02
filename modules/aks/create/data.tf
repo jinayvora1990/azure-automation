@@ -5,8 +5,6 @@ data "azurerm_subnet" "aks_subnet" {
 }
 
 data "azurerm_container_registry" "acr" {
-  for_each = toset(var.acr_names)
-
+  for_each            = toset(var.acr_names)
   name                = each.value
   resource_group_name = var.resource_group_name
-}
