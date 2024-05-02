@@ -95,7 +95,7 @@ resource "azurerm_private_endpoint" "pep" {
   name                = format("pep-evhns-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)))
   location            = local.location
   resource_group_name = local.rg
-  subnet_id           = data.azurerm_subnet.privatelink_subnet.0.id
+  subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
 
   private_service_connection {
     name                           = format("%s%s", azurerm_eventhub_namespace.eh-namespace.name, "-privatelink")

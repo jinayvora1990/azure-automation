@@ -33,7 +33,8 @@ resource "azurerm_eventhub" "eventhub" {
 }
 
 resource "azurerm_role_assignment" "role-assignment" {
-  count                = length(local.capture_config_list)
+  count = length(local.capture_config_list)
+
   principal_id         = azurerm_user_assigned_identity.sa_access.principal_id
   scope                = local.capture_config_list[count.index].destination.storage_account_id
   role_definition_name = "Storage Blob Data Contributor"
