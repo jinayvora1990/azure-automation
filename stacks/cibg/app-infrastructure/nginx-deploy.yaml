@@ -19,6 +19,7 @@ spec:
     spec:
       containers:
         - name: nginx
+#          image: akstest02.azurecr.io/samples/nginx:latest
           image: nginx:latest
           ports:
             - containerPort: 80

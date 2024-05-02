@@ -444,6 +444,11 @@ variable "tags" {
   description = "User defined extra tags to be added to all resources created in the module"
   default     = {}
 }
-
-
-
+variable "enable_id" {
+  type        = bool
+  default     = false
+  description = "(optional) enable user managed identity for ACR Registry"
+}
+variable "acr_id" {
+  type = string
+}
