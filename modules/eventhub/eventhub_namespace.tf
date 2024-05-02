@@ -85,7 +85,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 }
 
 resource "azurerm_user_assigned_identity" "sa_access" {
-  location            = var.resource_location
+  location            = local.location
   name                = "storage-account-access-identity"
   resource_group_name = local.rg
 }
@@ -104,11 +104,4 @@ resource "azurerm_private_endpoint" "pep" {
     subresource_names              = ["namespace"]
   }
   tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
-}
-
-data "azurerm_subnet" "privatelink_subnet" {
-  count                = var.privatelink_subnet != null ? 1 : 0
-  name                 = var.privatelink_subnet.name
-  virtual_network_name = var.privatelink_subnet.vnet_name
-  resource_group_name  = var.privatelink_subnet.resource_group
 }

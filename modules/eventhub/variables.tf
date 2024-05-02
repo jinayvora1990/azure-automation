@@ -62,7 +62,7 @@ variable "public_network_access_enabled" {
 variable "zone_redundant" {
   type        = bool
   description = "Is the eventhub namespace zone redundant"
-  default     = false
+  default     = true
 }
 
 variable "network_rulesets" {
