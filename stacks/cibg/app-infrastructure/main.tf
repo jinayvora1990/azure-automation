@@ -31,6 +31,11 @@ module "base-infra" {
   tags = local.tags
 
   depends_on = [module.app_resource_group]
-  acr_id     = "/subscriptions/e1811a95-7c51-4955-a86e-de0ce0c2cf73/resourceGroups/aks-test-rg/providers/Microsoft.ContainerRegistry/registries/akstest02"
+  acr_names  = var.acr_names
 }
 
+
+variable "acr_names" {
+  type    = list(string)
+  default = ["akstest02", "akstest03"]
+}

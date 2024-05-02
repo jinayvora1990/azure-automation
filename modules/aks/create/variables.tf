@@ -449,6 +449,6 @@ variable "enable_id" {
   default     = false
   description = "(optional) enable user managed identity for ACR Registry"
 }
-variable "acr_id" {
-  type = string
+variable "acr_names" {
+  type = list(string)
 }
