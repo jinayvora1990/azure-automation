@@ -447,5 +447,8 @@ variable "tags" {
   default     = {}
 }
 
+variable "acr_id" {
+  type = string
+}
 
 
