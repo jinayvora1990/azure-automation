@@ -5,7 +5,7 @@ locals {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                          = format("acr-%s-%s-%s-%s", var.application_name, var.environment, var.resource_location, "1")
+  name                          = format("acr%s%s%s%s", var.application_name, var.environment, var.resource_location, "1")
   resource_group_name           = var.resource_group_name
   location                      = local.location
   sku                           = var.sku

@@ -27,7 +27,7 @@ module "app_service_environment" {
 }
 
 module "app_svc_plan" {
-  source = "../../modules/app-service/service-plan"
+  source = "../../modules/app-service/app-service-plan"
 
   resource_group_name = module.app_resource_group.rg_name
   application_name    = local.application_name
