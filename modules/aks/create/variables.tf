@@ -322,9 +322,9 @@ variable "regular_node_pools" {
     condition = alltrue([
       for pool in var.regular_node_pools :
       can(regex("^\\w+$", pool.vm_size)) &&
-    can(regex("^[a-z0-9]+$", pool.name)) &&
-    can(regex("^(System|User)$", pool.mode)) &&
-    (pool.os_disk_type == null || can(regex("^(Ephemeral|Managed)$", pool.os_disk_type)))
+      can(regex("^[a-z0-9]+$", pool.name)) &&
+      can(regex("^(System|User)$", pool.mode)) &&
+      (pool.os_disk_type == null || can(regex("^(Ephemeral|Managed)$", pool.os_disk_type)))
       ])
     error_message = "Some of regular_node_pools is invalid."
   }
