@@ -34,7 +34,16 @@ resource "azurerm_role_assignment" "kubelet_identity_role_assignment_managed_ide
 
 
 resource "azurerm_role_assignment" "acr_role_assignment" {
-  scope                            = var.acr_id
+  scope                            = var.acr_names
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
+  skip_service_principal_aad_check = true
+}
+
+resource "azurerm_role_assignment" "acr_role_assignment" {
+  for_each                         = { for index, name in var.acr_names : index => name }
+  scope = data.azurerm_container_registry.acr[name].id
+  #  scope                            = "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.ContainerRegistry/registries/${each.value}"
   role_definition_name             = "AcrPull"
   principal_id                     = azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
   skip_service_principal_aad_check = true

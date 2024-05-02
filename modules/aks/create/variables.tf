@@ -447,8 +447,7 @@ variable "tags" {
   default     = {}
 }
 
-variable "acr_id" {
-  type = string
+variable "acr_names" {
+  type    = list(string)
 }
-
 
