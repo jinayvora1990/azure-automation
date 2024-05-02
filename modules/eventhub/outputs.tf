@@ -1,12 +1,14 @@
-/*output "eventhub_id" {      #TODO: Change this
+output "eventhub_id" {
   description = "The id of the eventhub"
-  value = azurerm_eventhub.eventhub.*.id
+  value       = azurerm_eventhub.eventhub[*].id
 }
 
 output "eventhub_namespace" {
-  value = azurerm_eventhub.eventhub.0.namespace_name
+  description = "The eventhub namespace name"
+  value = azurerm_eventhub_namespace.eh-namespace.name
 }
 
 output "eventhub_partition_ids" {
-  value = azurerm_eventhub.eventhub.*.partition_ids
-}*/
+  description = "The list of partition ids of the eventhub"
+  value = azurerm_eventhub.eventhub[*].partition_ids
+}

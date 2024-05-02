@@ -8,7 +8,7 @@ resource "azurerm_eventhub" "eventhub" {
   status              = var.eventhub_config[count.index].eventhub_status
 
   dynamic "capture_description" {
-    for_each = local.capture_config_list
+    for_each = var.eventhub_config[count.index].enable_capture ? [var.eventhub_config[count.index].capture_config] : []
     content {
       enabled  = true
       encoding = capture_description.value.encoding
@@ -29,20 +29,18 @@ resource "azurerm_eventhub" "eventhub" {
       error_message = "The message retention cannot be greater than 1 for basic tier"
     }
   }
-
   depends_on = [azurerm_role_assignment.storage_account_role_assignment]
 }
 
 resource "azurerm_role_assignment" "role-assignment" {
   count                = length(local.capture_config_list)
-
   principal_id         = azurerm_user_assigned_identity.sa_access.principal_id
   scope                = local.capture_config_list[count.index].destination.storage_account_id
   role_definition_name = "Storage Blob Data Contributor"
 }
 
 resource "azurerm_role_assignment" "storage_account_role_assignment" {
-  count = length(local.capture_config_list)
+  count = length(local.capture_config_list) > 0 ? 1 : 0
 
   principal_id         = data.azurerm_client_config.current.object_id
   scope                = local.capture_config_list[count.index].destination.storage_account_id

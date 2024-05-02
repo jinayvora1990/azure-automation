@@ -111,7 +111,7 @@ variable "privatelink_subnet" {
     resource_group = string
   })
   description = "Subnet where the private link is required."
-  default = null
+  default     = null
 }
 
 variable "diagnostic_settings" {
