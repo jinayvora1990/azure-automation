@@ -1,6 +1,10 @@
+locals {
+  cosmos_rg = format("rg-%s-%s-%s-cosmos", local.application_name, local.environment, local.region_shortcode)
+}
+
 module "mongo_resource_group" {
   source  = "../../modules/resource-groups"
-  rg_name = "rg-cosmos-test"
+  rg_name = local.cosmos_rg
   tags    = local.tags
 }
 
