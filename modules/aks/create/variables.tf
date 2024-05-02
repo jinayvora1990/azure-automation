@@ -210,7 +210,7 @@ variable "maintenance_window" {
 
 variable "enable_kubelet_identity" {
   type        = bool
-  default     = false
+  default     = true
   description = "(optional) Enable creation the kubelet identity in the AKS resource group instead of node resource group"
 }
 
@@ -322,10 +322,10 @@ variable "regular_node_pools" {
     condition = alltrue([
       for pool in var.regular_node_pools :
       can(regex("^\\w+$", pool.vm_size)) &&
-      can(regex("^[a-z0-9]+$", pool.name)) &&
-      can(regex("^(System|User)$", pool.mode)) &&
-      (pool.os_disk_type == null || can(regex("^(Ephemeral|Managed)$", pool.os_disk_type)))
-    ])
+    can(regex("^[a-z0-9]+$", pool.name)) &&
+    can(regex("^(System|User)$", pool.mode)) &&
+    (pool.os_disk_type == null || can(regex("^(Ephemeral|Managed)$", pool.os_disk_type)))
+      ])
     error_message = "Some of regular_node_pools is invalid."
   }
 }
@@ -333,13 +333,13 @@ variable "regular_node_pools" {
 variable "enable_private_cluster" {
   type        = bool
   description = "Enable private Kubernetes cluster. Changing this forces a new resource to be created."
-  default     = true
+  default     = false
 }
 
 variable "enable_private_cluster_public_fqdn" {
   type        = bool
   description = "Enable private Kubernetes cluster public fqdn."
-  default     = true
+  default     = false
 }
 
 variable "aks_private_dns_zone_id" {
@@ -380,6 +380,7 @@ variable "aks_pod_cidr" {
 
 variable "aks_service_cidr" {
   description = "CIDR allocated for Kubernetes Services"
+  type        = string
   default     = "10.117.17.0/24"
   validation {
     condition     = can(regex("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(3[0-2]|[1-2][0-9]|[0-9]))$", var.aks_service_cidr))
@@ -389,6 +390,7 @@ variable "aks_service_cidr" {
 
 variable "aks_dns_ip" {
   description = "Kubernetes DNS service IP"
+  type        = string
   default     = "10.117.17.10"
   validation {
     condition     = can(regex("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", var.aks_dns_ip))
@@ -444,6 +446,3 @@ variable "tags" {
   description = "User defined extra tags to be added to all resources created in the module"
   default     = {}
 }
-
-
-

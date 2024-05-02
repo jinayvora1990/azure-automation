@@ -22,7 +22,6 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   node_resource_group                 = var.node_resource_group_name
   azure_policy_enabled                = var.enable_azure_policy
 
-
   default_node_pool {
     name                         = var.aks_default_node_pool_name
     temporary_name_for_rotation  = "${var.aks_default_node_pool_name}tmp"
