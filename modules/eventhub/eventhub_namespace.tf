@@ -9,12 +9,12 @@ resource "azurerm_eventhub_namespace" "eh-namespace" {
   sku                           = var.sku
   capacity                      = var.capacity
   auto_inflate_enabled          = var.auto_inflate_enabled
-  maximum_throughput_units      = var.maximum_throughput_units    #TODO: Max TPUs cannot be >0 if auto inflate is disabled
+  maximum_throughput_units      = var.maximum_throughput_units
   public_network_access_enabled = var.public_network_access_enabled
   zone_redundant                = var.zone_redundant
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.sa_access.id]
   }
 
@@ -40,7 +40,12 @@ resource "azurerm_eventhub_namespace" "eh-namespace" {
       }
     }
   }
-
+  lifecycle {
+    precondition {
+      condition     = var.auto_inflate_enabled || var.maximum_throughput_units < 1
+      error_message = "The max throughput units cannot be given if auto inflate is disabled"
+    }
+  }
   tags = merge(var.tags, local.common_tags, { "resource_type" = "eventhub-namespace" })
 }
 
@@ -83,4 +88,27 @@ resource "azurerm_user_assigned_identity" "sa_access" {
   location            = var.resource_location
   name                = "storage-account-access-identity"
   resource_group_name = local.rg
+}
+
+resource "azurerm_private_endpoint" "pep" {
+  count               = var.privatelink_subnet != null ? 1 : 0
+  name                = format("pep-evhns-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)))
+  location            = local.location
+  resource_group_name = local.rg
+  subnet_id           = data.azurerm_subnet.privatelink_subnet.0.id
+
+  private_service_connection {
+    name                           = format("%s%s", azurerm_eventhub_namespace.eh-namespace.name, "-privatelink")
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_eventhub_namespace.eh-namespace.id
+    subresource_names              = ["namespace"]
+  }
+  tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
+}
+
+data "azurerm_subnet" "privatelink_subnet" {
+  count                = var.privatelink_subnet != null ? 1 : 0
+  name                 = var.privatelink_subnet.name
+  virtual_network_name = var.privatelink_subnet.vnet_name
+  resource_group_name  = var.privatelink_subnet.resource_group
 }

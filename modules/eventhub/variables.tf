@@ -85,7 +85,7 @@ variable "network_rulesets" {
 variable "eventhub_config" {
   type = list(object({
     name              = string
-    message_retention = number      #TODO: Can't be greater than 1 for basic tier
+    message_retention = number
     partition_count   = number
     eventhub_status   = optional(string, "Active")
     enable_capture    = optional(bool, false)
@@ -102,15 +102,16 @@ variable "eventhub_config" {
   }))
   description = "List of eventhub instances(topics) and their configuration to be created in the namespace"
   default     = []
-  /*validation {
-    Check enable_capture is true, then capture_config is not null
-  }*/
 }
 
-variable "identity" { #TODO: CHange this
-  type        = string
-  description = "The identity"
-  default     = null
+variable "privatelink_subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet where the private link is required."
+  default = null
 }
 
 variable "diagnostic_settings" {

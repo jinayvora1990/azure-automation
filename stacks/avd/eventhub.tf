@@ -16,24 +16,25 @@ module "app_resource_group" {
 module "eventhub" {
   source = "../../modules/eventhub"
 
-  application_name    = "avd"
-  environment = "dev"
-  #   sku              = "Standard"
-  resource_group_name = module.app_resource_group.rg_name
+  application_name     = "avd"
+  environment          = "dev"
+#   sku                  = "Standard"
+  resource_group_name  = module.app_resource_group.rg_name
+  auto_inflate_enabled = false
   network_rulesets = {
     default_action = "Deny"
-    ip_rules       = [
+    ip_rules = [
       {
         ip_mask = "10.0.0.0/26"
         action  = "Allow"
-      }, {
+        }, {
         ip_mask = "10.0.0.128/26"
         action  = "Allow"
       }
     ]
   }
   maximum_throughput_units = 0
-  eventhub_config          = [
+  eventhub_config = [
     {
       name              = "topic-1"
       message_retention = 1
@@ -43,19 +44,19 @@ module "eventhub" {
       name              = "topic-2"
       message_retention = 1
       partition_count   = 2
-      enable_capture = true
+      enable_capture    = true
       capture_config = {
         encoding = "Avro"
         destination = {
-          storage_account_id = module.storage_account.storage_account_id
+          storage_account_id  = module.storage_account.storage_account_id
           blob_container_name = azurerm_storage_container.storage-container.name
-          blob_container_id = azurerm_storage_container.storage-container.id
+          blob_container_id   = azurerm_storage_container.storage-container.id
         }
       }
     }
   ]
   #   eventhub_status = "SendDisabled"
-#   depends_on = [azurerm_storage_container.storage-container]
+  #   depends_on = [azurerm_storage_container.storage-container]
 }
 
 module "storage_account" {
@@ -70,9 +71,9 @@ module "storage_account" {
 }
 
 resource "azurerm_storage_container" "storage-container" {
-#   count                 = 1
+  #   count                 = 1
   name                  = "trial-sc-1"
   storage_account_name  = module.storage_account.storage_account_name
   container_access_type = "blob"
-  depends_on = [module.storage_account]
+  depends_on            = [module.storage_account]
 }
