@@ -24,7 +24,7 @@ resource "azurerm_redis_cache" "rediscache" {
   minimum_tls_version           = var.min_tls_version
   replicas_per_primary          = local.sku == "Premium" ? var.replicas : null
   shard_count                   = local.sku == "Premium" ? var.shard_count : null
-  subnet_id                     = local.sku == "Premium" ? data.azurerm_subnet.redis_subnet : null
+  subnet_id                     = local.sku == "Premium" ? data.azurerm_subnet.redis_subnet[0].id : null
   public_network_access_enabled = false
 
   # Only available in preview
@@ -43,29 +43,30 @@ resource "azurerm_redis_cache" "rediscache" {
 
     #rdb backup configuration
     rdb_backup_enabled            = local.sku == "Premium" ? var.rdb_backup_enabled : false
-    rdb_backup_frequency          = local.sku == "Premium" ? var.rdb_backup_configuration.backup_frequency : null
-    rdb_backup_max_snapshot_count = local.sku == "Premium" ? var.rdb_backup_configuration.max_snapshot_count : null
-    rdb_storage_connection_string = local.sku == "Premium" ? data.azurerm_storage_account.rdb_sa.primary_blob_connection_string : null
+    rdb_backup_frequency          = local.sku == "Premium" && var.rdb_backup_enabled ? var.rdb_backup_configuration.backup_frequency : null
+    rdb_backup_max_snapshot_count = local.sku == "Premium" && var.rdb_backup_enabled ? var.rdb_backup_configuration.max_snapshot_count : null
+    rdb_storage_connection_string = local.sku == "Premium" && var.rdb_backup_enabled ? data.azurerm_storage_account.rdb_sa[0].primary_blob_connection_string : null
 
     #aof backup configuration
     aof_backup_enabled              = local.sku == "Premium" ? var.aof_backup_enabled : false
-    aof_storage_connection_string_0 = local.sku == "Premium" ? data.azurerm_storage_account.aof_sa.primary_blob_connection_string : null
-    aof_storage_connection_string_1 = local.sku == "Premium" ? data.azurerm_storage_account.aof_sa.secondary_blob_connection_string : null
+    aof_storage_connection_string_0 = local.sku == "Premium" && var.aof_backup_enabled ? data.azurerm_storage_account.aof_sa[0].primary_blob_connection_string : null
+    aof_storage_connection_string_1 = local.sku == "Premium" && var.aof_backup_enabled ? data.azurerm_storage_account.aof_sa[0].secondary_blob_connection_string : null
   }
 
   tags = merge(var.tags, local.common_tags, { "resource_type" = "redis-cache" })
 
   lifecycle {
     # A bug in the Redis API where the original storage connection string isn't being returned
-    ignore_changes = [redis_configuration.0.rdb_storage_connection_string]
+    ignore_changes = [redis_configuration[0].rdb_storage_connection_string]
   }
 }
 
 resource "azurerm_private_endpoint" "pep" {
+  count               = var.privatelink_subnet != null ? 1 : 0
   name                = format("redis-pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   location            = local.location
   resource_group_name = local.rg
-  subnet_id           = data.azurerm_subnet.privatelink_subnet.id
+  subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
 
   private_service_connection {
     name                           = format("redis-pl-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
@@ -78,10 +79,10 @@ resource "azurerm_private_endpoint" "pep" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "extaudit" {
-  count                      = var.log_analytics.workspace_name != null ? 1 : 0
+  count                      = var.log_analytics != null ? 1 : 0
   name                       = format("redis-diag-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   target_resource_id         = azurerm_redis_cache.rediscache.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_ws.0.id
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_ws[0].id
   #  storage_account_id         = var.enable_data_persistence ? azurerm_storage_account.storeacc.0.id : null
 
   metric {

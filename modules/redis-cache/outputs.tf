@@ -32,10 +32,10 @@ output "secondary_connection_string" {
 
 output "redis_cache_private_endpoint" {
   description = "id of the Redis Cache Private Endpoint"
-  value       = azurerm_private_endpoint.pep.id
+  value       = azurerm_private_endpoint.pep[0].id
 }
 
 output "redis_cache_private_endpoint_ip" {
   description = "Redis Cache server private endpoint IPv4 Addresses"
-  value       = element(concat(data.azurerm_private_endpoint_connection.pep_connection.private_service_connection.0.private_ip_address, [""]), 0)
+  value       = concat(data.azurerm_private_endpoint_connection.pep_connection[0].private_service_connection[*].private_ip_address, [""])
 }

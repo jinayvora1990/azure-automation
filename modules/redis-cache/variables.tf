@@ -12,7 +12,6 @@ variable "resource_group_name" {
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
-  default     = ""
 }
 
 variable "env" {
@@ -50,13 +49,13 @@ variable "cache_eviction_policy" {
 
 variable "rdb_backup_enabled" {
   type        = bool
-  description = "RDB backup ennabled"
+  description = "RDB backup enabled"
   default     = false
 }
 
 variable "aof_backup_enabled" {
   type        = bool
-  description = "AOF backup ennabled"
+  description = "AOF backup enabled"
   default     = false
 }
 
@@ -66,7 +65,7 @@ variable "rdb_backup_configuration" {
     max_snapshot_count        = number
     storage_connection_string = string
   })
-  description = "RDB Backup Confifuration"
+  description = "RDB Backup Configuration"
   default = {
     backup_frequency          = 0
     max_snapshot_count        = 0
@@ -124,6 +123,7 @@ variable "patch_schedules" {
     start_hour_utc = number
   }))
   description = "Maintenance schedule of the redis cache."
+  default     = null
 }
 
 variable "tags" {
