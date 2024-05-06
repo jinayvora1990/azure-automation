@@ -7,6 +7,7 @@ locals {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
+  environment = lower(var.environment)
 }
 
 module "res-id" {
@@ -14,7 +15,7 @@ module "res-id" {
 }
 
 resource "azurerm_redis_cache" "rediscache" {
-  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   location                      = local.location
   resource_group_name           = local.rg
   sku_name                      = var.cache_tier.sku_name
@@ -63,13 +64,13 @@ resource "azurerm_redis_cache" "rediscache" {
 
 resource "azurerm_private_endpoint" "pep" {
   count               = var.privatelink_subnet != null ? 1 : 0
-  name                = format("redis-pep-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("redis-pep-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
   location            = local.location
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
 
   private_service_connection {
-    name                           = format("redis-pl-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+    name                           = format("redis-pl-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
     is_manual_connection           = false
     private_connection_resource_id = azurerm_redis_cache.rediscache.id
     subresource_names              = ["redisCache"]
@@ -78,18 +79,36 @@ resource "azurerm_private_endpoint" "pep" {
   tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
 }
 
-resource "azurerm_monitor_diagnostic_setting" "extaudit" {
-  count                      = var.log_analytics != null ? 1 : 0
-  name                       = format("redis-diag-%s-%s-%s-%s", var.application_name, var.env, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
-  target_resource_id         = azurerm_redis_cache.rediscache.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_ws[0].id
-  #  storage_account_id         = var.enable_data_persistence ? azurerm_storage_account.storeacc.0.id : null
+resource "azurerm_monitor_diagnostic_setting" "this" {
+  for_each = var.diagnostic_settings
 
-  metric {
-    category = "AllMetrics"
+  name                           = each.value.name != null ? each.value.name : "diag-redis-cache-${local.environment}"
+  target_resource_id             = azurerm_redis_cache.rediscache.id
+  eventhub_authorization_rule_id = each.value.event_hub_authorization_rule_resource_id
+  eventhub_name                  = each.value.event_hub_name
+  log_analytics_destination_type = each.value.log_analytics_destination_type
+  log_analytics_workspace_id     = each.value.workspace_resource_id
+  partner_solution_id            = each.value.marketplace_partner_resource_id
+  storage_account_id             = each.value.storage_account_resource_id
+
+  dynamic "enabled_log" {
+    for_each = each.value.log_categories
+    content {
+      category = enabled_log.value
+    }
   }
 
-  lifecycle {
-    ignore_changes = [metric]
+  dynamic "enabled_log" {
+    for_each = each.value.log_groups
+    content {
+      category_group = enabled_log.value
+    }
+  }
+
+  dynamic "metric" {
+    for_each = each.value.metric_categories
+    content {
+      category = metric.value
+    }
   }
 }
