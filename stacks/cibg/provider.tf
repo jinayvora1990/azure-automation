@@ -5,12 +5,7 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 3.71.0"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "2.13.1"
-    }
   }
-
   #  backend "azurerm" {
   #  }
 }
@@ -18,10 +13,4 @@ terraform {
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
   features {}
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
 }
