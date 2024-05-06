@@ -4,10 +4,8 @@ terraform {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.71.0"
-
     }
   }
-
   #  backend "azurerm" {
   #  }
 }
@@ -16,4 +14,3 @@ terraform {
 provider "azurerm" {
   features {}
 }
-

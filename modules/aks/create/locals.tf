@@ -13,5 +13,5 @@ locals {
   oms_agent_enabled                             = (var.oms_agent_log_analytics_workspace_id == "" ? false : true)
   oms_agent_block_enabled                       = (local.oms_agent_enabled ? [{}] : [])
   aks_user_assigned_identity_name               = "aks-${var.application_name}-${local.environment}-${local.region_shortcode}-${var.aks_name_suffix}"
-  aks_kubelet_identity_name                     = "aks-${var.application_name}-${local.environment}-${local.region_shortcode}${var.aks_name_suffix}-kubelet"
+  aks_kubelet_identity_name                     = "aks-${var.application_name}-${local.environment}-${local.region_shortcode}-${var.aks_name_suffix}-kubelet"
 }
