@@ -23,5 +23,8 @@ module "aks-create" {
   api_server_authorized_ip_ranges = var.aks_api_server_authorized_ip_ranges
 
   tags = local.tags
-  acr_names = var.acr_names
+  acr = [{
+    name           = module.acr.acr_name
+    resource_group = module.acr.acr_rg
+  }]
 }

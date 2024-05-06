@@ -76,8 +76,3 @@ variable "ase_cluster_setting" {
   ))
   default = []
 }
-
-variable "acr_names" {
-  type = list(string)
-  default = ["akstest02","akstest03"]
-}

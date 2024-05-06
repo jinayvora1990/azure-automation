@@ -54,4 +54,7 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_acr_name"></a> [acr\_name](#output\_acr\_name) | Azure Container Registry Name |
+| <a name="output_acr_rg"></a> [acr\_rg](#output\_acr\_rg) | Azure Container Registry Resource Group |

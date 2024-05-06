@@ -220,23 +220,6 @@ variable "oms_agent_log_analytics_workspace_id" {
   default     = ""
 }
 
-variable "aks_additional_node_pools_subnets" {
-  type = map(object({
-    subnet_cidrs = list(string)
-    node_pools   = list(string)
-  }))
-  description = "Map of lists for setting additional subnet name(key) and lists of values(subnet_cidrs, node_pools) for node pools"
-  default     = {}
-  validation {
-    condition = alltrue([
-      for k, v in var.aks_additional_node_pools_subnets :
-      (length(v.subnet_cidrs) > 0 &&
-      length(v.node_pools) > 0)
-    ])
-    error_message = "At least one subnet & nodepool association is required."
-  }
-}
-
 variable "workload_identity_enabled" {
   type        = bool
   description = "(optional) Specifies whether Azure AD Workload Identity should be enabled for the Cluster"
@@ -446,6 +429,12 @@ variable "tags" {
   description = "User defined extra tags to be added to all resources created in the module"
   default     = {}
 }
-variable "acr_names" {
-  type = list(string)
+
+variable "acr" {
+  type = list(object({
+    name           = string
+    resource_group = string
+  }))
+  description = "Configure Kubelet identity to pull images from these Azure Container Registries"
+  default     = []
 }
