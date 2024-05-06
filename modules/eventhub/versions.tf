@@ -6,11 +6,4 @@ terraform {
       version = ">= 3.71.0"
     }
   }
-  #  backend "azurerm" {
-  #  }
-}
-
-# Configure the Microsoft Azure Provider
-provider "azurerm" {
-  features {}
 }
