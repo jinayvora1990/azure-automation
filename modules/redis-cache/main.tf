@@ -79,6 +79,15 @@ resource "azurerm_private_endpoint" "pep" {
   tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
 }
 
+resource "azurerm_private_dns_a_record" "dns-a-record" {
+  count               = length(azurerm_private_endpoint.pep) > 0 && var.private_dns_zone_name != null ? 1 : 0
+  name                = "redis"
+  records             = [azurerm_private_endpoint.pep[0].private_service_connection[0].private_ip_address]
+  resource_group_name = local.rg
+  ttl                 = 300
+  zone_name           = var.private_dns_zone_name
+}
+
 resource "azurerm_monitor_diagnostic_setting" "this" {
   for_each = var.diagnostic_settings
 
