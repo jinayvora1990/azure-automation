@@ -1,0 +1,9 @@
+{
+  "allowedAccessTiers": {
+    "type": "Array",
+    "metadata": {
+      "description": "The list of allowed Access Tier for Storage Account.",
+      "displayName": "Allowed Access Tier for Storage Account"
+    }
+  }
+}
