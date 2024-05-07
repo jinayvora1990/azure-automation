@@ -1,11 +1,13 @@
 locals {
-  location         = lower(var.resource_location)
-  region_shortcode = local.location == "uaenorth" ? "uan" : "unknown"
-  environment      = lower(var.environment)
+  location = lower(var.resource_location)
+  location_short = {
+    "uaenorth"   = "uan"
+    "uaecentral" = "uac"
+  }
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                          = format("acr%s%s%s%s", var.application_name, var.environment, var.resource_location, "1")
+  name                          = format("acr%s%s%s%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "1")
   resource_group_name           = var.resource_group_name
   location                      = local.location
   sku                           = var.sku
