@@ -1,37 +1,18 @@
 locals {
-  rg_name = "db-dns-test"
+  rg_name = "redis-dns"
 }
 
-module "app_resource_group" {
+module "redis_resource_group" {
   source  = "../../modules/resource-groups"
   rg_name = local.rg_name
   tags    = local.tags
 }
 
-module "vnet" {
-  source              = "../../modules/base-infrastructure"
-  app_name            = var.application_name
-  environment         = var.environment
-  resource_group_name = module.app_resource_group.rg_name
-  vnet_address_spaces = ["10.0.1.0/24"]
-  subnets = {
-    "subnet-1" : {
-      subnet_name           = "vm-subnet"
-      subnet_address_prefix = ["10.0.1.0/28"]
-    }
-    "subnet-2" : {
-      subnet_name           = "pep-subnet"
-      subnet_address_prefix = ["10.0.1.128/28"]
-    }
-  }
-}
-
-module "dns" {
+module "redis-dns" {
   source         = "../../modules/dns"
   dns_zone_name  = "privatelink.redis.cache.windows.net"
-  vnet_name      = module.vnet.vnet_name
+  vnet_name      = module.base-infra.vnet_name
   resource_group = module.app_resource_group.rg_name
-  depends_on     = [module.vnet]
 }
 
 module "redis" {
@@ -45,10 +26,9 @@ module "redis" {
   resource_group_name = module.app_resource_group.rg_name
   application_name    = var.application_name
   privatelink_subnet = {
-    name           = module.vnet.subnet_names[1]
-    vnet_name      = module.vnet.vnet_name
+    name           = module.base-infra.subnet_names[1]
+    vnet_name      = module.base-infra.vnet_name
     resource_group = module.app_resource_group.rg_name
   }
-  private_dns_zone_name = module.dns.dns_zone_name
-  depends_on            = [module.vnet, module.dns]
+  private_dns_zone_name = module.redis-dns.dns_zone_name
 }
