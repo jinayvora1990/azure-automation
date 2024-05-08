@@ -1,9 +1,0 @@
-{
-  "allowedLocations": {
-    "type": "Array",
-    "metadata": {
-      "description": "The list of location allowed for resource deployment",
-      "displayName": "Allowed Regions for Service Deployment"
-    }
-  }
-}
