@@ -79,7 +79,7 @@ resource "azurerm_private_endpoint" "pep" {
   tags = merge(var.tags, local.common_tags, { "resource_type" = "private-endpoint" })
 }
 
-resource "azurerm_private_dns_a_record" "dns-a-record" {
+resource "azurerm_private_dns_a_record" "dns_record" {
   count               = length(azurerm_private_endpoint.pep) > 0 && var.private_dns_zone_name != null ? 1 : 0
   name                = "redis"
   records             = [azurerm_private_endpoint.pep[0].private_service_connection[0].private_ip_address]

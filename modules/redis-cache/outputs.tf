@@ -41,9 +41,9 @@ output "redis_cache_private_endpoint_ip" {
 
 output "pep_pvt_dns_fqdn" {
   precondition {
-    condition     = length(azurerm_private_dns_a_record.dns-a-record) > 0
+    condition     = length(azurerm_private_dns_a_record.dns_record) > 0
     error_message = "The private endpoint was not created for the redis cache"
   }
   description = "FQDN for the redis cache private endpoint in private dns zone"
-  value       = "${azurerm_private_dns_a_record.dns-a-record[0].name}.${var.private_dns_zone_name}"
+  value       = "${azurerm_private_dns_a_record.dns_record[0].name}.${var.private_dns_zone_name}"
 }

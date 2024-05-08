@@ -8,12 +8,6 @@ variable "vnet_name" {
   description = "The virtual network name which contains the pep for the resource"
 }
 
-variable "location" {
-  type        = string
-  description = "The location/region where the resource is created e.g. uaenorth. Changing this forces a new resource to be created."
-  default     = "uaenorth"
-}
-
 variable "resource_group" {
   type        = string
   description = "Existing resource group"
