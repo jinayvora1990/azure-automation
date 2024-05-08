@@ -24,7 +24,16 @@ variable "vnet_address_spaces" {
 
 variable "subnets" {
   description = "For each subnet, create an object that contain fields"
-  default     = {}
+  default = {
+    "subnet-1" : {
+      subnet_name           = "subnet-1"
+      subnet_address_prefix = ["10.0.1.0/28"]
+    }
+    "subnet-2" : {
+      subnet_name           = "subnet-2"
+      subnet_address_prefix = ["10.0.1.128/28"]
+    }
+  }
   type = map(object({
     subnet_name                                   = string
     subnet_address_prefix                         = list(string)

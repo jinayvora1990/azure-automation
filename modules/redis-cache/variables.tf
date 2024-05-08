@@ -117,6 +117,12 @@ variable "privatelink_subnet" {
   default     = null
 }
 
+variable "private_dns_zone_name" {
+  type        = string
+  description = "Name of the private dns zone for private link"
+  default     = null
+}
+
 variable "patch_schedules" {
   type = list(object({
     day_of_week    = string
