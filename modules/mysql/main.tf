@@ -1,6 +1,6 @@
 resource "azurerm_mysql_flexible_server" "mysql_flexible_server" {
   name                = "mysql-${var.application_name}-${local.environment}-${local.region_shortcode}-1"
-  resource_group_name = local.mysql_resource_group_name
+  resource_group_name = var.resource_group_name
   location            = local.location
   version             = var.mysql_version
   delegated_subnet_id = data.azurerm_subnet.mysql_subnet.id
@@ -48,7 +48,7 @@ resource "azurerm_mysql_flexible_server" "mysql_flexible_server" {
 resource "azurerm_mysql_flexible_server_configuration" "mysql_configuration" {
   for_each = var.server_configuration
 
-  resource_group_name = local.mysql_resource_group_name
+  resource_group_name = var.resource_group_name
   server_name         = azurerm_mysql_flexible_server.mysql_flexible_server.name
   name                = each.key
   value               = each.value.config_value
@@ -59,10 +59,11 @@ resource "azurerm_mysql_flexible_server_configuration" "mysql_configuration" {
 }
 
 resource "azurerm_private_endpoint" "pep" {
+  count               = var.privatelink_subnet != null ? 1 : 0
   name                = format("pep-mysql-%s-%s-%s", var.application_name, local.environment, local.region_shortcode)
   location            = local.location
-  resource_group_name = local.mysql_resource_group_name
-  subnet_id           = data.azurerm_subnet.privatelink_subnet.id
+  resource_group_name = var.resource_group_name
+  subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
 
   private_service_connection {
     name                           = format("%s%s", azurerm_mysql_flexible_server.mysql_flexible_server.name, "-privatelink")

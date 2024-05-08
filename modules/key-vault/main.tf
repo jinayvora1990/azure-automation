@@ -105,10 +105,11 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 }
 
 resource "azurerm_private_endpoint" "kv" {
+  count               = var.privatelink_subnet != null ? 1 : 0
   name                = format("pep-kv-%s-%s-%s", var.application_name, local.environment, local.region_shortcode)
   location            = local.location
   resource_group_name = var.resource_group_name
-  subnet_id           = data.azurerm_subnet.privatelink_subnet.id
+  subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
 
   private_service_connection {
     name                           = format("%s%s", azurerm_key_vault.this.name, "-privatelink")
