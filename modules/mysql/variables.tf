@@ -4,10 +4,9 @@ variable "location" {
   default     = "uaenorth"
 }
 
-variable "resource_group" {
+variable "resource_group_name" {
   type        = string
-  description = "Existing resource group"
-  default     = null
+  description = "The resource group for the MySQL DB"
 }
 
 variable "environment" {
@@ -22,7 +21,6 @@ variable "environment" {
 variable "application_name" {
   type        = string
   description = "The application that requires this resource"
-  default     = ""
 }
 
 variable "mysql_subnet" {
