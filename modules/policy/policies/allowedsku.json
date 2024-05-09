@@ -1,0 +1,55 @@
+{
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "storage_enforce_allowed_skus",
+  "properties": {
+    "metadata": {
+      "category": "Storage"
+    },
+    "parameters": {
+      "allowedSku": {
+        "type": "Array",
+        "defaultValue": [
+          "Standard_LRS",
+          "Standard_GRS",
+          "Standard_RAGRS"
+        ],
+        "metadata": {
+          "displayName": "Allowed SKU",
+          "description": "The list of allowed SKUs for the storage account"
+        }
+      },
+      "effect": {
+        "type": "String",
+        "defaultValue": "Deny",
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Effect",
+          "description": "The effect determines what happens when the policy rule is evaluated to match"
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "not": {
+              "field": "Microsoft.Storage/storageAccounts/sku.name",
+              "in": "[parameters('allowedSku')]"
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

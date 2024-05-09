@@ -48,11 +48,11 @@ variable "policy_mode" {
   }
 }
 
-variable "policy_category" {
-  type        = string
-  description = "The category of the policy, when using the module library this should correspond to the correct category folder under /policies/<policy_category>"
-  default     = null
-}
+#variable "policy_category" {
+#  type        = string
+#  description = "The category of the policy, when using the module library this should correspond to the correct category folder under /policies/<policy_category>"
+#  default     = null
+#}
 
 variable "policy_version" {
   type        = string
@@ -88,24 +88,28 @@ locals {
   # import the custom policy object from a library or specified file path
   policy_object = jsondecode(coalesce(try(
     file(var.file_path),
-    file("${path.cwd}/policies/${title(var.policy_category)}/${var.policy_name}.json"),
-    file("${path.root}/policies/${title(var.policy_category)}/${var.policy_name}.json"),
-    file("${path.root}/../policies/${title(var.policy_category)}/${var.policy_name}.json"),
-    file("${path.module}/../../policies/${title(var.policy_category)}/${var.policy_name}.json"),
+    #    file("${path.cwd}/policies/${title(var.policy_category)}/${var.policy_name}.json"),
+    #    file("${path.root}/policies/${title(var.policy_category)}/${var.policy_name}.json"),
+    #    file("${path.root}/../policies/${title(var.policy_category)}/${var.policy_name}.json"),
+    #    file("${path.module}/../../policies/${title(var.policy_category)}/${var.policy_name}.json"),
+    file("${path.cwd}/policies/${var.policy_name}.json"),
+    file("${path.root}/policies/${var.policy_name}.json"),
+    file("${path.root}/../policies/${var.policy_name}.json"),
+    file("${path.module}/../../policies/${var.policy_name}.json"),
     "{}" # return empty object if no policy is found
   )))
 
   # fallbacks
-  title    = title(replace(local.policy_name, "/-|_|\\s/", " "))
-  category = coalesce(var.policy_category, try((local.policy_object).properties.metadata.category, "General"))
-  version  = coalesce(var.policy_version, try((local.policy_object).properties.metadata.version, "1.0.0"))
-  mode     = coalesce(var.policy_mode, try((local.policy_object).properties.mode, "All"))
+  title = title(replace(local.policy_name, "/-|_|\\s/", " "))
+  #category = coalesce(var.policy_category, try((local.policy_object).properties.metadata.category, "General"))
+  version = coalesce(var.policy_version, try((local.policy_object).properties.metadata.version, "1.0.0"))
+  mode    = coalesce(var.policy_mode, try((local.policy_object).properties.mode, "All"))
 
   # use local library attributes if runtime inputs are omitted
   policy_name  = coalesce(var.policy_name, try((local.policy_object).name, null))
   display_name = coalesce(var.display_name, try((local.policy_object).properties.displayName, local.title))
   description  = coalesce(var.policy_description, try((local.policy_object).properties.description, local.title))
-  metadata     = coalesce(null, var.policy_metadata, try((local.policy_object).properties.metadata, merge({ category = local.category }, { version = local.version })))
+  metadata     = coalesce(null, var.policy_metadata, try((local.policy_object).properties.metadata, merge({ version = local.version })))
   parameters   = coalesce(null, var.policy_parameters, try((local.policy_object).properties.parameters, {}))
   policy_rule  = coalesce(var.policy_rule, try((local.policy_object).properties.policyRule, null))
 
