@@ -1,5 +1,5 @@
 module "whitelist_regions" {
-  source          = "../../../modules/policyNew/modules/definition"
+  source          = "../../../modules/policy/modules/definition"
   policy_name     = "whitelist_regions"
   display_name    = "Whitelist Azure Regions"
   policy_category = "General"
@@ -7,7 +7,7 @@ module "whitelist_regions" {
 }
 
 module "storageAccountSKU" {
-  source          = "../../../modules/policyNew/modules/definition"
+  source          = "../../../modules/policy/modules/definition"
   policy_name     = "allowedsku"
   display_name    = "Allowed Storage Account SKU"
   policy_category = "storage"
