@@ -88,10 +88,6 @@ locals {
   # import the custom policy object from a library or specified file path
   policy_object = jsondecode(coalesce(try(
     file(var.file_path),
-    #    file("${path.cwd}/policies/${title(var.policy_category)}/${var.policy_name}.json"),
-    #    file("${path.root}/policies/${title(var.policy_category)}/${var.policy_name}.json"),
-    #    file("${path.root}/../policies/${title(var.policy_category)}/${var.policy_name}.json"),
-    #    file("${path.module}/../../policies/${title(var.policy_category)}/${var.policy_name}.json"),
     file("${path.cwd}/policies/${var.policy_name}.json"),
     file("${path.root}/policies/${var.policy_name}.json"),
     file("${path.root}/../policies/${var.policy_name}.json"),
@@ -100,8 +96,7 @@ locals {
   )))
 
   # fallbacks
-  title = title(replace(local.policy_name, "/-|_|\\s/", " "))
-  #category = coalesce(var.policy_category, try((local.policy_object).properties.metadata.category, "General"))
+  title   = title(replace(local.policy_name, "/-|_|\\s/", " "))
   version = coalesce(var.policy_version, try((local.policy_object).properties.metadata.version, "1.0.0"))
   mode    = coalesce(var.policy_mode, try((local.policy_object).properties.mode, "All"))
 

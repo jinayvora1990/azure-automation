@@ -1,17 +1,9 @@
-##################
-# General
-##################
-module "org_mg_whitelist_regions" {
-  source            = "../../../modules/policy/modules/def_assignment"
-  definition        = module.whitelist_regions.definition
-  assignment_scope  = data.azurerm_resource_group.scope.id
-  assignment_effect = "Deny"
-}
 
-module "org_rg_allowedsku" {
-  source           = "../../../modules/policy/modules/def_assignment"
-  definition       = module.storageAccountSKU.definition
-  assignment_scope = data.azurerm_resource_group.scope.id
-  #assignment_effect = "Deny"
+module "policy_assignment" {
+  for_each              = var.policy_details
+  source                = "../../../modules/policy/modules/def_assignment"
+  assignment_scope      = data.azurerm_resource_group.scope.id
+  definition            = module.policy_definition[each.key].definition
+  assignment_parameters = each.value.assignment_parameters
+  assignment_effect     = each.value.assignment_effect
 }
-
