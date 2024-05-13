@@ -9,7 +9,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.103.1 |
 
 ## Modules
 
@@ -28,7 +28,6 @@ No modules.
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display Name to be used for this policy | `string` | `""` | no |
 | <a name="input_file_path"></a> [file\_path](#input\_file\_path) | The filepath to the custom policy. Omitting this assumes the policy is located in the module library | `any` | `null` | no |
 | <a name="input_management_group_id"></a> [management\_group\_id](#input\_management\_group\_id) | The management group scope at which the policy will be defined. Defaults to current Subscription if omitted. Changing this forces a new resource to be created. | `string` | `null` | no |
-| <a name="input_policy_category"></a> [policy\_category](#input\_policy\_category) | The category of the policy, when using the module library this should correspond to the correct category folder under /policies/<policy\_category> | `string` | `null` | no |
 | <a name="input_policy_description"></a> [policy\_description](#input\_policy\_description) | Policy definition description | `string` | `""` | no |
 | <a name="input_policy_metadata"></a> [policy\_metadata](#input\_policy\_metadata) | The metadata for the policy definition. This is a JSON object representing additional metadata that should be stored with the policy definition. Omitting this will fallback to meta in the definition or merge var.policy\_category and var.policy\_version | `any` | `null` | no |
 | <a name="input_policy_mode"></a> [policy\_mode](#input\_policy\_mode) | Specify which Resource Provider modes will be evaluated, defaults to All. Possible values are All, Indexed, Microsoft.Kubernetes.Data, Microsoft.KeyVault.Data or Microsoft.Network.Data | `string` | `null` | no |
