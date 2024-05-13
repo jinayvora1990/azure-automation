@@ -3,6 +3,7 @@ resource "azurerm_monitor_metric_alert" "metric_alert" {
   name                = each.key
   resource_group_name = local.rg
   scopes              = each.value.scopes
+
   dynamic "criteria" {
     for_each = each.value.criteria
     content {
@@ -21,11 +22,13 @@ resource "azurerm_monitor_metric_alert" "metric_alert" {
       }
     }
   }
+
   dynamic "action" {
     for_each = each.value.actions
     content {
       action_group_id = action.value
     }
   }
+
   tags = var.tags
 }

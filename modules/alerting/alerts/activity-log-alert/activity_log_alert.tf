@@ -5,6 +5,7 @@ resource "azurerm_monitor_activity_log_alert" "activity_log_alert" {
   resource_group_name = local.rg
   location            = var.resource_location
   scopes              = each.value.scopes
+
   criteria {
     category          = each.value.criteria.category
     operation_name    = lookup(each.value.criteria, "operation_name", null)
@@ -33,6 +34,7 @@ resource "azurerm_monitor_activity_log_alert" "activity_log_alert" {
       }
     }
   }
+
   dynamic "action" {
     for_each = each.value.actions
     content {

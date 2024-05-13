@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   type        = string
-  description = "The resource group for the redis cache"
+  description = "The resource group for the Azure Monitor"
 }
 
 variable "action_groups" {
