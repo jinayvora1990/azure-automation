@@ -1,9 +1,14 @@
 {
   "type": "Microsoft.Authorization/policyDefinitions",
-  "name": "whitelist_regions",
+  "name": "Deny-Azure-Region",
+  "apiVersion": "2021-06-01",
   "properties": {
+    "mode": "Indexed",
+    "displayName": "Allowed locations",
+    "description": "This policy enables you to restrict the locations your organization can specify when deploying resources.",
     "metadata": {
-      "category": "General"
+      "version": "1.0.0",
+      "category": "Locations"
     },
     "parameters": {
       "listOfRegionsAllowed": {
@@ -19,7 +24,7 @@
       },
       "effect": {
         "type": "String",
-        "defaultValue": "Audit",
+        "defaultValue": "Deny",
         "allowedValues": [
           "Audit",
           "Deny"

@@ -5,7 +5,5 @@ variable "policy_details" {
     assignment_effect     = string
     assignment_parameters = any
   }))
-  default = {
-
-  }
+  default = {}
 }

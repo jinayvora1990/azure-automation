@@ -4,8 +4,8 @@ resource "azurerm_policy_definition" "def" {
   description  = local.description
   policy_type  = "Custom"
   mode         = local.mode
-  #
-  #  management_group_id = var.management_group_id
+
+  management_group_id = var.management_group_id
 
   metadata    = jsonencode(local.metadata)
   parameters  = length(local.parameters) > 0 ? jsonencode(local.parameters) : null
