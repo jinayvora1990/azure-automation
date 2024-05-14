@@ -37,11 +37,11 @@ variable "log_search_alerts" {
       time_aggregation_method = string
       metric_measure_column   = string
       resource_id_column      = string
-      dimension = object({
+      dimension = optional(object({
         name     = string
         operator = string
         values   = list(string)
-      })
+      }))
       failing_periods = optional(object({
         minimum_failing_periods_to_trigger_alert = number
         number_of_evaluation_periods             = number

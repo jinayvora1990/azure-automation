@@ -24,7 +24,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "log_search_alert" {
       }
     }
     dynamic "failing_periods" {
-      for_each = each.value.criteria.failing_periods
+      for_each = each.value.criteria.failing_periods != null ? ["failing_periods"] : []
       content {
         minimum_failing_periods_to_trigger_alert = each.value.criteria.failing_periods.minimum_failing_periods_to_trigger_alert
         number_of_evaluation_periods             = each.value.criteria.failing_periods.number_of_evaluation_periods
