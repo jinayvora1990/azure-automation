@@ -90,16 +90,7 @@ variable "daily_memory_time_quota" {
   default     = null
 }
 
-variable "app_service_logs" {
-  type = object({
-    disk_quota_mb         = number
-    retention_period_days = number
-  })
-  description = "The log configuration for the function app"
-  default     = null
-}
-
-variable "custom_domain" {
+/*variable "custom_domain" {
   type = object({
     hostname = string
     certificate = optional(object({
@@ -112,7 +103,7 @@ variable "custom_domain" {
   })
   description = "Map a custom domain with the app service. If you do not pass the certificate, a managed certificate is created by azure"
   default     = null
-}
+}*/
 
 variable "backup" {
   type = object({
