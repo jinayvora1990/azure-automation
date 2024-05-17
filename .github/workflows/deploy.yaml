@@ -49,9 +49,9 @@ jobs:
         id: backend-config
         run: |
           if [ "${{ github.event.inputs.environment }}" != "prod" ]; then
-            echo "::set-output name=config_file::app.nonprod.config"
+            echo "::name=config_file::app.nonprod.config"  >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=config_file::prod.config"
+            echo "::name=config_file::prod.config" >> $GITHUB_OUTPUT
           fi
 
       - name: Initialize Terraform
