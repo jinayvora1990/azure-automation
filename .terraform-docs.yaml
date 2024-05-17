@@ -1,0 +1,14 @@
+---
+formatter: "markdown"
+
+output:
+  file: "README.md"
+  mode: replace
+
+recursive:
+  enabled: false
+  path: modules
+
+sort:
+  enabled: true
+  by: name

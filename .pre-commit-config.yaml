@@ -11,3 +11,6 @@ repos:
         args:
           - --args=-json
           - --args=-no-color
+      - id: terraform_docs
+        args:
+          - --args=--config=.terraform-docs.yaml
