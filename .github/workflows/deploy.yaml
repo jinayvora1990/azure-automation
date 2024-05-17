@@ -43,6 +43,7 @@ jobs:
 
       - name: Determine Present Working Directory
         run: pwd
+        working-directory: ./stacks/${{ github.event.inputs.stack_name }}/examples/
 
       - name: Determine Backend Config
         id: backend-config
