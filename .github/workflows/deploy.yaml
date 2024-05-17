@@ -48,11 +48,12 @@ jobs:
       - name: Determine Backend Config
         id: backend-config
         run: |
-          if [ "${{ github.event.inputs.environment }}" != "prod" ]; then
-            echo "::name=config_file::app.nonprod.config"  >> $GITHUB_OUTPUT
-          else
-            echo "::name=config_file::prod.config" >> $GITHUB_OUTPUT
-          fi
+         if [ "${{ github.event.inputs.environment }}" != "prod" ]; then
+         echo "config_file=app.nonprod.config" >> $GITHUB_ENV
+         else
+         echo "config_file=prod.config" >> $GITHUB_ENV
+         fi
+
 
       - name: Initialize Terraform
         run: terraform init
@@ -63,7 +64,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out=tfplan -var-file="environment=dev.tfvars"
+        run: terraform plan -out=tfplan -var-file="dev.tfvars"
 #
 #      - name: Terraform Apply
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
