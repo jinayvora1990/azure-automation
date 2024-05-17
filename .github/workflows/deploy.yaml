@@ -24,7 +24,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./stacks/${{ inputs.stack_name }}/examples/
+        working-directory: ./stacks/policy_test/examples/
         shell: bash
 
     steps:
