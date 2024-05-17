@@ -24,7 +24,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./stacks/${{ github.event.inputs.stack_name }}/examples/
+#        working-directory: ./stacks/${{ github.event.inputs.stack_name }}/examples/
         shell: bash
 
     steps:
