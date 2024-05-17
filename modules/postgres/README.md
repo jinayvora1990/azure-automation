@@ -1,9 +1,10 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
@@ -61,3 +62,4 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_postgres_fqdn"></a> [postgres\_fqdn](#output\_postgres\_fqdn) | n/a |
+<!-- END_TF_DOCS -->

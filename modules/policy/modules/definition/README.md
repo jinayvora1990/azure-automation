@@ -1,9 +1,10 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
@@ -46,3 +47,4 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | The name of the Policy Definition |
 | <a name="output_parameters"></a> [parameters](#output\_parameters) | The parameters of the Policy Definition |
 | <a name="output_rules"></a> [rules](#output\_rules) | The rules of the Policy Definition |
+<!-- END_TF_DOCS -->

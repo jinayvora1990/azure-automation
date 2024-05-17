@@ -1,15 +1,16 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.101.0 |
 
 ## Modules
 
@@ -44,3 +45,4 @@
 |------|-------------|
 | <a name="output_backup_vault_id"></a> [backup\_vault\_id](#output\_backup\_vault\_id) | The id of the azure recovery services vault |
 | <a name="output_vault_name"></a> [vault\_name](#output\_vault\_name) | The name of the azure recovery services vault |
+<!-- END_TF_DOCS -->

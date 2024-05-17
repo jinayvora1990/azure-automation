@@ -1,15 +1,16 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.100.0 |
 
 ## Modules
 
@@ -58,3 +59,4 @@
 | <a name="output_eventhub_id"></a> [eventhub\_id](#output\_eventhub\_id) | The id of the eventhub |
 | <a name="output_eventhub_namespace"></a> [eventhub\_namespace](#output\_eventhub\_namespace) | The eventhub namespace name |
 | <a name="output_eventhub_partition_ids"></a> [eventhub\_partition\_ids](#output\_eventhub\_partition\_ids) | The list of partition ids of the eventhub |
+<!-- END_TF_DOCS -->

@@ -1,15 +1,16 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.103.1 |
 
 ## Modules
 
@@ -66,3 +67,4 @@ No modules.
 | <a name="output_identity_id"></a> [identity\_id](#output\_identity\_id) | The Managed Identity block containing Principal Id & Tenant Id of this Policy Assignment if type is SystemAssigned |
 | <a name="output_remediation_id"></a> [remediation\_id](#output\_remediation\_id) | The Id of the remediation task |
 | <a name="output_role_definition_ids"></a> [role\_definition\_ids](#output\_role\_definition\_ids) | The List of Role Definition Ids assignable to the managed identity |
+<!-- END_TF_DOCS -->

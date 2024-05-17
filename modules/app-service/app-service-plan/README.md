@@ -1,15 +1,16 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.101.0 |
 
 ## Modules
 
@@ -47,3 +48,4 @@
 | <a name="output_kind"></a> [kind](#output\_kind) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_reserved"></a> [reserved](#output\_reserved) | n/a |
+<!-- END_TF_DOCS -->

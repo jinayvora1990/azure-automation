@@ -1,15 +1,16 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.71.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.101.0 |
 
 ## Modules
 
@@ -37,13 +38,11 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_function_subnet"></a> [app\_function\_subnet](#input\_app\_function\_subnet) | The subnet id which will be used by this function app for regional virtual network integration. | <pre>object({<br>    name           = string<br>    vnet_name      = string<br>    resource_group = string<br>  })</pre> | `null` | no |
-| <a name="input_app_service_logs"></a> [app\_service\_logs](#input\_app\_service\_logs) | The log configuration for the function app | <pre>object({<br>    disk_quota_mb         = number<br>    retention_period_days = number<br>  })</pre> | `null` | no |
 | <a name="input_application_insights_enabled"></a> [application\_insights\_enabled](#input\_application\_insights\_enabled) | Use Application Insights for this App Service | `bool` | `false` | no |
 | <a name="input_application_name"></a> [application\_name](#input\_application\_name) | The application that requires this resource | `string` | n/a | yes |
 | <a name="input_artifact_url"></a> [artifact\_url](#input\_artifact\_url) | The url for the artifact to run | `string` | `null` | no |
 | <a name="input_backup"></a> [backup](#input\_backup) | The backup configuration for the app service. Skip this for the default backup configuration | <pre>object({<br>    backup_sa = object({<br>      name           = string<br>      resource_group = string<br>    })<br>    enabled = optional(bool)<br>    schedule = object({<br>      frequency_interval       = number<br>      frequency_unit           = string<br>      start_time               = optional(string)<br>      retention_period_days    = optional(number)<br>      keep_at_least_one_backup = optional(bool)<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_connection_strings"></a> [connection\_strings](#input\_connection\_strings) | Connection strings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#connection_string | <pre>list(object({<br>    name  = string<br>    type  = string<br>    value = string<br>  }))</pre> | `[]` | no |
-| <a name="input_custom_domain"></a> [custom\_domain](#input\_custom\_domain) | Map a custom domain with the app service. If you do not pass the certificate, a managed certificate is created by azure | <pre>object({<br>    hostname = string<br>    certificate = optional(object({<br>      name = string<br>      vault = object({<br>        name           = string<br>        resource_group = string<br>      })<br>    }))<br>  })</pre> | `null` | no |
 | <a name="input_daily_memory_time_quota"></a> [daily\_memory\_time\_quota](#input\_daily\_memory\_time\_quota) | The amount of memory in gigabyte-seconds that the application is allowed to consume per day. | `number` | `null` | no |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | The environment variables map | `map(string)` | `{}` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment where redis cache is provisioned | `string` | n/a | yes |
@@ -65,3 +64,4 @@
 | <a name="output_hostname"></a> [hostname](#output\_hostname) | The default hostname of the function app |
 | <a name="output_id"></a> [id](#output\_id) | The id of the function app |
 | <a name="output_name"></a> [name](#output\_name) | The name of the function app |
+<!-- END_TF_DOCS -->

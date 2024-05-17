@@ -1,9 +1,10 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.71.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.7.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.100.0 |
 
 ## Providers
 
@@ -35,3 +36,4 @@ No modules.
 |------|-------------|
 | <a name="output_rg_location"></a> [rg\_location](#output\_rg\_location) | Location of the resource group |
 | <a name="output_rg_name"></a> [rg\_name](#output\_rg\_name) | Name of the resource group |
+<!-- END_TF_DOCS -->
