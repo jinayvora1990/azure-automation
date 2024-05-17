@@ -63,7 +63,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out=tfplan -var-file="environment=${{ github.event.inputs.environment }}.tfvars"
+        run: terraform plan -out=tfplan -var-file="environment=dev.tfvars"
 #
 #      - name: Terraform Apply
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
