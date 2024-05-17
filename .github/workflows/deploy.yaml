@@ -50,8 +50,10 @@ jobs:
         run: |
          if [ "${{ github.event.inputs.environment }}" != "prod" ]; then
          echo "config_file=app.nonprod.config" >> $GITHUB_ENV
+         echo "This is non prod"
          else
          echo "config_file=prod.config" >> $GITHUB_ENV
+         echo "This is Prod"
          fi
 
 
@@ -64,9 +66,8 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out=tfplan -var-file="dev.tfvars"
-        working-directory: "./stacks/policy_test/examples/"
-#
+        run: terraform plan -out=tfplan -var-file="./stacks/policy_test/examples/dev.tfvars"
+        
 #      - name: Terraform Apply
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 #        run: terraform apply -auto-approve tfplan
