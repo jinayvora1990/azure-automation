@@ -24,7 +24,7 @@ jobs:
 
     defaults:
       run:
-#        working-directory: ./stacks/${{ github.event.inputs.stack_name }}/examples/
+        working-directory: ./stacks/${{ inputs.stack_name }}/examples/
         shell: bash
 
     steps:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Determine Present Working Directory
         run: pwd
-        working-directory: ./stacks/${{ github.event.inputs.stack_name }}/examples/
+#        working-directory: ./stacks/${{ inputs.stack_name }}/examples/
 
       - name: Determine Backend Config
         id: backend-config
