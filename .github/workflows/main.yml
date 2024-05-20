@@ -69,8 +69,8 @@ jobs:
 
 
       - name: Initialize Terraform
-        run: terraform init
-#        run: terraform init -reconfigure -backend-config="./config/${{ github.event.inputs.environment }}.config" -backend-config="./config/${{ github.event.inputs.environment }}.config"
+#        run: terraform init
+        run: terraform init -reconfigure -backend-config="./config/${{ inputs.environment }}.config" -backend-config="./config/${{ env.config_file }}.config"
 
       - name: Validate Terraform
         run: terraform validate
