@@ -50,7 +50,7 @@ jobs:
 #        working-directory: ./stacks/${{ inputs.stack_name }}/examples/
 
       - name: Debug environment input
-        run: echo " This is deploying in ${{ github.event.inputs.environment }}"
+        run: echo " This is deploying in ${{ inputs.environment }}"
 
       - name: Determine Backend Config
         id: backend-config
