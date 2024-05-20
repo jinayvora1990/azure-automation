@@ -33,7 +33,7 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
     defaults:
       run:
-        working-directory: ./stacks/policy_test/examples/
+        working-directory: ./stacks/${{ inputs.stacks_name }}/examples/
         shell: bash
 
     steps:
@@ -49,9 +49,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Determine Present Working Directory
-        run: pwd
 
       - name: Debug environment input
         run: echo " This is deploying in ${{ inputs.environment }}"
