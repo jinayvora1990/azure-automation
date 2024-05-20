@@ -47,7 +47,6 @@ jobs:
 
       - name: Determine Present Working Directory
         run: pwd
-#        working-directory: ./stacks/${{ inputs.stack_name }}/examples/
 
       - name: Debug environment input
         run: echo " This is deploying in ${{ inputs.environment }}"
