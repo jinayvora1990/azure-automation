@@ -1,4 +1,4 @@
-name: Deploy Terraform to Azure
+name: Destroy Existing Resource through Terraform
 
 on:
   push:
