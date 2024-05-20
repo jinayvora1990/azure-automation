@@ -57,10 +57,10 @@ jobs:
         id: backend-config
         run: |
          if [ "${{ github.event.inputs.environment }}" != "prod" ]; then
-         echo "config_file=app.nonprod.config" >> $GITHUB_ENV
+         echo "config_file=app.nonprod" >> $GITHUB_ENV
          echo "This is non prod"
          else
-         echo "config_file=prod.config" >> $GITHUB_ENV
+         echo "config_file=prod" >> $GITHUB_ENV
          echo "This is Prod"
          fi
 
