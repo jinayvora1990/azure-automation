@@ -72,10 +72,6 @@ jobs:
       - name: Validate Terraform
         run: terraform validate
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -out=tfplan -var-file=${{ inputs.environment }}.tfvars
-
       - name: Terraform destroy
         if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve tfplan
+        run: terraform destroy -auto-approve
