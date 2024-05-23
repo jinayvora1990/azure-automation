@@ -38,11 +38,11 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.7.5  # Use the latest stable version
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#
+#      - name: Azure Login
+#        uses: azure/login@v1
+#        with:
+#          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Debug environment input
         run: echo " This is deploying in ${{ inputs.environment }}"
