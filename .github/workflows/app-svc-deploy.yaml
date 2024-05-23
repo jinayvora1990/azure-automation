@@ -68,7 +68,7 @@ jobs:
 
       - name: Deploy to stage env
         uses: azure/webapps-deploy@v1
-        id: deploy-to-stagepom.xml
+        id: deploy-to-stage
         with:
           app-name: ${{ env.WEBAPP_NAME }}
           package: '*.war'
