@@ -1,12 +1,6 @@
 name: Destroy Existing Resource through Terraform
 
 on:
-#  push:
-#    branches:
-#      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -26,11 +20,6 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    env:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
     defaults:
       run:
         working-directory: ./stacks/${{ inputs.stacks_name }}/examples/
@@ -66,7 +55,6 @@ jobs:
 
 
       - name: Initialize Terraform
-        #        run: terraform init
         run: terraform init -reconfigure -backend-config="./config/${{ inputs.environment }}.config" -backend-config="./config/${{ env.config_file }}.config"
 
       - name: Validate Terraform
