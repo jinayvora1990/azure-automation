@@ -40,3 +40,9 @@ resource "azurerm_role_assignment" "acr_role_assignment" {
   principal_id                     = azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
   skip_service_principal_aad_check = true
 }
+
+resource "azurerm_role_assignment" "monitoring_metrics_publisher" {
+  principal_id         = azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
+  role_definition_name = "Monitoring Metrics Publisher"
+  scope                = var.oms_agent_log_analytics_workspace_id
+}
