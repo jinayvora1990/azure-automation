@@ -1,0 +1,135 @@
+name: App Service Deployment
+on:
+  workflow_dispatch:
+
+env:
+  APP_SRC: 'flask'        # set this to the path to your path of working directory inside github repository, defaults to the repository root
+  PYTHON_VERSION: '3.10'        # set the version to use
+#  STARTUP_COMMAND: ''           # set this to the startup command required to start the gunicorn server. default it is empty
+  WARMUP_SLOT: "v1-slot"
+  PRODUCTION_SLOT: "production"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Build-app:
+    runs-on: ubuntu-latest
+#    environment:
+    steps:
+      # checkout the repo
+      - uses: actions/checkout@v4
+      # setup python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      # install dependencies
+      - name: python install
+        working-directory: ${{ env.APP_SRC }}
+        run: |
+          sudo apt install python${{ env.PYTHON_VERSION }}-venv
+          python -m venv --copies antenv
+          source antenv/bin/activate
+          pip install setuptools
+          pip install -r requirements.txt
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: flask-app
+          path: '${{ github.workspace }}/${{ env.APP_SRC }}'
+
+  Deploy-app-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs:
+      - Build-app
+    steps:
+      # Azure login
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDS }}
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: flask-app
+          path: ${{ env.APP_SRC }}
+      - name: Run ls
+        run: |
+          echo "Files"
+          ls
+          pwd
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.WEBAPP_NAME }}
+          package: ${{ env.APP_SRC }}
+          startup-command: ${{ env.STARTUP_COMMAND }}
+      # Azure logout
+      - name: logout
+        run: |
+          az logout
+
+  Deploy-app-prod:
+    runs-on: ubuntu-latest
+    environment: prod
+    needs:
+      - Build-app
+      - Deploy-app-dev
+    steps:
+      # Azure login
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDS }}
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: flask-app
+          path: ${{ env.APP_SRC }}
+      - name: Run ls
+        run: |
+          echo "Files"
+          ls
+          pwd
+#      - uses: azure/appservice-settings@v1
+#        with:
+#          app-name: ${{ vars.WEBAPP_NAME }}
+#          mask-inputs: false
+#          general-settings-json: '{"linuxFxVersion": "PYTHON|${{ env.PYTHON_VERSION }}"}' #'General configuration settings as Key Value pairs'
+      # deploy web app
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.WEBAPP_NAME }}
+          package: ${{ env.APP_SRC }}
+          startup-command: ${{ env.STARTUP_COMMAND }}
+          slot-name: ${{ env.WARMUP_SLOT }}
+      # Azure logout
+      - name: logout
+        run: |
+          az logout
+
+  Rollback-prod-deployment:
+    runs-on: ubuntu-latest
+    environment: prod-rollback
+    needs:
+      - Deploy-app-prod
+    steps:
+      - name: Export Env Vars
+        run: |
+          echo "WEBAPP_NAME=${{ vars.WEBAPP_NAME }}" >> $GITHUB_ENV
+          echo "RG_NAME=${{ vars.RG_NAME }}" >> $GITHUB_ENV
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDS }}
+      - name: Rollback Deployment
+        run: |
+          echo "Warmup Slot: ${{ env.WARMUP_SLOT }}"
+          echo "RG: ${{ env.RG_NAME }}"
+          az webapp deployment slot swap \
+          --resource-group ${{ env.RG_NAME }} \
+          --name ${{ env.WEBAPP_NAME }} \
+          --slot ${{ env.WARMUP_SLOT }} \
+          --target-slot ${{ env.PRODUCTION_SLOT }}
+      - name: logout
+        run: |
+          az logout
