@@ -27,4 +27,7 @@ module "aks-create" {
     name           = module.acr.acr_name
     resource_group = module.acr.acr_rg
   }]
+  streams                              = var.streams
+  depends_on                           = [module.app_resource_group]
+  oms_agent_log_analytics_workspace_id = module.log_analytics.law_id
 }
