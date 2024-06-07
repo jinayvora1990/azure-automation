@@ -195,6 +195,12 @@ DESCRIPTION
   }
 }
 
+variable "private_dns_zone_name" {
+  type        = string
+  description = "Name of the private dns zone for private link"
+  default     = null
+}
+
 variable "privatelink_subnet" {
   type = object({
     name           = string

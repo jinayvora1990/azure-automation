@@ -10,7 +10,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.101.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.100.0 |
 
 ## Modules
 
@@ -23,6 +23,7 @@ No modules.
 | [azurerm_monitor_diagnostic_setting.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting) | resource |
 | [azurerm_mysql_flexible_server.mysql_flexible_server](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_flexible_server) | resource |
 | [azurerm_mysql_flexible_server_configuration.mysql_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_flexible_server_configuration) | resource |
+| [azurerm_private_dns_a_record.dns_record](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_a_record) | resource |
 | [azurerm_private_endpoint.pep](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
 | [azurerm_key_vault.keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
 | [azurerm_key_vault_secret.mysql_admin_password](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault_secret) | data source |
@@ -47,6 +48,7 @@ No modules.
 | <a name="input_mysql_storage"></a> [mysql\_storage](#input\_mysql\_storage) | MySQL storage configuration | <pre>object({<br>    auto_grow_enabled  = bool<br>    io_scaling_enabled = bool<br>    iops               = number<br>    size_gb            = number<br>  })</pre> | `null` | no |
 | <a name="input_mysql_subnet"></a> [mysql\_subnet](#input\_mysql\_subnet) | Subnet to use with MySQL server | <pre>object({<br>    name           = string<br>    vnet_name      = string<br>    resource_group = string<br>  })</pre> | n/a | yes |
 | <a name="input_mysql_version"></a> [mysql\_version](#input\_mysql\_version) | Specifies the version of MySQL to use. Valid values are 5.7, 8.0.21 | `string` | `"8.0.21"` | no |
+| <a name="input_private_dns_zone_name"></a> [private\_dns\_zone\_name](#input\_private\_dns\_zone\_name) | Name of the private dns zone for private link | `string` | `null` | no |
 | <a name="input_privatelink_subnet"></a> [privatelink\_subnet](#input\_privatelink\_subnet) | Subnet where the private link is required. | <pre>object({<br>    name           = string<br>    vnet_name      = string<br>    resource_group = string<br>  })</pre> | `null` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The resource group for the MySQL DB | `string` | n/a | yes |
 | <a name="input_server_configuration"></a> [server\_configuration](#input\_server\_configuration) | map for additional server configurations. See https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-server-parameters | <pre>map(object({<br>    config_value = string<br>  }))</pre> | `{}` | no |
@@ -58,5 +60,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_pep_pvt_dns_fqdn"></a> [pep\_pvt\_dns\_fqdn](#output\_pep\_pvt\_dns\_fqdn) | FQDN for mysql server endpoint in private dns zone |
 | <a name="output_postgres_fqdn"></a> [postgres\_fqdn](#output\_postgres\_fqdn) | n/a |
 <!-- END_TF_DOCS -->

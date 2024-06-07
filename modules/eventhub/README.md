@@ -25,6 +25,7 @@
 | [azurerm_eventhub.eventhub](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub) | resource |
 | [azurerm_eventhub_namespace.eh-namespace](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub_namespace) | resource |
 | [azurerm_monitor_diagnostic_setting.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting) | resource |
+| [azurerm_private_dns_a_record.dns_record](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_a_record) | resource |
 | [azurerm_private_endpoint.pep](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
 | [azurerm_role_assignment.role-assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.storage_account_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
@@ -44,6 +45,7 @@
 | <a name="input_eventhub_config"></a> [eventhub\_config](#input\_eventhub\_config) | List of eventhub instances(topics) and their configuration to be created in the namespace | <pre>list(object({<br>    name              = string<br>    message_retention = number<br>    partition_count   = number<br>    eventhub_status   = optional(string, "Active")<br>    enable_capture    = optional(bool, false)<br>    capture_config = optional(object({<br>      encoding            = string<br>      interval_in_seconds = optional(number)<br>      size_limit_in_bytes = optional(number)<br>      skip_empty_archives = optional(bool)<br>      destination = object({<br>        blob_container_name = string<br>        storage_account_id  = string<br>      })<br>    }))<br>  }))</pre> | `[]` | no |
 | <a name="input_maximum_throughput_units"></a> [maximum\_throughput\_units](#input\_maximum\_throughput\_units) | Specifies the maximum number of throughput units when Auto Inflate is Enabled. | `number` | `null` | no |
 | <a name="input_network_rulesets"></a> [network\_rulesets](#input\_network\_rulesets) | n/a | <pre>object({<br>    default_action                 = string<br>    trusted_service_access_enabled = optional(bool)<br>    virtual_network_rules = optional(list(object({<br>      subnet_id                                       = string<br>      ignore_missing_virtual_network_service_endpoint = optional(bool)<br>    })), [])<br>    ip_rules = optional(list(object({<br>      ip_mask = string<br>      action  = optional(string)<br>    })), [])<br>  })</pre> | `null` | no |
+| <a name="input_private_dns_zone_name"></a> [private\_dns\_zone\_name](#input\_private\_dns\_zone\_name) | Name of the private dns zone for private link | `string` | `null` | no |
 | <a name="input_privatelink_subnet"></a> [privatelink\_subnet](#input\_privatelink\_subnet) | Subnet where the private link is required. | <pre>object({<br>    name           = string<br>    vnet_name      = string<br>    resource_group = string<br>  })</pre> | `null` | no |
 | <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled) | Is public network access enabled for the EventHub Namespace | `bool` | `false` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The resource group for the redis cache | `string` | n/a | yes |
@@ -59,4 +61,5 @@
 | <a name="output_eventhub_id"></a> [eventhub\_id](#output\_eventhub\_id) | The id of the eventhub |
 | <a name="output_eventhub_namespace"></a> [eventhub\_namespace](#output\_eventhub\_namespace) | The eventhub namespace name |
 | <a name="output_eventhub_partition_ids"></a> [eventhub\_partition\_ids](#output\_eventhub\_partition\_ids) | The list of partition ids of the eventhub |
+| <a name="output_pep_pvt_dns_fqdn"></a> [pep\_pvt\_dns\_fqdn](#output\_pep\_pvt\_dns\_fqdn) | FQDN for the eventhub private endpoint in private dns zone |
 <!-- END_TF_DOCS -->

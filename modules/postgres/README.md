@@ -10,7 +10,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.101.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.100.0 |
 
 ## Modules
 
@@ -24,6 +24,7 @@ No modules.
 | [azurerm_postgresql_flexible_server.postgresql_flexible_server](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server) | resource |
 | [azurerm_postgresql_flexible_server_configuration.postgres_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server_configuration) | resource |
 | [azurerm_postgresql_flexible_server_configuration.postgres_pgbouncer_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server_configuration) | resource |
+| [azurerm_private_dns_a_record.dns_record](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_a_record) | resource |
 | [azurerm_private_endpoint.pep](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
 | [azurerm_key_vault.keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
 | [azurerm_key_vault_secret.postgres_admin_password](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault_secret) | data source |
@@ -46,6 +47,7 @@ No modules.
 | <a name="input_keyvault"></a> [keyvault](#input\_keyvault) | n/a | <pre>object({<br>    name                        = string<br>    resource_group              = string<br>    postgres_admin_username_key = string<br>    postgres_admin_password_key = string<br>  })</pre> | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | The location/region where the resource is created e.g. uaenorth. Changing this forces a new resource to be created. | `string` | `"uaenorth"` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | Maintenance window configuration | <pre>object({<br>    day_of_week  = number<br>    start_hour   = number<br>    start_minute = number<br>  })</pre> | `null` | no |
+| <a name="input_private_dns_zone_name"></a> [private\_dns\_zone\_name](#input\_private\_dns\_zone\_name) | Name of the private dns zone for private link | `string` | `null` | no |
 | <a name="input_privatelink_subnet"></a> [privatelink\_subnet](#input\_privatelink\_subnet) | Subnet where the private link is required. | <pre>object({<br>    name           = string<br>    vnet_name      = string<br>    resource_group = string<br>  })</pre> | `null` | no |
 | <a name="input_psql_subnet"></a> [psql\_subnet](#input\_psql\_subnet) | Subnet to use with PostgreSQL server | <pre>object({<br>    name           = string<br>    vnet_name      = string<br>    resource_group = string<br>  })</pre> | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The resource group for the Postgres DB | `string` | n/a | yes |
@@ -61,5 +63,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_pep_pvt_dns_fqdn"></a> [pep\_pvt\_dns\_fqdn](#output\_pep\_pvt\_dns\_fqdn) | FQDN for the postgres server private endpoint in private dns zone |
 | <a name="output_postgres_fqdn"></a> [postgres\_fqdn](#output\_postgres\_fqdn) | n/a |
 <!-- END_TF_DOCS -->

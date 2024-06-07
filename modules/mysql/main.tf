@@ -58,6 +58,15 @@ resource "azurerm_mysql_flexible_server_configuration" "mysql_configuration" {
   ]
 }
 
+resource "azurerm_private_dns_a_record" "dns_record" {
+  count               = length(azurerm_private_endpoint.pep) > 0 && var.private_dns_zone_name != null ? 1 : 0
+  name                = "redis"
+  records             = [azurerm_private_endpoint.pep[0].private_service_connection[0].private_ip_address]
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  zone_name           = var.private_dns_zone_name
+}
+
 resource "azurerm_private_endpoint" "pep" {
   count               = var.privatelink_subnet != null ? 1 : 0
   name                = format("pep-mysql-%s-%s-%s", var.application_name, local.environment, local.region_shortcode)

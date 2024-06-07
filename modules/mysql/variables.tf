@@ -42,6 +42,12 @@ variable "privatelink_subnet" {
   default     = null
 }
 
+variable "private_dns_zone_name" {
+  type        = string
+  description = "Name of the private dns zone for private link"
+  default     = null
+}
+
 variable "create_mode" {
   type        = string
   default     = "Default"
