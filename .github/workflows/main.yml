@@ -1,0 +1,69 @@
+name: Deploy Terraform to Azure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'Environment to deploy (e.g., dev, staging, prod)'
+        required: true
+        options:
+          - dev
+          - stage
+          - prod
+        default: 'dev'
+      stacks_name:
+        description: Name of the application stack to be deployed
+        required: true
+        default: policy_test
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    defaults:
+      run:
+        working-directory: ./stacks/${{ inputs.stacks_name }}/examples/
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.5  # Use the latest stable version
+
+      - name: Debug environment input
+        run: echo " This is deploying in ${{ inputs.environment }}"
+
+      - name: Determine Backend Config
+        id: backend-config
+        run: |
+         if [ "${{ github.event.inputs.environment }}" != "prod" ]; then
+         echo "config_file=app.nonprod" >> $GITHUB_ENV
+         echo "This is non prod"
+         else
+         echo "config_file=prod" >> $GITHUB_ENV
+         echo "This is Prod"
+         fi
+
+
+      - name: Initialize Terraform
+        run: terraform init -reconfigure -backend-config="./config/${{ inputs.environment }}.config" -backend-config="./config/${{ env.config_file }}.config"
+
+      - name: Validate Terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out=tfplan -var-file=${{ inputs.environment }}.tfvars
+        
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve tfplan
