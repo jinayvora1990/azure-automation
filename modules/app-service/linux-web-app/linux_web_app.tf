@@ -30,11 +30,12 @@ module "app-insights" {
 
 resource "azurerm_linux_web_app" "linux-web-app" {
   location            = local.location
-  name                = format("app-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("app%s%s%s%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), "1" /*module.res-id.result*/)
   resource_group_name = local.rg
   service_plan_id     = var.existing_service_plan == null ? module.service-plan[0].id : data.azurerm_service_plan.existing_service_plan[0].id
 
-  app_settings                  = local.app_settings
+  app_settings = local.app_settings
+
   https_only                    = true
   public_network_access_enabled = var.public_network_access_enabled
   virtual_network_subnet_id     = var.web_app_subnet != null ? data.azurerm_subnet.app_service_subnet[0].id : null
@@ -139,6 +140,15 @@ resource "azurerm_linux_web_app" "linux-web-app" {
   }
   tags       = merge(var.tags, local.common_tags, { "resource_type" = "linux-web-app" })
   depends_on = [module.service-plan]
+}
+
+resource "azurerm_linux_web_app_slot" "v1_slot" {
+  count          = var.app_slots ? 1 : 0
+  name           = "v1-slot"
+  app_service_id = azurerm_linux_web_app.linux-web-app.id
+  site_config {
+    auto_swap_slot_name = "production"
+  }
 }
 
 resource "azurerm_storage_container" "backup_container" {

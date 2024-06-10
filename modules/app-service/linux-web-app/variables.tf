@@ -193,3 +193,8 @@ variable "connection_strings" {
   }))
   default = []
 }
+
+variable "app_slots" {
+  default = false
+  type    = bool
+}
