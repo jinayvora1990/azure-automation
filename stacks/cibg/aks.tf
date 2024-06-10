@@ -21,6 +21,7 @@ module "aks-create" {
   environment                     = local.environment
   application_name                = local.application_name
   api_server_authorized_ip_ranges = var.aks_api_server_authorized_ip_ranges
+  dapr_enabled                    = true
 
   tags = local.tags
   acr = [{

@@ -438,3 +438,9 @@ variable "acr" {
   description = "Configure Kubelet identity to pull images from these Azure Container Registries"
   default     = []
 }
+
+variable "dapr_enabled" {
+  type        = bool
+  description = "Enable DAPR extension for the AKS cluster"
+  default     = false
+}

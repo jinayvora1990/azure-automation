@@ -11,7 +11,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.101.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.100.0 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | 4.0.5 |
 
 ## Modules
@@ -23,9 +23,11 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_kubernetes_cluster.aks_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
+| [azurerm_kubernetes_cluster_extension.dapr_ext](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_extension) | resource |
 | [azurerm_kubernetes_cluster_node_pool.regular_node_pools](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
 | [azurerm_monitor_diagnostic_setting.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting) | resource |
 | [azurerm_private_dns_zone.private_dns_zone](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone) | resource |
+| [azurerm_resource_provider_registration.k8s_ext](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_provider_registration) | resource |
 | [azurerm_role_assignment.acr_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.custom_private_dns_zone_contributor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.kubelet_identity_role_assignment_managed_identity](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
@@ -71,6 +73,7 @@ No modules.
 | <a name="input_azure_active_directory_rbac_enabled"></a> [azure\_active\_directory\_rbac\_enabled](#input\_azure\_active\_directory\_rbac\_enabled) | Enable AKS managed Azure RBAC integration, https://docs.microsoft.com/en-us/azure/aks/manage-azure-rbac | `bool` | `false` | no |
 | <a name="input_azure_key_vaults_secrets_rotation_interval"></a> [azure\_key\_vaults\_secrets\_rotation\_interval](#input\_azure\_key\_vaults\_secrets\_rotation\_interval) | (optional) Azure Key Vault secret rotation interval | `string` | `"2m"` | no |
 | <a name="input_create_private_dns_zone"></a> [create\_private\_dns\_zone](#input\_create\_private\_dns\_zone) | (optional) Create Private DNS Zone for private cluster. `aks_private_dns_zone_id` variable takes precedence. | `bool` | `false` | no |
+| <a name="input_dapr_enabled"></a> [dapr\_enabled](#input\_dapr\_enabled) | Enable DAPR extension for the AKS cluster | `bool` | `false` | no |
 | <a name="input_diagnostic_settings"></a> [diagnostic\_settings](#input\_diagnostic\_settings) | A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.<br><br>- `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.<br>- `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.<br>- `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.<br>- `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.<br>- `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.<br>- `storage_account_resource_id` - (Optional) The resource ID of the storage account to send logs and metrics to.<br>- `event_hub_authorization_rule_resource_id` - (Optional) The resource ID of the event hub authorization rule to send logs and metrics to.<br>- `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.<br>- `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs. | <pre>map(object({<br>    name                                     = optional(string, null)<br>    log_categories                           = optional(set(string), [])<br>    metric_categories                        = optional(set(string), ["AllMetrics"])<br>    log_analytics_destination_type           = optional(string, "Dedicated")<br>    workspace_resource_id                    = optional(string, null)<br>    storage_account_resource_id              = optional(string, null)<br>    event_hub_authorization_rule_resource_id = optional(string, null)<br>    event_hub_name                           = optional(string, null)<br>    marketplace_partner_resource_id          = optional(string, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_enable_azure_key_vault_secrets_provider"></a> [enable\_azure\_key\_vault\_secrets\_provider](#input\_enable\_azure\_key\_vault\_secrets\_provider) | (optional) Enable Azure Key Vault secrets provider | `bool` | `false` | no |
 | <a name="input_enable_azure_key_vaults_secrets_rotation"></a> [enable\_azure\_key\_vaults\_secrets\_rotation](#input\_enable\_azure\_key\_vaults\_secrets\_rotation) | (optional) Enable Azure Key Vault secret rotation | `bool` | `false` | no |
