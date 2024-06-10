@@ -10,7 +10,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.97.1 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.100.0 |
 
 ## Modules
 
@@ -34,6 +34,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_rg_id"></a> [rg\_id](#output\_rg\_id) | n/a |
 | <a name="output_rg_location"></a> [rg\_location](#output\_rg\_location) | Location of the resource group |
 | <a name="output_rg_name"></a> [rg\_name](#output\_rg\_name) | Name of the resource group |
 <!-- END_TF_DOCS -->
