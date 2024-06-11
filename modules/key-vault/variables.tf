@@ -126,12 +126,12 @@ variable "owners" {
 }
 
 variable "contacts" {
-  type = list(object({
+  type = map(object({
     email = string
     name  = optional(string, null)
     phone = optional(string, null)
   }))
-  default     = []
+  default     = {}
   description = "A map of contacts for the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time."
 }
 
