@@ -92,7 +92,7 @@ resource "azurerm_user_assigned_identity" "sa_access" {
 
 resource "azurerm_private_dns_a_record" "dns_record" {
   count               = length(azurerm_private_endpoint.pep) > 0 && var.private_dns_zone_name != null ? 1 : 0
-  name                = "redis"
+  name                = "evhns"
   records             = [azurerm_private_endpoint.pep[0].private_service_connection[0].private_ip_address]
   resource_group_name = local.rg
   ttl                 = 300

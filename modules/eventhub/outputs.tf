@@ -14,10 +14,6 @@ output "eventhub_partition_ids" {
 }
 
 output "pep_pvt_dns_fqdn" {
-  precondition {
-    condition     = length(azurerm_private_dns_a_record.dns_record) > 0
-    error_message = "Private DNS does not exist for the eventhub"
-  }
   description = "FQDN for the eventhub private endpoint in private dns zone"
-  value       = "${azurerm_private_dns_a_record.dns_record[0].name}.${var.private_dns_zone_name}"
+  value       = var.privatelink_subnet != null && var.private_dns_zone_name != null ? "${azurerm_private_dns_a_record.dns_record[0].name}.${var.private_dns_zone_name}" : null
 }

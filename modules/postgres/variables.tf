@@ -23,14 +23,14 @@ variable "application_name" {
   description = "The application that requires this resource"
 }
 
-variable "psql_subnet" {
+/*variable "psql_subnet" {
   type = object({
     name           = string
     vnet_name      = string
     resource_group = string
   })
   description = "Subnet to use with PostgreSQL server"
-}
+}*/
 
 variable "privatelink_subnet" {
   type = object({
@@ -106,7 +106,6 @@ variable "storage_in_mb" {
 variable "storage_tier" {
   type        = string
   description = "The name of storage performance tier for IOPS of the PostgreSQL Flexible Server. Possible values are P4, P6, P10, P15, P20, P30, P40, P50, P60, P70 or P80. Default value is dependant on the storage_mb value"
-  default     = null
   validation {
     condition     = can(regex("^(?:P4|P6|P10|P15|P20|P30|P40|P50|P60|P70|P80)$", var.storage_tier))
     error_message = "Allowed values are P4, P6, P10, P15, P20, P30, P40, P50, P60, P70 or P80"
@@ -171,6 +170,12 @@ variable "keyvault" {
     postgres_admin_username_key = string
     postgres_admin_password_key = string
   })
+}
+
+variable "identities" {
+  type        = list(string)
+  description = "List of identities associated with the postgresql server"
+  default     = []
 }
 
 variable "tags" {

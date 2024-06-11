@@ -1,8 +1,8 @@
-data "azurerm_subnet" "psql_subnet" {
+/*data "azurerm_subnet" "psql_subnet" {
   name                 = var.psql_subnet.name
   virtual_network_name = var.psql_subnet.vnet_name
   resource_group_name  = var.psql_subnet.resource_group
-}
+}*/
 
 data "azurerm_subnet" "privatelink_subnet" {
   count                = var.privatelink_subnet != null ? 1 : 0

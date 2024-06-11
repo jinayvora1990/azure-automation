@@ -3,14 +3,13 @@ resource "azurerm_postgresql_flexible_server" "postgresql_flexible_server" {
   resource_group_name = var.resource_group_name
   location            = local.location
   version             = var.sql_version
-  delegated_subnet_id = data.azurerm_subnet.psql_subnet.id
-  create_mode         = var.create_mode
+  #   delegated_subnet_id = data.azurerm_subnet.psql_subnet.id
+  create_mode = var.create_mode
 
   administrator_login          = local.administrator_login
   administrator_password       = local.administrator_password
   zone                         = var.availability_zone
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
-
 
   dynamic "maintenance_window" {
     for_each = local.maintenance_window_enabled ? { maintenance_window = var.maintenance_window } : {}
@@ -27,6 +26,14 @@ resource "azurerm_postgresql_flexible_server" "postgresql_flexible_server" {
     content {
       mode                      = "ZoneRedundant"
       standby_availability_zone = high_availability.value
+    }
+  }
+
+  dynamic "identity" {
+    for_each = var.identities
+    content {
+      identity_ids = identity
+      type         = "UserAssigned"
     }
   }
 
@@ -63,7 +70,7 @@ resource "azurerm_postgresql_flexible_server_configuration" "postgres_pgbouncer_
 
 resource "azurerm_private_dns_a_record" "dns_record" {
   count               = length(azurerm_private_endpoint.pep) > 0 && var.private_dns_zone_name != null ? 1 : 0
-  name                = "redis"
+  name                = "postgres"
   records             = [azurerm_private_endpoint.pep[0].private_service_connection[0].private_ip_address]
   resource_group_name = var.resource_group_name
   ttl                 = 300
