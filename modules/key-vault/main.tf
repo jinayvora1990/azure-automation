@@ -11,7 +11,6 @@ locals {
   kv_name                            = substr(format("kv-%s-%s-%s-%s", var.application_name, var.environment, local.region_shortcode, module.res-id.result), 0, 24)
 }
 
-data "azurerm_client_config" "current" {}
 
 module "res-id" {
   source = "../utility/random-identifier"
