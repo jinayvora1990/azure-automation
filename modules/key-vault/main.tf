@@ -1,5 +1,3 @@
-
-
 locals {
   owners           = var.owners
   environment      = var.environment
@@ -10,7 +8,7 @@ locals {
     environment = local.environment
   }
   role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
-  kv_name                            = substr(format("kv-%s-%s-%s-%s", var.application_name, var.environment, local.location, module.res-id.result), 0, 24)
+  kv_name                            = substr(format("kv-%s-%s-%s-%s", var.application_name, var.environment, local.region_shortcode, module.res-id.result), 0, 24)
 }
 
 data "azurerm_client_config" "current" {}

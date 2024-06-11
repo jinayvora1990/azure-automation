@@ -47,8 +47,14 @@ variable "tags" {
   default     = {}
 }
 
-variable "contributors" {
-  description = "A list of users / apps that should have Log Analytics Contributer access. Required to use log analytics as log source."
+variable "contributor_apps" {
+  description = "A list of apps that should have Log Analytics Contributer access. Required to use log analytics as log source."
+  type        = list(string)
+  default     = []
+}
+
+variable "contributor_users" {
+  description = "A list of users that should have Log Analytics Contributer access. Required to use log analytics as log source."
   type        = list(string)
   default     = []
 }
