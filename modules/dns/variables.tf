@@ -11,7 +11,6 @@ variable "vnet_name" {
 variable "resource_group" {
   type        = string
   description = "Existing resource group"
-  default     = null
 }
 
 variable "tags" {
