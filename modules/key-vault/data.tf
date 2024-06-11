@@ -4,3 +4,5 @@ data "azurerm_subnet" "privatelink_subnet" {
   virtual_network_name = var.privatelink_subnet.vnet_name
   resource_group_name  = var.privatelink_subnet.resource_group
 }
+
+data "azurerm_client_config" "current" {}

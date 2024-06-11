@@ -5,7 +5,7 @@ variable "seed-value" {
 }
 
 resource "random_string" "unique-id" {
-  length      = 8
+  length      = 6
   min_numeric = 2
   min_lower   = 2
   upper       = false
