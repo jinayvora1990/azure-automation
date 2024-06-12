@@ -436,7 +436,7 @@ variable "acr" {
     resource_group = string
   }))
   description = "Configure Kubelet identity to pull images from these Azure Container Registries"
-  default     = []
+  #  default     = []
 }
 
 variable "dapr_enabled" {

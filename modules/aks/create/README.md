@@ -16,7 +16,9 @@
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_res-id"></a> [res-id](#module\_res-id) | ../../../modules/utility/random-identifier | n/a |
 
 ## Resources
 
@@ -43,7 +45,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_acr"></a> [acr](#input\_acr) | Configure Kubelet identity to pull images from these Azure Container Registries | <pre>list(object({<br>    name           = string<br>    resource_group = string<br>  }))</pre> | `[]` | no |
+| <a name="input_acr"></a> [acr](#input\_acr) | Configure Kubelet identity to pull images from these Azure Container Registries | <pre>list(object({<br>    name           = string<br>    resource_group = string<br>  }))</pre> | n/a | yes |
 | <a name="input_admin_username"></a> [admin\_username](#input\_admin\_username) | The Linux profile admin username | `string` | `"azureuser"` | no |
 | <a name="input_aks_agent_count"></a> [aks\_agent\_count](#input\_aks\_agent\_count) | Number of workers in the agent pool | `number` | `1` | no |
 | <a name="input_aks_default_node_pool_name"></a> [aks\_default\_node\_pool\_name](#input\_aks\_default\_node\_pool\_name) | The AKS default node pool name | `string` | `"default"` | no |

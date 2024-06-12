@@ -54,3 +54,10 @@ variable "subnets" {
     }))
   }))
 }
+
+
+variable "aks_api_server_authorized_ip_ranges" {
+  type        = list(string)
+  description = "List of IP Address which can access aks cluster"
+
+}

@@ -3,8 +3,13 @@ resource "tls_private_key" "pair" {
   rsa_bits  = 4096
 }
 
+module "res-id" {
+  source = "../../../modules/utility/random-identifier"
+}
+
+
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
-  name                = "aks-${var.application_name}-${local.environment}-${local.region_shortcode}-1"
+  name                = format("aks-%s-%s-%s-%s", var.application_name, var.environment, local.region_shortcode, module.res-id.result)
   location            = local.location
   resource_group_name = var.resource_group_name
 
