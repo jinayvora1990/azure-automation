@@ -26,7 +26,7 @@ resource "azurerm_storage_account" "storeacc" {
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
   min_tls_version           = var.min_tls_version
-  tags                      = local.common_tags
+  tags                      = merge(local.common_tags, var.tags)
   dynamic "identity" {
     for_each = var.managed_identity_type != null ? [1] : []
     content {
@@ -56,6 +56,7 @@ resource "azurerm_storage_account" "storeacc" {
       virtual_network_subnet_ids = var.network_rules.subnet_ids
     }
   }
+  infrastructure_encryption_enabled = var.infrastructure_encryption_enabled
 }
 
 #--------------------------------------
