@@ -1,3 +1,5 @@
+
+
 locals {
   cosmos_rg = format("rg-%s-%s-%s-%s-cosmos", var.application_name, local.environment, lookup(local.location_short, var.location, "uan"), module.res-id_rg.result)
 }
@@ -16,8 +18,7 @@ module "cosmosdb" {
   application_name    = var.application_name
   environment         = var.environment
   resource_group_name = module.mongo_resource_group.rg_name
-
-  capabilities = ["EnableMongo"]
+  capabilities        = ["EnableMongo"]
 
   consistency_policy = {
     consistency_level       = "BoundedStaleness"
@@ -52,5 +53,11 @@ module "cosmosdb" {
     failover_priority = 0
     zone_redundant    = false
   }]
+
+  privatelink_subnet = {
+    name           = module.base-infra.subnet_names[2]
+    vnet_name      = module.base-infra.vnet_name
+    resource_group = module.mongo_resource_group.rg_name
+  }
 }
 

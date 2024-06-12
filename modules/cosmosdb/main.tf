@@ -17,7 +17,7 @@ module "res-id" {
 }
 
 resource "azurerm_cosmosdb_account" "cosmosdb_account" {
-  name                       = format("cosmos-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                       = format("cosmon-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
   location                   = local.location
   resource_group_name        = var.resource_group_name
   offer_type                 = var.offer_type
