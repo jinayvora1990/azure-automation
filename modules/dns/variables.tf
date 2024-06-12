@@ -3,15 +3,15 @@ variable "dns_zone_name" {
   description = "The name of the private dns zone"
 }
 
-variable "vnet_name" {
-  type        = string
-  description = "The virtual network name which contains the pep for the resource"
-}
+# variable "vnet_name" {
+#   type        = string
+#   description = "The virtual network name which contains the pep for the resource"
+#   default     = null
+# }
 
 variable "resource_group" {
   type        = string
   description = "Existing resource group"
-  default     = null
 }
 
 variable "tags" {

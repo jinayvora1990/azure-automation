@@ -44,7 +44,7 @@ variable "purge_protection_enabled" {
 variable "public_network_access_enabled" {
   type        = bool
   description = "(Optional) Whether public network access is allowed for this Key Vault."
-  default     = true
+  default     = false
 }
 
 variable "enable_rbac_authorization" {

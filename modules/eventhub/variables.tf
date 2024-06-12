@@ -50,7 +50,7 @@ variable "auto_inflate_enabled" {
 variable "maximum_throughput_units" {
   type        = number
   description = "Specifies the maximum number of throughput units when Auto Inflate is Enabled."
-  default     = null
+  default     = 0
 }
 
 variable "public_network_access_enabled" {
