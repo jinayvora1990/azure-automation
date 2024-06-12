@@ -99,7 +99,7 @@ variable "allowed_cidrs" {
 variable "public_network_access_enabled" {
   description = "Whether or not public network access is allowed for this CosmosDB account."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "is_virtual_network_filter_enabled" {
@@ -211,4 +211,14 @@ DESCRIPTION
     )
     error_message = "At least one of `workspace_resource_id`, `storage_account_resource_id`, `marketplace_partner_resource_id`, or `event_hub_authorization_rule_resource_id`, must be set."
   }
+}
+
+variable "privatelink_subnet" {
+  type = object({
+    name           = string
+    vnet_name      = string
+    resource_group = string
+  })
+  description = "Subnet where the private link is required."
+  default     = null
 }
