@@ -1,6 +1,7 @@
 module "azure_key_vault" {
+  count                         = var.provision_modules.kv ? 1 : 0
   source                        = "../../modules/key-vault"
-  resource_group_name           = module.resource_group.rg_name
+  resource_group_name           = module.resource_group[0].rg_name
   environment                   = local.environment
   application_name              = var.application_name
   enable_rbac_authorization     = true
@@ -11,7 +12,7 @@ module "azure_key_vault" {
       log_groups                     = ["allLogs"]
       metric_categories              = ["AllMetrics"]
       log_analytics_destination_type = "AzureDiagnostics"
-      workspace_resource_id          = module.law.law_id
+      workspace_resource_id          = module.law[0].law_id
     }
   }
   role_assignments = {

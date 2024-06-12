@@ -1,21 +1,9 @@
-locals {
-  cosmos_rg = format("rg-%s-%s-%s-%s-cosmos", var.application_name, local.environment, lookup(local.location_short, var.location, "uan"), module.res-id_rg.result)
-}
-
-module "mongo_resource_group" {
-  source  = "../../modules/resource-groups"
-  rg_name = local.cosmos_rg
-  tags    = local.tags
-}
-module "res-id_rg" {
-  source = "../../modules/utility/random-identifier"
-}
-
 module "cosmosdb" {
+  count               = var.provision_modules.cosmosdb ? 1 : 0
   source              = "../../modules/cosmosdb"
   application_name    = var.application_name
   environment         = var.environment
-  resource_group_name = module.mongo_resource_group.rg_name
+  resource_group_name = module.resource_group[0].rg_name
 
   capabilities = ["EnableMongo"]
 

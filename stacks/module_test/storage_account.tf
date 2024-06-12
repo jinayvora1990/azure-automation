@@ -1,10 +1,11 @@
 module "storage_account" {
+  count                             = var.provision_modules.storage_account ? 1 : 0
   source                            = "../../modules/storage"
-  resource_group                    = module.resource_group.rg_name
+  resource_group                    = module.resource_group[0].rg_name
   environment                       = var.environment
   location                          = var.location
   application_name                  = var.application_name
-  storage_account_name              = "trial-${module.resource_group.rg_name}-sa"
+  storage_account_name              = "trial-${module.resource_group[0].rg_name}-sa"
   account_kind                      = "StorageV2"
   skuname                           = "Standard_LRS"
   enable_advanced_threat_protection = true
@@ -40,5 +41,5 @@ module "storage_account" {
 resource "azurerm_user_assigned_identity" "uami" {
   location            = var.location
   name                = "uami"
-  resource_group_name = module.resource_group.rg_name
+  resource_group_name = module.resource_group[0].rg_name
 }
