@@ -53,3 +53,4 @@ module "cosmosdb" {
     zone_redundant    = false
   }]
 }
+
