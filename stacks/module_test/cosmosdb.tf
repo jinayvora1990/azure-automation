@@ -1,7 +1,7 @@
 
 
 locals {
-  cosmos_rg = format("rg-%s-%s-%s-%s-cosmos", var.application_name, local.environment, lookup(local.location_short, var.location, "uan"), module.res-id_rg.result)
+  cosmos_rg = format("rg-%s-%s-%s-%s-cosmos", var.application_name, local.environment, var.location, module.res-id_rg.result)
 }
 
 module "mongo_resource_group" {
