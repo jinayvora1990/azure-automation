@@ -1,9 +1,10 @@
 module "azure_key_vault" {
-  source                    = "../../modules/key-vault"
-  resource_group_name       = module.resource_group.rg_name
-  environment               = local.environment
-  application_name          = var.application_name
-  enable_rbac_authorization = true
+  source                        = "../../modules/key-vault"
+  resource_group_name           = module.resource_group.rg_name
+  environment                   = local.environment
+  application_name              = var.application_name
+  enable_rbac_authorization     = true
+  public_network_access_enabled = true
   diagnostic_settings = {
     "settings" = {
       name                           = "diag-settings"

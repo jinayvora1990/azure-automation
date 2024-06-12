@@ -26,7 +26,7 @@ variable "environment" {
 variable "sku" {
   description = "The SKU name of the container registry. Possible values are Basic, Standard and Premium"
   type        = string
-  default     = "Basic"
+  default     = "Premium"
 }
 
 variable "user_assigned_identity_name" {
@@ -106,7 +106,7 @@ variable "allowed_subnets" {
 variable "public_network_access_enabled" {
   description = "Whether the Container Registry is accessible publicly."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "data_endpoint_enabled" {
@@ -118,7 +118,7 @@ variable "data_endpoint_enabled" {
 variable "encryption_enabled" {
   description = "Specifies whether encryption is enabled (Premium only)"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "tags" {
