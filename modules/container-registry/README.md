@@ -10,7 +10,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.100.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.97.1 |
 
 ## Modules
 
@@ -39,7 +39,7 @@ No modules.
 | <a name="input_azure_services_bypass_allowed"></a> [azure\_services\_bypass\_allowed](#input\_azure\_services\_bypass\_allowed) | Whether to allow trusted Azure services to access a network restricted Container Registry. | `bool` | `false` | no |
 | <a name="input_azurerm_key_vault_key"></a> [azurerm\_key\_vault\_key](#input\_azurerm\_key\_vault\_key) | Specifies the name of the Key Vault Key. Changing this forces a new resource to be created. | `string` | `null` | no |
 | <a name="input_data_endpoint_enabled"></a> [data\_endpoint\_enabled](#input\_data\_endpoint\_enabled) | Whether to enable dedicated data endpoints for this Container Registry? (Only supported on resources with the Premium SKU). | `bool` | `false` | no |
-| <a name="input_encryption_enabled"></a> [encryption\_enabled](#input\_encryption\_enabled) | Specifies whether encryption is enabled (Premium only) | `bool` | `true` | no |
+| <a name="input_encryption_enabled"></a> [encryption\_enabled](#input\_encryption\_enabled) | Specifies whether encryption is enabled (Premium only) | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment to provision resources | `string` | n/a | yes |
 | <a name="input_georeplication_locations"></a> [georeplication\_locations](#input\_georeplication\_locations) | A list of Azure locations where the Ccontainer Registry should be geo-replicated. Only activated on Premium SKU.<br>  Supported properties are:<br>    location                  = string<br>    zone\_redundancy\_enabled   = bool<br>    regional\_endpoint\_enabled = bool<br>    tags                      = map(string)<br>  or this can be a list of `string` (each element is a location) | `any` | `[]` | no |
 | <a name="input_images_retention_days"></a> [images\_retention\_days](#input\_images\_retention\_days) | Specifies the number of images retention days. | `number` | `90` | no |

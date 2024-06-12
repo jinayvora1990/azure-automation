@@ -23,14 +23,14 @@ variable "application_name" {
   description = "The application that requires this resource"
 }
 
-/*variable "psql_subnet" {
+variable "psql_subnet" {
   type = object({
     name           = string
     vnet_name      = string
     resource_group = string
   })
   description = "Subnet to use with PostgreSQL server"
-}*/
+}
 
 variable "privatelink_subnet" {
   type = object({
@@ -42,9 +42,9 @@ variable "privatelink_subnet" {
   default     = null
 }
 
-variable "private_dns_zone_name" {
+variable "private_dns_zone_id" {
   type        = string
-  description = "Name of the private dns zone for private link"
+  description = "ARM ID of the private dns zone for private link"
   default     = null
 }
 

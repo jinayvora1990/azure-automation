@@ -118,7 +118,7 @@ variable "data_endpoint_enabled" {
 variable "encryption_enabled" {
   description = "Specifies whether encryption is enabled (Premium only)"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "tags" {
