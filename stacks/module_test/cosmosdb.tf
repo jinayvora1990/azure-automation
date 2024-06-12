@@ -40,5 +40,10 @@ module "cosmosdb" {
     failover_priority = 0
     zone_redundant    = false
   }]
-}
 
+  privatelink_subnet = {
+    name           = module.base-infra[0].subnet_names[2]
+    vnet_name      = module.base-infra[0].vnet_name
+    resource_group = module.resource_group[0].rg_name
+  }
+}

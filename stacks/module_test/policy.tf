@@ -8,7 +8,7 @@ module "policy_assignment" {
   for_each = var.provision_modules.policy ? var.policy_details : {}
   source   = "../../modules/policy/modules/def_assignment"
 
-  assignment_scope      = module.resource_group[0].rg_id
+  assignment_scope      = data.azurerm_client_config.current.id
   definition            = module.policy_definition[each.key].definition
   assignment_parameters = each.value.assignment_parameters
   assignment_effect     = each.value.assignment_effect
