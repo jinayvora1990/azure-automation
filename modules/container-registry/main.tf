@@ -4,10 +4,15 @@ locals {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
+  acr_name = format("acr%s%s%s%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+}
+
+module "res-id" {
+  source = "../utility/random-identifier"
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                          = format("acr%s%s%s%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), "1")
+  name                          = local.acr_name
   resource_group_name           = var.resource_group_name
   location                      = local.location
   sku                           = var.sku
@@ -104,7 +109,7 @@ resource "azurerm_user_assigned_identity" "acr_managed_identity" {
 
   resource_group_name = var.resource_group_name
   location            = local.location
-  name                = var.user_assigned_identity_name
+  name                = "${local.acr_name}-id"
 }
 
 resource "azurerm_role_assignment" "crypto_encryption_role_assignment" {

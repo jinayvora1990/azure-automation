@@ -31,19 +31,11 @@ output "secondary_connection_string" {
 }
 
 output "redis_cache_private_endpoint_ip" {
-  precondition {
-    condition     = length(azurerm_private_endpoint.pep) > 0
-    error_message = "The private endpoint was not created for the redis cache"
-  }
   description = "Redis Cache server private endpoint IPv4 Addresses"
   value       = concat(data.azurerm_private_endpoint_connection.pep_connection[0].private_service_connection[*].private_ip_address, [""])
 }
 
 output "pep_pvt_dns_fqdn" {
-  precondition {
-    condition     = length(azurerm_private_dns_a_record.dns_record) > 0
-    error_message = "The private endpoint was not created for the redis cache"
-  }
   description = "FQDN for the redis cache private endpoint in private dns zone"
-  value       = "${azurerm_private_dns_a_record.dns_record[0].name}.${var.private_dns_zone_name}"
+  value       = var.privatelink_subnet != null && var.private_dns_zone_name != null ? "${azurerm_private_dns_a_record.dns_record[0].name}.${var.private_dns_zone_name}" : null
 }

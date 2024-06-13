@@ -1,5 +1,5 @@
 resource "azurerm_postgresql_flexible_server" "postgresql_flexible_server" {
-  name                = "psql-${var.application_name}-${local.environment}-${local.region_shortcode}-1"
+  name                = "psql-${var.application_name}-${local.environment}-${local.region_shortcode}-module.res-id.result"
   resource_group_name = var.resource_group_name
   location            = local.location
   version             = var.sql_version
