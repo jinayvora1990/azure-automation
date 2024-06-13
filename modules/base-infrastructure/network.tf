@@ -1,5 +1,9 @@
+module "res-id" {
+  source = "../utility/random-identifier"
+}
+
 resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-${var.app_name}-${local.environment}-${local.region_shortcode}-1"
+  name                = local.vnet_name
   location            = local.location
   resource_group_name = var.resource_group_name
   address_space       = var.vnet_address_spaces
@@ -26,7 +30,7 @@ resource "azurerm_network_ddos_protection_plan" "ddos" {
 
 resource "azurerm_network_watcher" "nwatcher" {
   count               = var.create_network_watcher != false ? 1 : 0
-  name                = "NetworkWatcher_${local.location}"
+  name                = "${local.vnet_name}-nw"
   location            = local.location
   resource_group_name = var.resource_group_name
   tags                = merge({ "Name" = format("%s", "NetworkWatcher_${local.location}") }, var.tags, )

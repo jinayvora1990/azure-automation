@@ -25,7 +25,7 @@ module "storage_account" {
   ]
   queues                = ["filequeue"]
   managed_identity_type = "UserAssigned"
-  managed_identity_ids  = [azurerm_user_assigned_identity.uami.id]
+  managed_identity_ids  = [azurerm_user_assigned_identity.uami[0].id]
   lifecycles = [
     {
       prefix_match               = ["${local.sc_name}/prefix"]
@@ -39,6 +39,7 @@ module "storage_account" {
 }
 
 resource "azurerm_user_assigned_identity" "uami" {
+  count               = var.provision_modules.storage_account ? 1 : 0
   location            = var.location
   name                = "uami"
   resource_group_name = module.resource_group[0].rg_name
