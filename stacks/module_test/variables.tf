@@ -27,7 +27,7 @@ variable "policy_details" {
 variable "vnet_address_spaces" {
   description = "The address space to be used for the Azure virtual network."
   type        = list(string)
-  default     = ["10.0.0.0/24"]
+  default     = ["10.0.0.0/16"]
 }
 
 variable "subnets" {

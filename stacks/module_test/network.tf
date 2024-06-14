@@ -30,6 +30,14 @@ module "base-infra" {
       subnet_name           = "subnet-2"
       subnet_address_prefix = ["10.0.0.128/25"]
     }
+    "subnet-3" : {
+      subnet_name           = "subnet-3"
+      subnet_address_prefix = ["10.0.1.0/24"]
+    }
+    "subnet-4" : {
+      subnet_name           = "subnet-4"
+      subnet_address_prefix = ["10.0.2.0/24"]
+    }
   }
 }
 

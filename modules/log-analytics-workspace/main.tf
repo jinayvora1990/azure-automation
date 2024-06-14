@@ -3,7 +3,7 @@ module "res-id" {
 }
 
 resource "azurerm_log_analytics_workspace" "this" {
-  name                          = format("law-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(local.location, 0, 4)), module.res-id.result)
+  name                          = format("law-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name           = var.resource_group_name
   location                      = var.resource_location
   local_authentication_disabled = var.local_authentication_disabled

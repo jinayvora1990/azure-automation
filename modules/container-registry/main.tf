@@ -1,12 +1,3 @@
-locals {
-  location = lower(var.resource_location)
-  location_short = {
-    "uaenorth"   = "uan"
-    "uaecentral" = "uac"
-  }
-  acr_name = format("acr%s%s%s%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
-}
-
 module "res-id" {
   source = "../utility/random-identifier"
 }

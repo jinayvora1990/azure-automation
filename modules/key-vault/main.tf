@@ -1,17 +1,3 @@
-locals {
-  owners           = var.owners
-  environment      = var.environment
-  location         = lower(var.resource_location)
-  region_shortcode = (local.location == "uaenorth" ? "uan" : "unknown")
-  common_tags = {
-    owners      = local.owners
-    environment = local.environment
-  }
-  role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
-  kv_name                            = substr(format("kv-%s-%s-%s-%s", var.application_name, var.environment, local.region_shortcode, module.res-id.result), 0, 24)
-}
-
-
 module "res-id" {
   source = "../utility/random-identifier"
 }
@@ -118,7 +104,7 @@ resource "azurerm_private_dns_a_record" "dns_record" {
 
 resource "azurerm_private_endpoint" "kv" {
   count               = var.privatelink_subnet != null ? 1 : 0
-  name                = format("pep-kv-%s-%s-%s", var.application_name, local.environment, local.region_shortcode)
+  name                = format("pep-kv-%s-%s-%s", var.application_name, local.environment, local.location_shortcode)
   location            = local.location
   resource_group_name = var.resource_group_name
   subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id

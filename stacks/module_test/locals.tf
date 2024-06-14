@@ -3,7 +3,7 @@ locals {
   #   location         = lower(var.location)
   #region_shortcode = (var.location == "uaenorth" ? "uan" : "unknown")
   environment = lower(var.environment)
-  #   location_short = {
+  #   location_shortcode_map = {
   #     "uaenorth"   = "uan"
   #     "uaecentral" = "uac"
   #   }

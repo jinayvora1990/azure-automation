@@ -14,7 +14,9 @@
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_res-id"></a> [res-id](#module\_res-id) | ../utility/random-identifier | n/a |
 
 ## Resources
 

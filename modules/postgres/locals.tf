@@ -1,6 +1,10 @@
 locals {
-  location                   = lower(var.location)
-  region_shortcode           = (local.location == "uaenorth" ? "uan" : "unknown")
+  location = lower(var.location)
+  location_shortcode_map = {
+    "uaenorth"   = "uan"
+    "uaecentral" = "uac"
+  }
+  location_shortcode         = lookup(local.location_shortcode_map, var.location, substr(var.location, 0, 4))
   environment                = lower(var.environment)
   maintenance_window_enabled = var.maintenance_window != null
 
