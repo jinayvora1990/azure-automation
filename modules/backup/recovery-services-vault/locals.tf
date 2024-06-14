@@ -1,5 +1,5 @@
 locals {
-  common_tags = { module = "redis-cache" }
+  common_tags = { module = "recovery-services-vault" }
   rg          = var.resource_group_name
   location    = lower(var.resource_location)
   location_shortcode_map = {
