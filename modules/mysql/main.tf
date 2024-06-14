@@ -1,5 +1,9 @@
+module "res-id" {
+  source = "../utility/random-identifier"
+}
+
 resource "azurerm_mysql_flexible_server" "mysql_flexible_server" {
-  name                = "mysql-${var.application_name}-${local.environment}-${local.region_shortcode}-1"
+  name                = "mysql-${var.application_name}-${local.environment}-${local.location_shortcode}-${module.res-id.result}"
   resource_group_name = var.resource_group_name
   location            = local.location
   version             = var.mysql_version
@@ -69,7 +73,7 @@ resource "azurerm_private_dns_a_record" "dns_record" {
 
 resource "azurerm_private_endpoint" "pep" {
   count               = var.privatelink_subnet != null ? 1 : 0
-  name                = format("pep-mysql-%s-%s-%s", var.application_name, local.environment, local.region_shortcode)
+  name                = format("pep-mysql-%s-%s-%s", var.application_name, local.environment, local.location_shortcode)
   location            = local.location
   resource_group_name = var.resource_group_name
   subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id

@@ -30,7 +30,7 @@ module "app-insights" {
 
 resource "azurerm_linux_web_app" "linux-web-app" {
   location            = local.location
-  name                = format("app%s%s%s%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), "1" /*module.res-id.result*/)
+  name                = format("app%s%s%s%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name = local.rg
   service_plan_id     = var.existing_service_plan == null ? module.service-plan[0].id : data.azurerm_service_plan.existing_service_plan[0].id
 
@@ -153,7 +153,7 @@ resource "azurerm_linux_web_app_slot" "v1_slot" {
 
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }
@@ -169,7 +169,7 @@ resource "azurerm_app_service_custom_hostname_binding" "app_service_custom_hostn
 
 resource "azurerm_app_service_certificate" "certificate" {
   count               = var.custom_domain != null ? 1 : 0
-  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("app-sslcert-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name = local.rg
   location            = local.location
   pfx_blob            = data.azurerm_key_vault_secret.certificate[0].value

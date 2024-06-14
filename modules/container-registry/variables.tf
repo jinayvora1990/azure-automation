@@ -29,12 +29,6 @@ variable "sku" {
   default     = "Premium"
 }
 
-variable "user_assigned_identity_name" {
-  description = "Name of the User Assigned Managed Identity"
-  type        = string
-  default     = null
-}
-
 variable "azurerm_key_vault_key" {
   description = "Specifies the name of the Key Vault Key. Changing this forces a new resource to be created."
   type        = string

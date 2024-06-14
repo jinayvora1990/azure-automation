@@ -14,7 +14,9 @@
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_res-id"></a> [res-id](#module\_res-id) | ../utility/random-identifier | n/a |
 
 ## Resources
 
@@ -51,12 +53,12 @@ No modules.
 | <a name="input_sku"></a> [sku](#input\_sku) | The SKU name of the container registry. Possible values are Basic, Standard and Premium | `string` | `"Premium"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | User defined extra tags to be added to all resources created in the module | `map(string)` | `{}` | no |
 | <a name="input_trust_policy_enabled"></a> [trust\_policy\_enabled](#input\_trust\_policy\_enabled) | Specifies whether the trust policy is enabled (Premium only). | `bool` | `false` | no |
-| <a name="input_user_assigned_identity_name"></a> [user\_assigned\_identity\_name](#input\_user\_assigned\_identity\_name) | Name of the User Assigned Managed Identity | `string` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_acr_assigned_identity"></a> [acr\_assigned\_identity](#output\_acr\_assigned\_identity) | Name of the assigned identity to acr |
 | <a name="output_acr_name"></a> [acr\_name](#output\_acr\_name) | Azure Container Registry Name |
 | <a name="output_acr_rg"></a> [acr\_rg](#output\_acr\_rg) | Azure Container Registry Resource Group |
 <!-- END_TF_DOCS -->

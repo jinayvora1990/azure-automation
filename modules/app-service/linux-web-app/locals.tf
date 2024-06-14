@@ -2,11 +2,11 @@ locals {
   common_tags = { module = "app-service" }
   rg          = var.resource_group_name
   location    = lower(var.resource_location)
-  location_short = {
+  location_shortcode_map = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
-
+  location_shortcode = lookup(local.location_shortcode_map, var.resource_location, substr(local.location, 0, 4))
 
   default_app_settings = var.application_insights.enabled ? {
     APPLICATION_INSIGHTS_IKEY             = module.app-insights[0].instrumentation_key

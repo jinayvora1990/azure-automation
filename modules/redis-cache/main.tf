@@ -1,21 +1,9 @@
-locals {
-  common_tags = { module = "redis-cache" }
-  rg          = var.resource_group_name
-  location    = var.resource_location
-  sku         = var.cache_tier.sku_name
-  location_short = {
-    "uaenorth"   = "uan"
-    "uaecentral" = "uac"
-  }
-  environment = lower(var.environment)
-}
-
 module "res-id" {
   source = "../utility/random-identifier"
 }
 
 resource "azurerm_redis_cache" "rediscache" {
-  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                          = format("redis-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   location                      = local.location
   resource_group_name           = local.rg
   sku_name                      = var.cache_tier.sku_name
@@ -64,13 +52,13 @@ resource "azurerm_redis_cache" "rediscache" {
 
 resource "azurerm_private_endpoint" "pep" {
   count               = var.privatelink_subnet != null ? 1 : 0
-  name                = format("redis-pep-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                = format("redis-pep-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   location            = local.location
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
 
   private_service_connection {
-    name                           = format("redis-pl-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+    name                           = format("redis-pl-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
     is_manual_connection           = false
     private_connection_resource_id = azurerm_redis_cache.rediscache.id
     subresource_names              = ["redisCache"]

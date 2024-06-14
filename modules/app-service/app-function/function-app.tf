@@ -34,14 +34,14 @@ module "storage_account" {
   environment          = var.environment
   location             = local.location
   application_name     = var.application_name
-  storage_account_name = format("func-sa-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  storage_account_name = format("func-sa-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   account_kind         = "StorageV2"
   skuname              = "Standard_LRS"
 }
 
 resource "azurerm_linux_function_app" "function-app" {
   location                   = local.location
-  name                       = format("func-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                       = format("func-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name        = local.rg
   service_plan_id            = var.existing_service_plan == null ? module.service-plan[0].id : data.azurerm_service_plan.existing_service_plan[0].id
   storage_account_name       = module.storage_account.storage_account_name
@@ -158,7 +158,7 @@ resource "azurerm_linux_function_app" "function-app" {
 
 resource "azurerm_storage_container" "backup_container" {
   count                 = var.backup == null ? 0 : 1
-  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                  = format("app-sc-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   storage_account_name  = var.backup.backup_sa.name
   container_access_type = "container"
 }

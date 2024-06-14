@@ -27,7 +27,7 @@ variable "policy_details" {
 variable "vnet_address_spaces" {
   description = "The address space to be used for the Azure virtual network."
   type        = list(string)
-  default     = ["10.0.0.0/24"]
+  default     = ["10.0.0.0/16"]
 }
 
 variable "subnets" {
@@ -53,4 +53,34 @@ variable "subnets" {
       })
     }))
   }))
+}
+
+variable "provision_modules" {
+  description = "Select what modules should be provisioned"
+  default = {
+    acr             = true
+    cosmosdb        = true
+    eventhub        = true
+    kv              = true
+    law             = true
+    network         = true
+    policy          = true
+    postgres        = true
+    pvt_dns         = true
+    rg              = true
+    storage_account = true
+  }
+  type = object({
+    acr             = bool
+    cosmosdb        = bool
+    eventhub        = bool
+    kv              = bool
+    law             = bool
+    network         = bool
+    policy          = bool
+    postgres        = bool
+    pvt_dns         = bool
+    rg              = bool
+    storage_account = bool
+  })
 }

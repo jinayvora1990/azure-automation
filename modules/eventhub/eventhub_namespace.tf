@@ -4,7 +4,7 @@ module "res-id" {
 
 resource "azurerm_eventhub_namespace" "eh-namespace" {
   location                      = local.location
-  name                          = format("evhns-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)), module.res-id.result)
+  name                          = format("evhns-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name           = var.resource_group_name
   sku                           = var.sku
   capacity                      = var.capacity
@@ -101,7 +101,7 @@ resource "azurerm_private_dns_a_record" "dns_record" {
 
 resource "azurerm_private_endpoint" "pep" {
   count               = var.privatelink_subnet != null ? 1 : 0
-  name                = format("pep-evhns-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, var.resource_location, substr(var.resource_location, 0, 4)))
+  name                = format("pep-evhns-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   location            = local.location
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id

@@ -1,11 +1,11 @@
 locals {
   common_tags = { module = "app-gateway" }
   location    = lower(var.resource_location)
-  location_short = {
+  location_shortcode_map = {
     "uaenorth"   = "uan"
     "uaecentral" = "uac"
   }
-
+  location_shortcode                  = lookup(local.location_shortcode_map, var.resource_location, substr(var.resource_location, 0, 4))
   frontend_ip_configuration_name      = "appGatewayFrontendIP"
   frontend_priv_ip_configuration_name = "appGatewayPrivFrontendIP"
 

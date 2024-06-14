@@ -1,12 +1,11 @@
 module "policy_definition" {
-  for_each    = var.policy_details
+  for_each    = var.provision_modules.policy ? var.policy_details : {}
   source      = "../../modules/policy/modules/definition"
   policy_name = each.key
 }
 
-
 module "policy_assignment" {
-  for_each = var.policy_details
+  for_each = var.provision_modules.policy ? var.policy_details : {}
   source   = "../../modules/policy/modules/def_assignment"
 
   assignment_scope      = data.azurerm_client_config.current.id

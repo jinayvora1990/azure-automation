@@ -1,18 +1,3 @@
-locals {
-  owners           = var.owners
-  project          = var.business_divsion
-  environment      = var.environment
-  location         = lower(var.location)
-  region_shortcode = (local.location == "uaenorth" ? "uan" : "unknown")
-  common_tags = {
-    owners      = local.owners
-    project     = local.project
-    environment = local.environment
-  }
-  account_tier             = (var.account_kind == "FileStorage" ? "Premium" : split("_", var.skuname)[0])
-  account_replication_type = (local.account_tier == "Premium" ? "LRS" : split("_", var.skuname)[1])
-}
-
 module "res-id" {
   source = "../utility/random-identifier"
 }
@@ -26,7 +11,7 @@ resource "azurerm_storage_account" "storeacc" {
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
   min_tls_version           = var.min_tls_version
-  tags                      = local.common_tags
+  tags                      = merge(local.common_tags, var.tags)
   dynamic "identity" {
     for_each = var.managed_identity_type != null ? [1] : []
     content {
@@ -56,6 +41,7 @@ resource "azurerm_storage_account" "storeacc" {
       virtual_network_subnet_ids = var.network_rules.subnet_ids
     }
   }
+  infrastructure_encryption_enabled = var.infrastructure_encryption_enabled
 }
 
 #--------------------------------------

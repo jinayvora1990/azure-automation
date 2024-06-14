@@ -7,3 +7,8 @@ output "acr_rg" {
   description = "Azure Container Registry Resource Group"
   value       = azurerm_container_registry.acr.resource_group_name
 }
+
+output "acr_assigned_identity" {
+  description = "Name of the assigned identity to acr"
+  value       = azurerm_user_assigned_identity.acr_managed_identity[0].name
+}

@@ -126,8 +126,21 @@ variable "tables" {
 
 variable "lifecycles" {
   description = "Configure Azure Storage firewalls and virtual networks"
-  type        = list(object({ prefix_match = set(string), tier_to_cool_after_days = number, tier_to_archive_after_days = number, delete_after_days = number, snapshot_delete_after_days = number }))
-  default     = []
+  type = list(
+    object({
+      prefix_match               = set(string),
+      tier_to_cool_after_days    = number,
+      tier_to_archive_after_days = number,
+      delete_after_days          = number,
+      snapshot_delete_after_days = number
+  }))
+  default = []
+}
+
+variable "infrastructure_encryption_enabled" {
+  description = "Enable infrastructure encryption for storage account"
+  type        = bool
+  default     = true
 }
 
 variable "managed_identity_type" {
@@ -150,4 +163,10 @@ variable "privatelink_subnet" {
   })
   description = "Subnet where the private link is required."
   default     = null
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "User defined extra tags to be added to all resources created in the module"
+  default     = {}
 }

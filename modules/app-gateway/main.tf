@@ -1,5 +1,9 @@
+module "res-id" {
+  source = "../utility/random-identifier"
+}
+
 resource "azurerm_public_ip" "app_gateway_ip" {
-  name                    = format("agwip-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), "1")
+  name                    = format("agwip-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, "1")
   resource_group_name     = var.resource_group_name
   location                = local.location
   sku                     = var.ip_sku
@@ -11,7 +15,7 @@ resource "azurerm_public_ip" "app_gateway_ip" {
 }
 
 resource "azurerm_application_gateway" "app_gateway" {
-  name                = format("agw-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), "1")
+  name                = format("agw-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name = var.resource_group_name
   location            = local.location
   zones               = ["1", "2", "3"]

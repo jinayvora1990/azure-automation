@@ -1,15 +1,9 @@
-locals {
-  common_tags = { module = "app-service-environment" }
-  rg          = var.resource_group_name
-  location    = lower(var.resource_location)
-  location_short = {
-    "uaenorth"   = "uan"
-    "uaecentral" = "uac"
-  }
+module "res-id" {
+  source = "../../utility/random-identifier"
 }
 
 resource "azurerm_app_service_environment_v3" "ase" {
-  name                = format("ase-%s-%s-%s-%s", var.application_name, var.environment, lookup(local.location_short, local.location, substr(var.resource_location, 0, 4)), "1")
+  name                = format("ase-%s-%s-%s-%s", var.application_name, var.environment, local.location_shortcode, module.res-id.result)
   resource_group_name = local.rg
   subnet_id           = data.azurerm_subnet.ase_subnet.id
 

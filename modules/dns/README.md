@@ -21,6 +21,8 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_private_dns_zone.pvt_dns](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone) | resource |
+| [azurerm_private_dns_zone_virtual_network_link.dns_vnet_link](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone_virtual_network_link) | resource |
+| [azurerm_virtual_network.vnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/virtual_network) | data source |
 
 ## Inputs
 
@@ -29,6 +31,7 @@ No modules.
 | <a name="input_dns_zone_name"></a> [dns\_zone\_name](#input\_dns\_zone\_name) | The name of the private dns zone | `string` | n/a | yes |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Existing resource group | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | User defined extra tags to be added to all resources created in the module | `map(string)` | `{}` | no |
+| <a name="input_vnet_link"></a> [vnet\_link](#input\_vnet\_link) | The virtual network name which contains the pep for the resource | <pre>object({<br>    vnet_name         = string<br>    auto_registration = bool<br>  })</pre> | `null` | no |
 
 ## Outputs
 
