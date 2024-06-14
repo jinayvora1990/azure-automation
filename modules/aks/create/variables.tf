@@ -439,8 +439,8 @@ variable "acr" {
   #  default     = []
 }
 
-variable "dapr_enabled" {
-  type        = bool
-  description = "Enable DAPR extension for the AKS cluster"
-  default     = false
-}
+#variable "dapr_enabled" {
+#  type        = bool
+#  description = "Enable DAPR extension for the AKS cluster"
+#  default     = false
+#}

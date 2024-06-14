@@ -146,8 +146,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     }
   }
 
-  tags       = var.tags
-  depends_on = [azurerm_resource_provider_registration.k8s_ext]
+  tags = var.tags
+  #  depends_on = [azurerm_resource_provider_registration.k8s_ext]
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "regular_node_pools" {
@@ -213,16 +213,24 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
     }
   }
 }
+#
+#resource "azurerm_resource_provider_registration" "k8s_ext" {
+#  count = var.dapr_enabled ? 1 : 0
+#  name  = "Microsoft.KubernetesConfiguration"
+#}
+#
+#resource "azurerm_kubernetes_cluster_extension" "dapr_ext" {
+#  count          = var.dapr_enabled ? 1 : 0
+#  cluster_id     = azurerm_kubernetes_cluster.aks_cluster.id
+#  extension_type = "Microsoft.Dapr"
+#  name           = "dapr-extension"
+#  depends_on     = [azurerm_resource_provider_registration.k8s_ext]
+#}
 
-resource "azurerm_resource_provider_registration" "k8s_ext" {
-  count = var.dapr_enabled ? 1 : 0
-  name  = "Microsoft.KubernetesConfiguration"
-}
+resource "null_resource" "get_credentials" {
+  provisioner "local-exec" {
+    command = "az aks get-credentials --resource-group ${var.resource_group_name} --name ${azurerm_kubernetes_cluster.aks_cluster.name} --overwrite-existing"
+  }
 
-resource "azurerm_kubernetes_cluster_extension" "dapr_ext" {
-  count          = var.dapr_enabled ? 1 : 0
-  cluster_id     = azurerm_kubernetes_cluster.aks_cluster.id
-  extension_type = "Microsoft.Dapr"
-  name           = "dapr-extension"
-  depends_on     = [azurerm_resource_provider_registration.k8s_ext]
+  depends_on = [azurerm_kubernetes_cluster.aks_cluster]
 }
