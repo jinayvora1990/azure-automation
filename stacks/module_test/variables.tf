@@ -69,6 +69,7 @@ variable "provision_modules" {
     pvt_dns         = true
     rg              = true
     storage_account = true
+    aks             = true
   }
   type = object({
     acr             = bool
@@ -82,5 +83,11 @@ variable "provision_modules" {
     pvt_dns         = bool
     rg              = bool
     storage_account = bool
+    aks             = bool
   })
+}
+
+variable "aks_api_server_authorized_ip_ranges" {
+  type        = list(string)
+  description = "List of IP Address which can access aks cluster"
 }

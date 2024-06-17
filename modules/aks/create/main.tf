@@ -225,3 +225,10 @@ resource "azurerm_kubernetes_cluster_extension" "dapr_ext" {
   name           = "dapr-extension"
   depends_on     = [azurerm_resource_provider_registration.k8s_ext]
 }
+
+
+resource "null_resource" "get_credentials" {
+  provisioner "local-exec" {
+    command = "az aks get-credentials --resource-group ${var.resource_group_name} --name ${azurerm_kubernetes_cluster.aks_cluster.name} --overwrite-existing"
+  }
+}
