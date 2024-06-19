@@ -9,9 +9,8 @@ module "redis_resource_group" {
 }
 
 module "redis-dns" {
-  source        = "../../modules/dns"
-  dns_zone_name = "privatelink.redis.cache.windows.net"
-  #vnet_name      = module.base-infra[0].vnet_name
+  source         = "../../modules/dns"
+  dns_zone_name  = "privatelink.redis.cache.windows.net"
   resource_group = module.app_resource_group.rg_name
   vnet_link = {
     vnet_name         = module.base-infra[0].vnet_name
