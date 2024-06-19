@@ -10,5 +10,5 @@ output "acr_rg" {
 
 output "acr_assigned_identity" {
   description = "Name of the assigned identity to acr"
-  value       = azurerm_user_assigned_identity.acr_managed_identity[0].name
+  value       = var.encryption_enabled ? azurerm_user_assigned_identity.acr_managed_identity[0].name : null
 }
