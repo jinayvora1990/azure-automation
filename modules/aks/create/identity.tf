@@ -38,3 +38,10 @@ resource "azurerm_role_assignment" "acr_role_assignment" {
   role_definition_name = "AcrPull"
   principal_id         = azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
 }
+
+resource "azurerm_role_assignment" "monitoring_metrics_publisher" {
+  count                = var.enable_data_Collection_rule ? 1 : 0
+  principal_id         = azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
+  role_definition_name = "Monitoring Metrics Publisher"
+  scope                = var.oms_agent_log_analytics_workspace_id
+}

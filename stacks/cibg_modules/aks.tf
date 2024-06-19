@@ -14,19 +14,18 @@ module "aks-create" {
   source = "../../modules/aks/create"
 
   aks_subnet = {
-    #name           = module.base-infra.subnet_names[3]
     name           = module.base-infra[0].subnet_names[3]
     vnet_name      = module.base-infra[0].vnet_name
     resource_group = module.resource_group[0].rg_name
   }
   depends_on                      = [module.base-infra]
-  aks_network_plugin              = "azure"
+  aks_network_plugin              = var.aks_network_plugin
   resource_group_name             = module.aks_resource_group.rg_name
   environment                     = local.environment
   application_name                = var.application_name
   api_server_authorized_ip_ranges = var.aks_api_server_authorized_ip_ranges
   #dapr_enabled                                  = true
-  azure_active_directory_admin_group_object_ids = ["77e919ac-290c-4493-b3aa-0a74aaf69ca5"]
+  azure_active_directory_admin_group_object_ids = var.azure_active_directory_admin_group_object_ids
   oms_agent_log_analytics_workspace_id          = module.law[0].law_id
   tags                                          = local.tags
 

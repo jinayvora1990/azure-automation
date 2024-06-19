@@ -1,14 +1,10 @@
 locals {
-  sc_name = "capture-sc-1"
-}
+  environment = lower(var.environment)
 
-module "eventhub" {
-  count  = var.provision_modules.eventhub ? 1 : 0
-  source = "../../modules/eventhub"
-
-  application_name    = "avd"
-  environment         = "dev"
-  resource_group_name = module.resource_group[0].rg_name
+  tags = {
+    project = "adcb"
+    owners  = "jinay"
+  }
   eventhub_config = [
     {
       name              = "topic-1"
