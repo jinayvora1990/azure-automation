@@ -38,7 +38,7 @@
 | <a name="input_allowed_cidrs"></a> [allowed\_cidrs](#input\_allowed\_cidrs) | List of CIDRs to allow on the registry. | `list(string)` | `[]` | no |
 | <a name="input_allowed_subnets"></a> [allowed\_subnets](#input\_allowed\_subnets) | List of VNet/Subnet IDs to allow on the registry. | `list(string)` | `[]` | no |
 | <a name="input_application_name"></a> [application\_name](#input\_application\_name) | The application that requires this resource | `string` | n/a | yes |
-| <a name="input_azure_services_bypass_allowed"></a> [azure\_services\_bypass\_allowed](#input\_azure\_services\_bypass\_allowed) | Whether to allow trusted Azure services to access a network restricted Container Registry. | `bool` | `false` | no |
+| <a name="input_azure_services_bypass_allowed"></a> [azure\_services\_bypass\_allowed](#input\_azure\_services\_bypass\_allowed) | Whether to allow trusted Azure services to access a network restricted Container Registry. | `bool` | `true` | no |
 | <a name="input_azurerm_key_vault_key"></a> [azurerm\_key\_vault\_key](#input\_azurerm\_key\_vault\_key) | Specifies the name of the Key Vault Key. Changing this forces a new resource to be created. | `string` | `null` | no |
 | <a name="input_data_endpoint_enabled"></a> [data\_endpoint\_enabled](#input\_data\_endpoint\_enabled) | Whether to enable dedicated data endpoints for this Container Registry? (Only supported on resources with the Premium SKU). | `bool` | `false` | no |
 | <a name="input_encryption_enabled"></a> [encryption\_enabled](#input\_encryption\_enabled) | Specifies whether encryption is enabled (Premium only) | `bool` | `false` | no |

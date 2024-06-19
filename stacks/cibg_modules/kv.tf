@@ -26,5 +26,3 @@ module "azure_key_vault" {
     default_action = "Allow"
   }
 }
-
-data "azurerm_client_config" "current" {}

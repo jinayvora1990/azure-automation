@@ -124,3 +124,10 @@ site_config = {
     allowed_origins = ["www.jdsakl.com"]
   }
 }
+
+#Redis Variables
+cache_tier = {
+  family   = "C"
+  capacity = 0
+  sku_name = "Basic"
+}

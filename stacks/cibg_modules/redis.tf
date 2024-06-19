@@ -20,13 +20,8 @@ module "redis-dns" {
 }
 
 module "redis" {
-  source = "../../modules/redis-cache"
-
-  cache_tier = {
-    family   = "C"
-    capacity = 0
-    sku_name = "Basic"
-  }
+  source              = "../../modules/redis-cache"
+  cache_tier          = var.cache_tier
   resource_group_name = module.app_resource_group.rg_name
   application_name    = var.application_name
   privatelink_subnet = {

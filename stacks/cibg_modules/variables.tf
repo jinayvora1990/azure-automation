@@ -234,3 +234,12 @@ variable "site_config" {
   })
   description = "Site config for App Service."
 }
+
+variable "cache_tier" {
+  type = object({
+    family   = string
+    capacity = number
+    sku_name = string
+  })
+  description = "This is the tier of the cache that is provisioned"
+}
