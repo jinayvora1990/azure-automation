@@ -21,9 +21,9 @@ module "postgres-db" {
   }
   #   private_dns_zone_name = module.dns_zone.dns_zone_name
   resource_group_name = module.resource_group[0].rg_name
-  sku_name            = "GP_Standard_D2s_v3"
-  sql_version         = "12"
-  storage_tier        = "P15"
+  sku_name            = var.postgres_sku_name
+  sql_version         = var.sql_version
+  storage_tier        = var.storage_tier
   depends_on          = [module.azure_key_vault]
 }
 

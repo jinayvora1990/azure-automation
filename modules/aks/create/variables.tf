@@ -486,3 +486,9 @@ variable "enableContainerLogV2" {
   type        = bool
   description = "Boolean parameter to enable container logs"
 }
+
+variable "enable_data_Collection_rule" {
+  type        = bool
+  description = "Boolean Paramter to enable Data Collection Rule for Logs"
+  default     = false
+}

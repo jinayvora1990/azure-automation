@@ -91,6 +91,7 @@
 | <a name="input_enable_azure_key_vault_secrets_provider"></a> [enable\_azure\_key\_vault\_secrets\_provider](#input\_enable\_azure\_key\_vault\_secrets\_provider) | (optional) Enable Azure Key Vault secrets provider | `bool` | `false` | no |
 | <a name="input_enable_azure_key_vaults_secrets_rotation"></a> [enable\_azure\_key\_vaults\_secrets\_rotation](#input\_enable\_azure\_key\_vaults\_secrets\_rotation) | (optional) Enable Azure Key Vault secret rotation | `bool` | `false` | no |
 | <a name="input_enable_azure_policy"></a> [enable\_azure\_policy](#input\_enable\_azure\_policy) | (optional) Enable Azure Policy for Kubernetes Add On | `bool` | `false` | no |
+| <a name="input_enable_data_Collection_rule"></a> [enable\_data\_Collection\_rule](#input\_enable\_data\_Collection\_rule) | Boolean Paramter to enable Data Collection Rule for Logs | `bool` | `false` | no |
 | <a name="input_enable_kubelet_identity"></a> [enable\_kubelet\_identity](#input\_enable\_kubelet\_identity) | (optional) Enable creation the kubelet identity in the AKS resource group instead of node resource group | `bool` | `true` | no |
 | <a name="input_enable_local_account"></a> [enable\_local\_account](#input\_enable\_local\_account) | If true local accounts will be enabled. Defaults to true. | `bool` | `false` | no |
 | <a name="input_enable_private_cluster"></a> [enable\_private\_cluster](#input\_enable\_private\_cluster) | Enable private Kubernetes cluster. Changing this forces a new resource to be created. | `bool` | `false` | no |
