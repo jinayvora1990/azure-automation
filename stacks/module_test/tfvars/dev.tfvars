@@ -84,6 +84,10 @@ subnets = {
     subnet_name           = "subnet-4"
     subnet_address_prefix = ["10.0.2.0/24"]
   }
+  "subnet-5" : {
+    subnet_name           = "subnet-4"
+    subnet_address_prefix = ["10.0.3.0/24"]
+  }
 }
 
 dns_servers      = ["10.0.0.4", "10.0.0.5"]
@@ -95,3 +99,28 @@ ddos_plan_name   = "DDOS-PP"
 postgres_sku_name = "GP_Standard_D2s_v3"
 sql_version       = "12"
 storage_tier      = "P15"
+
+#App Service deployment Variables
+
+site_config = {
+  application_stack = {
+    "python_version" = "3.10"
+  }
+  cidr_restriction = [
+    {
+      name     = "demo_restriction"
+      priority = 100
+      action   = "Allow"
+      cidr     = "10.0.0.0/24"
+    },
+    {
+      name     = "demo_restriction_2"
+      priority = 102
+      action   = "Deny"
+      cidr     = "10.0.0.0/26"
+    },
+  ]
+  cors = {
+    allowed_origins = ["www.jdsakl.com"]
+  }
+}

@@ -183,3 +183,54 @@ variable "storage_tier" {
   type        = string
   description = "The name of storage performance tier for IOPS of the PostgreSQL Flexible Server. Possible values are P4, P6, P10, P15, P20, P30, P40, P50, P60, P70 or P80. Default value is dependant on the storage_mb value"
 }
+
+variable "ase_cluster_setting" {
+  description = "(Optional) Cluster settings for ASE v3"
+  type = list(object({
+    name  = string
+    value = string
+    }
+  ))
+  default = []
+}
+
+variable "site_config" {
+  type = object({
+    always_on                         = optional(bool)
+    app_command_line                  = optional(string)
+    default_documents                 = optional(list(string))
+    ftps_state                        = optional(string)
+    health_check_path                 = optional(string)
+    health_check_eviction_time_in_min = optional(string)
+    http2_enabled                     = optional(string)
+    load_balancing_mode               = optional(string)
+    application_stack                 = optional(map(string))
+    cidr_restriction = optional(list(object({
+      name     = optional(string)
+      priority = optional(number)
+      action   = optional(string)
+      cidr     = optional(string)
+      #       headers  = optional(object({}))
+    })), [])
+    subnet_restriction = optional(list(object({
+      name      = optional(string)
+      priority  = optional(number)
+      action    = optional(string)
+      subnet_id = optional(string)
+      #       headers   = optional(object({}))
+    })), [])
+    service_tags_restriction = optional(list(object({
+      name        = optional(string)
+      priority    = optional(number)
+      action      = optional(string)
+      service_tag = optional(string)
+      #       headers     = optional(object({}))
+    })), [])
+    default_ip_restriction_action = optional(string)
+    cors = optional(object({
+      allowed_origins     = optional(list(string))
+      support_credentials = optional(bool)
+    }))
+  })
+  description = "Site config for App Service."
+}
