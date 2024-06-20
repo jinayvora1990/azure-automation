@@ -16,9 +16,6 @@ resource "azurerm_container_app_environment" "container_app_env" {
     }
   }
   tags = var.tags
-  lifecycle {
-    ignore_changes = [infrastructure_subnet_id]
-  }
 }
 
 resource "azurerm_container_app_job" "github_action_job" {

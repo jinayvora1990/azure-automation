@@ -6,7 +6,7 @@ module "azure_key_vault" {
   application_name              = var.application_name
   enable_rbac_authorization     = true
   public_network_access_enabled = true
-  /*  diagnostic_settings = {
+  diagnostic_settings = {
     "settings" = {
       name                           = "diag-settings"
       log_groups                     = ["allLogs"]
@@ -14,7 +14,7 @@ module "azure_key_vault" {
       log_analytics_destination_type = "AzureDiagnostics"
       workspace_resource_id          = module.law[0].law_id
     }
-  }*/
+  }
   role_assignments = {
     "user" = {
       role_definition_id_or_name = "Key Vault Administrator"
