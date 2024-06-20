@@ -119,6 +119,39 @@ resource "azurerm_role_assignment" "kv_administrator_role_assignment" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
+resource "azurerm_private_endpoint" "pep" {
+  count               = var.privatelink_subnet != null ? 1 : 0
+  name                = format("pep-acr-%s-%s-%s", var.application_name, var.environment, local.location_shortcode)
+  location            = local.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = data.azurerm_subnet.privatelink_subnet[0].id
+  private_service_connection {
+    name                           = format("%s%s", azurerm_container_registry.acr.name, "-privatelink")
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_container_registry.acr.id
+    subresource_names              = ["registry"]
+  }
+
+  private_dns_zone_group {
+    name                 = "privatelink-azurecr-io"
+    private_dns_zone_ids = [var.private_dns_zone_id]
+  }
+
+  tags = merge(var.tags, { "resource_type" = "private-endpoint" })
+}
+
+resource "azurerm_role_assignment" "this" {
+  for_each                               = var.role_assignments
+  principal_id                           = each.value.principal_id
+  scope                                  = azurerm_container_registry.acr.id
+  condition                              = each.value.condition
+  condition_version                      = each.value.condition_version
+  delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
+  role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
+  role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
+  skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
+}
+
 resource "azurerm_key_vault_key" "vault_key" {
   count = var.encryption_enabled ? 1 : 0
 

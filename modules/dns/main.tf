@@ -6,7 +6,7 @@ resource "azurerm_private_dns_zone" "pvt_dns" {
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_vnet_link" {
   count                 = var.vnet_link != null ? 1 : 0
-  name                  = "${var.dns_zone_name}_dns_vnet_link"
+  name                  = var.dns_zone_name
   private_dns_zone_name = azurerm_private_dns_zone.pvt_dns.name
   resource_group_name   = local.rg
   virtual_network_id    = data.azurerm_virtual_network.vnet[0].id

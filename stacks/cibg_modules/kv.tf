@@ -20,6 +20,10 @@ module "azure_key_vault" {
       role_definition_id_or_name = "Key Vault Administrator"
       principal_id               = data.azurerm_client_config.current.object_id
     }
+    "container_job_id" = {
+      role_definition_id_or_name = "Key Vault Secrets User"
+      principal_id               = azurerm_user_assigned_identity.kv_identity.principal_id
+    }
   }
   network_acls = {
     bypass         = "None"
