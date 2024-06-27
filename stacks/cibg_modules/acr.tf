@@ -10,11 +10,11 @@ module "registry" {
     vnet_name      = module.base-infra[0].vnet_name
     resource_group = module.resource_group[0].rg_name
   }
-  admin_enabled = true
-  images_retention_enabled = true
-  images_retention_days = 30
+  admin_enabled                 = true
+  images_retention_enabled      = true
+  images_retention_days         = 30
   azure_services_bypass_allowed = true
-  private_dns_zone_id = module.dns_zone.dns_zone_id
+  private_dns_zone_id           = module.dns_zone_acr.dns_zone_id
   role_assignments = {
     "container_job_id" = {
       role_definition_id_or_name = "AcrPull"
@@ -24,12 +24,12 @@ module "registry" {
   depends_on = [module.base-infra]
 }
 
-module "dns_zone" {
-  source = "../../modules/dns"
-  dns_zone_name = "privatelink.azurecr.io"
+module "dns_zone_acr" {
+  source         = "../../modules/dns"
+  dns_zone_name  = "privatelink.azurecr.io"
   resource_group = module.resource_group[0].rg_name
   vnet_link = {
-    vnet_name = module.base-infra[0].vnet_name
+    vnet_name         = module.base-infra[0].vnet_name
     auto_registration = false
   }
 }

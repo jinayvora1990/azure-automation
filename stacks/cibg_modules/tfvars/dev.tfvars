@@ -62,10 +62,10 @@ subnets = {
     subnet_address_prefix = ["10.0.0.0/25"]
     service_endpoints     = ["Microsoft.AzureCosmosDB"]
     nsg_inbound_rules = [
-      ["test123", 100, "Inbound", "Deny", "Tcp", "*", "*", "*", "*"],
+      ["test123", 100, "Inbound", "Deny", "Tcp", "*", "*", ["*"], ["*"], "*"],
     ]
     nsg_outbound_rules = [
-      ["testOut", 100, "Outbound", "Deny", "Udp", "*", "*", "*", "*"],
+      ["testOut", 100, "Outbound", "Deny", "Udp", "*", "*", ["*"], ["*"], "*"],
     ]
     route_table_rules = [
       #       ["rt_rule_1", "10.0.0.0/30", "VirtualAppliance", "VirtualAppliance"],
