@@ -41,8 +41,8 @@ variable "subnets" {
     service_endpoint_policy_ids                   = optional(list(string))
     private_endpoint_network_policies_enabled     = optional(bool)
     private_link_service_network_policies_enabled = optional(bool)
-    nsg_inbound_rules                             = optional(list(tuple([string, number, string, string, string, string, string, list(string), list(string), string])), [])
-    nsg_outbound_rules                            = optional(list(tuple([string, number, string, string, string, string, string, list(string), list(string), string])), [])
+    nsg_inbound_rules                             = optional(list(tuple([string, number, string, string, string, list(string), list(string), list(string), list(string), string])), [])
+    nsg_outbound_rules                            = optional(list(tuple([string, number, string, string, string, list(string), list(string), list(string), list(string), string])), [])
     route_table_rules                             = optional(list(list(string)), [])
 
     delegation = optional(object({
